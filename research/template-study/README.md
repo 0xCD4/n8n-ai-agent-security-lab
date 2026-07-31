@@ -54,6 +54,7 @@ Collected on 2026-07-31 from the official API:
 | Median heuristic score | 62/100 |
 | Templates queued for path-level review | 52 |
 | Path-level finding instances | 86 |
+| Shared credential lane signals | 1 |
 
 These figures are static-analysis signals, not confirmed vulnerabilities. The [aggregate report](top-100/summary.md) separates high and medium instances for rules that can produce both severities. Template-level findings remain private until validated.
 

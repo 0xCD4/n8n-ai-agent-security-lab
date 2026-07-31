@@ -240,8 +240,63 @@ function isTrustedUrlResolver(node) {
   );
 }
 
+function isTrustedUrlBoundary(node) {
+  if (isDisabled(node) || isModelNode(node)) return false;
+  if (isValidator(node) || isTrustedUrlResolver(node)) return true;
+  if (normalize(node.type).includes("httprequest")) return false;
+
+  const text = nodeText(node);
+  const hasExplicitUrlBoundary = includesAny(text, [
+    "url allowlist",
+    "allowlisted url",
+    "allowed url",
+    "allowed host",
+    "allowed destination",
+    "allowed endpoint",
+    "trusted destination",
+    "trusted endpoint",
+  ]);
+  const hasLiteralUrl = /https?:\/\/[^\s"']+/i.test(JSON.stringify(node.parameters ?? {}));
+  const looksLikeMapping = includesAny(text, [
+    "lookup",
+    "enum",
+    "url map",
+    "endpoint map",
+    "destination map",
+    "route table",
+  ]);
+  return hasExplicitUrlBoundary || (hasLiteralUrl && looksLikeMapping);
+}
+
 function isApproval(node) {
   return !isDisabled(node) && includesAny(nodeText(node), APPROVAL_MARKERS);
+}
+
+function isExplicitApprovalBoundary(node) {
+  if (isDisabled(node)) return false;
+  const name = normalize(node.name);
+  const type = normalize(node.type);
+  const operation = normalize(node.parameters?.operation);
+  if (operation.includes("sendandwait")) return true;
+  if (
+    includesAny(name, [
+      "human approval",
+      "manual approval",
+      "approval gate",
+      "approval step",
+      "approval decision",
+      "review gate",
+      "confirm action",
+      "is approved",
+      "was approved",
+    ])
+  ) {
+    return true;
+  }
+  return (
+    includesAny(type, ["wait", "if", "switch"]) &&
+    includesAny(name, APPROVAL_MARKERS)
+  );
 }
 
 function isLogger(node) {
@@ -352,6 +407,84 @@ function findPathAvoiding(adjacency, start, targetNames, blockedNames) {
   return null;
 }
 
+function collectReachable(adjacency, starts, blockedNames = new Set()) {
+  const queue = [...starts];
+  const visited = new Set();
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (visited.has(current) || blockedNames.has(current)) continue;
+    visited.add(current);
+    for (const next of adjacency.get(current) ?? []) {
+      if (!visited.has(next) && !blockedNames.has(next)) queue.push(next);
+    }
+  }
+
+  return visited;
+}
+
+function credentialReferenceKeys(node) {
+  const references = [];
+  if (!node?.credentials || typeof node.credentials !== "object") return references;
+
+  for (const [credentialType, value] of Object.entries(node.credentials)) {
+    const type = normalize(credentialType);
+    if (!type) continue;
+    if (value && typeof value === "object") {
+      const id = String(value.id ?? "").trim();
+      const name = String(value.name ?? "").trim();
+      if (id) references.push(`${type}:id:${id}`);
+      else if (name) references.push(`${type}:name:${name}`);
+    } else {
+      const reference = String(value ?? "").trim();
+      if (reference) references.push(`${type}:value:${reference}`);
+    }
+  }
+
+  return [...new Set(references)];
+}
+
+function indexCredentialUsage(nodeByName, laneNames) {
+  const usage = new Map();
+  for (const nodeName of laneNames) {
+    const node = nodeByName.get(nodeName);
+    if (!node) continue;
+    for (const reference of credentialReferenceKeys(node)) {
+      const names = usage.get(reference) ?? new Set();
+      names.add(nodeName);
+      usage.set(reference, names);
+    }
+  }
+  return usage;
+}
+
+function findCredentialLaneReuse(nodeByName, adjacency, inputs, approvalNames) {
+  if (inputs.length === 0 || approvalNames.size === 0) return [];
+  const beforeApproval = collectReachable(
+    adjacency,
+    inputs.map((node) => node.name),
+    approvalNames,
+  );
+  const afterApproval = collectReachable(adjacency, approvalNames);
+  const beforeUsage = indexCredentialUsage(nodeByName, beforeApproval);
+  const afterUsage = indexCredentialUsage(nodeByName, afterApproval);
+  const shared = [];
+
+  for (const [reference, beforeNodes] of beforeUsage) {
+    const afterNodes = afterUsage.get(reference);
+    if (!afterNodes) continue;
+    const beforeOnlyNodes = [...beforeNodes].filter((name) => !afterNodes.has(name));
+    const afterOnlyNodes = [...afterNodes].filter((name) => !beforeNodes.has(name));
+    if (beforeOnlyNodes.length === 0 || afterOnlyNodes.length === 0) continue;
+    shared.push({
+      beforeNodes: beforeOnlyNodes.sort(),
+      afterNodes: afterOnlyNodes.sort(),
+    });
+  }
+
+  return shared;
+}
+
 function finding(id, severity, title, evidence, recommendation, standard, path = []) {
   const item = {
     id,
@@ -402,11 +535,13 @@ export function auditN8nWorkflow(workflow) {
       .filter((node) => !isModelNode(node) && isValidator(node))
       .map((node) => node.name),
   );
-  const urlBoundaries = new Set([
-    ...validators,
-    ...activeNodes.filter(isTrustedUrlResolver).map((node) => node.name),
-  ]);
+  const urlBoundaries = new Set(
+    activeNodes.filter(isTrustedUrlBoundary).map((node) => node.name),
+  );
   const approvals = new Set(activeNodes.filter(isApproval).map((node) => node.name));
+  const explicitApprovalBoundaries = new Set(
+    activeNodes.filter(isExplicitApprovalBoundary).map((node) => node.name),
+  );
   const loggers = activeNodes.filter(isLogger);
   const findings = [];
 
@@ -582,6 +717,31 @@ export function auditN8nWorkflow(workflow) {
         "The export has no errorWorkflow setting or explicit error node.",
         "Add a failure route that records the error, alerts the operator and prevents partial actions from being treated as success.",
         "NIST AI RMF: Manage",
+      ),
+    );
+  }
+
+  const sharedCredentialLanes = findCredentialLaneReuse(
+    nodeByName,
+    adjacency,
+    inputs,
+    explicitApprovalBoundaries,
+  );
+  if (sharedCredentialLanes.length > 0) {
+    const beforeNodes = [
+      ...new Set(sharedCredentialLanes.flatMap((item) => item.beforeNodes)),
+    ].sort();
+    const afterNodes = [
+      ...new Set(sharedCredentialLanes.flatMap((item) => item.afterNodes)),
+    ].sort();
+    findings.push(
+      finding(
+        "AA-011",
+        "medium",
+        "A credential reference is shared across untrusted and approved lanes",
+        `Shared credential references: ${sharedCredentialLanes.length}. Before approval: ${beforeNodes.join(", ")}. After approval: ${afterNodes.join(", ")}.`,
+        "Use separate least-privilege credentials for intake or read-only work and for approved send or write actions. Confirm the real credential scopes in n8n before release.",
+        "OWASP LLM06: Excessive Agency and least privilege",
       ),
     );
   }

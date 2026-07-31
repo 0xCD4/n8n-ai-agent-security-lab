@@ -328,6 +328,162 @@ const providerMediaWorkflow = {
 const providerMediaResult = auditN8nWorkflow(providerMediaWorkflow);
 assert.equal(providerMediaResult.findings.find((item) => item.id === "AA-007").severity, "medium");
 
+// Raw model-derived destinations stay high priority, while a fixed
+// allowlisted enum or lookup table is treated as a visible URL boundary.
+const rawModelUrlWorkflow = {
+  name: "Raw model URL",
+  nodes: [
+    { name: "Public Chat", type: "@n8n/n8n-nodes-langchain.chatTrigger", parameters: {} },
+    { name: "Support Agent", type: "@n8n/n8n-nodes-langchain.agent", parameters: {} },
+    {
+      name: "Fetch Destination",
+      type: "n8n-nodes-base.httpRequest",
+      parameters: { url: "={{ $json.url }}" },
+    },
+  ],
+  connections: {
+    "Public Chat": connection("Support Agent"),
+    "Support Agent": connection("Fetch Destination"),
+  },
+};
+assert.equal(
+  auditN8nWorkflow(rawModelUrlWorkflow).findings.find((item) => item.id === "AA-007")
+    .severity,
+  "high",
+);
+
+const allowlistedUrlWorkflow = structuredClone(rawModelUrlWorkflow);
+allowlistedUrlWorkflow.name = "Allowlisted URL lookup";
+allowlistedUrlWorkflow.nodes.splice(2, 0, {
+  name: "Destination URL Lookup",
+  type: "n8n-nodes-base.set",
+  parameters: {
+    values: {
+      string: [
+        { name: "support", value: "https://support.example.test/api" },
+        { name: "billing", value: "https://billing.example.test/api" },
+      ],
+    },
+  },
+});
+allowlistedUrlWorkflow.connections = {
+  "Public Chat": connection("Support Agent"),
+  "Support Agent": connection("Destination URL Lookup"),
+  "Destination URL Lookup": connection("Fetch Destination"),
+};
+const allowlistedUrlResult = auditN8nWorkflow(allowlistedUrlWorkflow);
+assert.equal(
+  allowlistedUrlResult.findings.find((item) => item.id === "AA-007").severity,
+  "medium",
+);
+
+const untrustedLookupWorkflow = structuredClone(allowlistedUrlWorkflow);
+untrustedLookupWorkflow.nodes[2].name = "Copy Requested URL";
+untrustedLookupWorkflow.nodes[2].parameters = { value: "={{ $json.url }}" };
+untrustedLookupWorkflow.connections = {
+  "Public Chat": connection("Support Agent"),
+  "Support Agent": connection("Copy Requested URL"),
+  "Copy Requested URL": connection("Fetch Destination"),
+};
+assert.equal(
+  auditN8nWorkflow(untrustedLookupWorkflow).findings.find((item) => item.id === "AA-007")
+    .severity,
+  "high",
+);
+
+const opaqueLookupWorkflow = structuredClone(allowlistedUrlWorkflow);
+opaqueLookupWorkflow.nodes[2].name = "Destination URL Lookup";
+opaqueLookupWorkflow.nodes[2].parameters = { value: "={{ $json.url }}" };
+assert.equal(
+  auditN8nWorkflow(opaqueLookupWorkflow).findings.find((item) => item.id === "AA-007")
+    .severity,
+  "high",
+);
+
+// Reusing one credential reference before and after human approval weakens the
+// trust boundary. Reports name the nodes but never expose the credential ID.
+const sharedCredentialWorkflow = {
+  name: "Shared credential lanes",
+  settings: { errorWorkflow: "error-handler" },
+  nodes: [
+    {
+      name: "Slack Intake",
+      type: "n8n-nodes-base.slackTrigger",
+      parameters: {},
+      credentials: {
+        slackApi: { id: "shared-lane-credential", name: "Shared Slack account" },
+      },
+    },
+    { name: "Human Approval", type: "n8n-nodes-base.wait", parameters: {} },
+    {
+      name: "Approved Slack Send",
+      type: "n8n-nodes-base.slack",
+      parameters: { operation: "postMessage" },
+      credentials: {
+        slackApi: { id: "shared-lane-credential", name: "Shared Slack account" },
+      },
+    },
+  ],
+  connections: {
+    "Slack Intake": connection("Human Approval"),
+    "Human Approval": connection("Approved Slack Send"),
+  },
+};
+const sharedCredentialResult = auditN8nWorkflow(sharedCredentialWorkflow);
+const sharedCredentialFinding = sharedCredentialResult.findings.find(
+  (item) => item.id === "AA-011",
+);
+assert.equal(sharedCredentialFinding.severity, "medium");
+assert.match(sharedCredentialFinding.evidence, /Slack Intake/);
+assert.match(sharedCredentialFinding.evidence, /Approved Slack Send/);
+assert.doesNotMatch(sharedCredentialFinding.evidence, /shared-lane-credential/);
+
+const separatedCredentialWorkflow = structuredClone(sharedCredentialWorkflow);
+separatedCredentialWorkflow.nodes[2].credentials.slackApi = {
+  id: "approved-send-credential",
+  name: "Approved Slack sender",
+};
+assert.equal(
+  auditN8nWorkflow(separatedCredentialWorkflow).findings.some((item) => item.id === "AA-011"),
+  false,
+);
+
+const noApprovalWorkflow = structuredClone(sharedCredentialWorkflow);
+noApprovalWorkflow.nodes[1].name = "Queue Work";
+noApprovalWorkflow.connections = {
+  "Slack Intake": connection("Queue Work"),
+  "Queue Work": connection("Approved Slack Send"),
+};
+assert.equal(
+  auditN8nWorkflow(noApprovalWorkflow).findings.some((item) => item.id === "AA-011"),
+  false,
+);
+
+const cyclicCredentialWorkflow = structuredClone(sharedCredentialWorkflow);
+cyclicCredentialWorkflow.nodes[0].name = "Slack Lane A";
+cyclicCredentialWorkflow.nodes[0].type = "n8n-nodes-base.slackTrigger";
+cyclicCredentialWorkflow.nodes.splice(1, 0, {
+  name: "Slack Lane B",
+  type: "n8n-nodes-base.slack",
+  parameters: { operation: "get" },
+  credentials: {
+    slackApi: { id: "shared-lane-credential", name: "Shared Slack account" },
+  },
+});
+cyclicCredentialWorkflow.nodes[3].credentials.slackApi = {
+  id: "approved-send-credential",
+  name: "Approved Slack sender",
+};
+cyclicCredentialWorkflow.connections = {
+  "Slack Lane A": connection("Slack Lane B"),
+  "Slack Lane B": connection("Human Approval"),
+  "Human Approval": connection("Slack Lane A"),
+};
+assert.equal(
+  auditN8nWorkflow(cyclicCredentialWorkflow).findings.some((item) => item.id === "AA-011"),
+  false,
+);
+
 // An HTTP call to a model endpoint can be both model-like and POST-capable. It
 // is not, by itself, a model-to-external-action path.
 const directModelHttpWorkflow = {

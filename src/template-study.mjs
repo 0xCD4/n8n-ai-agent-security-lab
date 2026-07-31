@@ -195,6 +195,7 @@ export function buildAggregateSummary(records, collection) {
       "Public exports cannot prove runtime authorization, credential scopes, upstream controls or model behavior.",
       "Critical findings and high-severity path findings require manual validation before publication.",
       "AA-006 remains an aggregate scanner signal, but it is not a template-level publication target because exports cannot reveal instance-level rate or cost controls.",
+      "AA-011 compares credential references within one export; it cannot prove real credential scopes or correlate credentials hidden across separate workflows.",
       "The sample represents the most-viewed free AI Agent templates returned by the official API at collection time, not the entire template library.",
     ],
   };

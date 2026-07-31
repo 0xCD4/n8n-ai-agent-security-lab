@@ -9,6 +9,8 @@
 - Added study-specific path triage without changing the scanner's canonical demo scoring.
 - Classified all 15 initial priority paths and recorded an anonymous validation summary.
 - Added a reproducible 100-template study command and aggregate output.
+- Refined dynamic URL review for visible allowlist, enum and lookup boundaries.
+- Added `AA-011` for credential references reused across untrusted and explicitly approved lanes.
 
 ## 1.2.0 - 2026-07-31
 

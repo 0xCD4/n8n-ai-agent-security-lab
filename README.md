@@ -94,6 +94,10 @@ The included runtime fixture contains no email, HTTP request, database or AI nod
 node bin/audit.mjs path/to/workflow.json reports/my-audit.md
 ```
 
+The static scan distinguishes raw model-derived request URLs from destinations selected through a visible allowlist, enum, lookup map or trusted provider resolver. It also reports `AA-011` when the same exported credential reference appears in an untrusted lane and again after an explicit human-approval boundary.
+
+`AA-011` is a review signal. An export can show shared references, but it cannot prove the credential's real permissions or compare credentials hidden in separate workflow exports. Use separate least-privilege credentials for intake/read and approved send/write actions.
+
 Remove credentials, customer data, private URLs and production payloads before storing or sharing an export.
 
 ## Run a staging contract
