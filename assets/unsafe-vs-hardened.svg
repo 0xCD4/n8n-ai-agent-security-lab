@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">Unsafe and hardened n8n AI support workflow comparison</title>
+  <desc id="desc">The unsafe workflow scores 10 out of 100. The hardened workflow scores 93 out of 100 with one manual URL review remaining.</desc>
+  <rect width="1280" height="640" fill="#efe7d8"/>
+  <path d="M0 112H1280M0 590H1280" stroke="#b9ad99" stroke-width="1"/>
+  <text x="64" y="58" fill="#191814" font-family="Georgia, serif" font-size="34" font-weight="700">n8n AI Agent Security Lab</text>
+  <text x="64" y="88" fill="#5f5a51" font-family="Arial, sans-serif" font-size="17">The same support workflow before and after defensive controls</text>
+  <text x="1216" y="62" text-anchor="end" fill="#3f4938" font-family="Arial, sans-serif" font-size="18" font-weight="700">CSINT Research</text>
+
+  <rect x="64" y="142" width="548" height="410" fill="#faf7ef" stroke="#c9bdab"/>
+  <rect x="668" y="142" width="548" height="410" fill="#faf7ef" stroke="#c9bdab"/>
+  <rect x="64" y="142" width="8" height="410" fill="#963f37"/>
+  <rect x="668" y="142" width="8" height="410" fill="#536448"/>
+
+  <text x="96" y="188" fill="#191814" font-family="Georgia, serif" font-size="27" font-weight="700">Unsafe workflow</text>
+  <text x="580" y="188" text-anchor="end" fill="#963f37" font-family="Arial, sans-serif" font-size="30" font-weight="700">10/100</text>
+  <text x="96" y="220" fill="#6a6257" font-family="Arial, sans-serif" font-size="16">9 findings, including 4 high severity</text>
+
+  <g font-family="Arial, sans-serif" font-size="15" fill="#191814">
+    <rect x="96" y="260" width="208" height="52" fill="#fffdf8" stroke="#b9ad99"/>
+    <text x="112" y="292">Public webhook</text>
+    <path d="M304 286H354" stroke="#963f37" stroke-width="2"/>
+    <circle cx="329" cy="286" r="3" fill="#963f37"/>
+    <rect x="354" y="260" width="208" height="52" fill="#fffdf8" stroke="#b9ad99"/>
+    <text x="370" y="292">AI support agent</text>
+
+    <rect x="96" y="342" width="208" height="52" fill="#fffdf8" stroke="#b9ad99"/>
+    <text x="112" y="374">Send account email</text>
+    <path d="M304 368H354" stroke="#963f37" stroke-width="2"/>
+    <circle cx="329" cy="368" r="3" fill="#963f37"/>
+    <rect x="354" y="342" width="208" height="52" fill="#fffdf8" stroke="#b9ad99"/>
+    <text x="370" y="374">Fetch user URL</text>
+  </g>
+
+  <g fill="#5f5a51" font-family="Arial, sans-serif" font-size="15">
+    <text x="96" y="438">No authentication or input validation</text>
+    <text x="96" y="466">No approval before external actions</text>
+    <text x="96" y="494">No timeout, audit record or failure route</text>
+  </g>
+
+  <text x="700" y="188" fill="#191814" font-family="Georgia, serif" font-size="27" font-weight="700">Hardened workflow</text>
+  <text x="1184" y="188" text-anchor="end" fill="#536448" font-family="Arial, sans-serif" font-size="30" font-weight="700">93/100</text>
+  <text x="700" y="220" fill="#6a6257" font-family="Arial, sans-serif" font-size="16">1 medium finding remains for manual URL review</text>
+
+  <g font-family="Arial, sans-serif" font-size="14" fill="#191814">
+    <rect x="700" y="256" width="142" height="48" fill="#fffdf8" stroke="#87917d"/>
+    <text x="716" y="285">Authenticated input</text>
+    <path d="M842 280H866" stroke="#536448" stroke-width="2"/>
+    <rect x="866" y="256" width="142" height="48" fill="#fffdf8" stroke="#87917d"/>
+    <text x="882" y="285">Input guard</text>
+    <path d="M1008 280H1032" stroke="#536448" stroke-width="2"/>
+    <rect x="1032" y="256" width="152" height="48" fill="#fffdf8" stroke="#87917d"/>
+    <text x="1048" y="285">AI support agent</text>
+
+    <rect x="700" y="326" width="142" height="48" fill="#fffdf8" stroke="#87917d"/>
+    <text x="716" y="355">Output schema</text>
+    <path d="M842 350H866" stroke="#536448" stroke-width="2"/>
+    <rect x="866" y="326" width="142" height="48" fill="#fffdf8" stroke="#87917d"/>
+    <text x="882" y="355">Human approval</text>
+    <path d="M1008 350H1032" stroke="#536448" stroke-width="2"/>
+    <rect x="1032" y="326" width="152" height="48" fill="#fffdf8" stroke="#87917d"/>
+    <text x="1048" y="355">Bounded actions</text>
+
+    <rect x="783" y="396" width="142" height="48" fill="#fffdf8" stroke="#87917d"/>
+    <text x="799" y="425">Audit record</text>
+    <path d="M925 420H949" stroke="#536448" stroke-width="2"/>
+    <rect x="949" y="396" width="152" height="48" fill="#fffdf8" stroke="#87917d"/>
+    <text x="965" y="425">Failure route</text>
+  </g>
+
+  <g fill="#5f5a51" font-family="Arial, sans-serif" font-size="15">
+    <text x="700" y="486">HTTPS host allowlist, timeout and bounded retry</text>
+    <text x="700" y="514">A high score still requires runtime and permission review</text>
+  </g>
+
+  <text x="64" y="616" fill="#5f5a51" font-family="Arial, sans-serif" font-size="14">Free local scanner and reproducible workflows</text>
+  <text x="1216" y="616" text-anchor="end" fill="#5f5a51" font-family="Arial, sans-serif" font-size="14">github.com/0xCD4/n8n-ai-agent-security-lab</text>
+</svg>

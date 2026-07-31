@@ -1,0 +1,34 @@
+name: False positive
+description: Report a scanner finding that needs better context.
+title: "[False positive] "
+labels:
+  - false-positive
+body:
+  - type: input
+    id: rule
+    attributes:
+      label: Rule ID
+      placeholder: AA-007
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Why the finding is inaccurate or incomplete
+      description: Explain the visible control the scanner missed.
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: Minimal redacted sample
+      description: Do not include a full client workflow.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed credentials, personal data and private infrastructure details.
+          required: true

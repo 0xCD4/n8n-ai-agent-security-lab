@@ -1,0 +1,38 @@
+name: Workflow security pattern
+description: Propose a defensive rule or a new lab example.
+title: "[Pattern] "
+labels:
+  - workflow-pattern
+body:
+  - type: markdown
+    attributes:
+      value: Remove credentials, personal data and private URLs before submitting.
+  - type: textarea
+    id: pattern
+    attributes:
+      label: Pattern
+      description: Describe the unsafe or unreliable path in plain language.
+      placeholder: Untrusted webhook input reaches...
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence
+      description: Provide a minimal redacted example or pseudocode.
+    validations:
+      required: true
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Defensive recommendation
+      description: Explain the boundary or control that should be visible.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed credentials, personal data and private infrastructure details.
+          required: true

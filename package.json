@@ -1,0 +1,17 @@
+{
+  "name": "n8n-ai-agent-security-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A defensive lab for comparing unsafe and hardened n8n AI workflows.",
+  "type": "module",
+  "scripts": {
+    "test": "node test/audit.test.mjs",
+    "audit:unsafe": "node bin/audit.mjs workflows/unsafe-support-agent.json reports/unsafe-support-agent-audit.md",
+    "audit:hardened": "node bin/audit.mjs workflows/hardened-support-agent.json reports/hardened-support-agent-audit.md",
+    "audit": "npm run audit:unsafe && npm run audit:hardened"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

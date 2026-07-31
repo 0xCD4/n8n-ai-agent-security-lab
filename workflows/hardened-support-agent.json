@@ -1,0 +1,233 @@
+{
+  "name": "Demo - Hardened Support Agent",
+  "nodes": [
+    {
+      "id": "authenticated-webhook",
+      "name": "Authenticated Support Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -860,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "support-agent-demo",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived"
+      }
+    },
+    {
+      "id": "input-guard",
+      "name": "Rate Limit and Validate Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -620,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const incoming = $input.first().json;\nconst body = incoming.body ?? incoming;\nconst message = String(body.message ?? '').trim();\nconst email = String(body.customer_email ?? '').trim().toLowerCase();\nconst rawUrl = String(body.customer_url ?? '').trim();\n\nif (!message || message.length > 2000) {\n  throw new Error('Message must contain 1 to 2000 characters.');\n}\nif (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {\n  throw new Error('A valid customer email is required.');\n}\n\nconst customerUrl = new URL(rawUrl);\nconst allowedHosts = new Set(['support.example.org', 'status.example.org']);\nif (customerUrl.protocol !== 'https:' || !allowedHosts.has(customerUrl.hostname)) {\n  throw new Error('Customer URL is outside the approved destination list.');\n}\n\n// Enforce the real request quota at the gateway or a shared datastore.\n// This fixture keeps the boundary visible but does not claim in-memory rate limiting.\nreturn [{\n  json: {\n    request_id: String(body.request_id ?? crypto.randomUUID()),\n    message,\n    customer_email: email,\n    customer_url: customerUrl.toString(),\n    policy: {\n      max_model_calls: 1,\n      approval_required: true\n    }\n  }\n}];"
+      }
+    },
+    {
+      "id": "support-agent",
+      "name": "Customer Support Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -360,
+        0
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "Draft a support reply. Do not send messages, fetch URLs, change accounts, or claim that an action was completed. Return only the requested structured fields."
+        }
+      }
+    },
+    {
+      "id": "output-guard",
+      "name": "Validate Output Schema",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst parsed = typeof raw.output === 'string' ? JSON.parse(raw.output) : raw.output;\nconst allowed = new Set(['subject', 'body', 'risk']);\nfor (const key of Object.keys(parsed ?? {})) {\n  if (!allowed.has(key)) throw new Error(`Unexpected model field: ${key}`);\n}\nconst subject = String(parsed?.subject ?? '').trim().slice(0, 120);\nconst body = String(parsed?.body ?? '').trim().slice(0, 4000);\nconst risk = String(parsed?.risk ?? '').trim().toLowerCase();\nif (!subject || !body || !['low', 'medium', 'high'].includes(risk)) {\n  throw new Error('Model output does not match the approved schema.');\n}\nreturn [{ json: { ...$input.first().json, draft: { subject, body, risk } } }];"
+      }
+    },
+    {
+      "id": "human-approval",
+      "name": "Human Approval",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        0
+      ],
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Review support action",
+        "formDescription": "Confirm the recipient, message, risk level and outbound destination before continuing."
+      }
+    },
+    {
+      "id": "approved-email",
+      "name": "Send Approved Account Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        420,
+        -80
+      ],
+      "parameters": {
+        "fromEmail": "support@example.org",
+        "toEmail": "={{ $json.customer_email }}",
+        "subject": "={{ $json.draft.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.draft.body }}"
+      }
+    },
+    {
+      "id": "allowlisted-request",
+      "name": "Fetch Allowlisted Customer URL",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        80
+      ],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000,
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.customer_url }}",
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={{ { request_id: $json.request_id, approved: true } }}",
+        "options": {
+          "timeout": 5000,
+          "redirect": {
+            "followRedirects": false
+          }
+        }
+      }
+    },
+    {
+      "id": "audit-log",
+      "name": "Audit Log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        700,
+        0
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO agent_audit (request_id, action, result, created_at) VALUES ($1, $2, $3, NOW())",
+        "options": {
+          "queryReplacement": "={{ [$json.request_id, 'approved_support_action', 'queued'] }}"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Authenticated Support Webhook": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit and Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit and Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Customer Support Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Support Agent": {
+      "main": [
+        [
+          {
+            "node": "Validate Output Schema",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Output Schema": {
+      "main": [
+        [
+          {
+            "node": "Human Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human Approval": {
+      "main": [
+        [
+          {
+            "node": "Send Approved Account Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Allowlisted Customer URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Approved Account Email": {
+      "main": [
+        [
+          {
+            "node": "Audit Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Allowlisted Customer URL": {
+      "main": [
+        [
+          {
+            "node": "Audit Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "configure-your-error-workflow"
+  },
+  "active": false,
+  "tags": [
+    {
+      "name": "defensive-lab"
+    }
+  ]
+}
