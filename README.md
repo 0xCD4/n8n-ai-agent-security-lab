@@ -1,5 +1,7 @@
 # n8n AI Agent Security Lab
 
+[![test](https://github.com/0xCD4/n8n-ai-agent-security-lab/actions/workflows/test.yml/badge.svg)](https://github.com/0xCD4/n8n-ai-agent-security-lab/actions/workflows/test.yml)
+
 This defensive lab compares two small n8n AI support workflows:
 
 - `unsafe-support-agent.json` exposes common security and reliability mistakes.
