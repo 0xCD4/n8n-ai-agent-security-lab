@@ -4,24 +4,28 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { auditN8nWorkflow, renderMarkdownReport } from "../src/rules.mjs";
+import {
+  renderExposureGraphMermaid,
+  renderExposureGraphSvg,
+} from "../src/exposure-graph.mjs";
 
 function printUsage() {
   process.stdout.write(
     [
       "Usage:",
-      "  node tools/ai-agent-auditor/audit.mjs <workflow.json> [output-file] [--format markdown|json]",
+      "  node bin/audit.mjs <workflow.json> [output-file] [--format markdown|json] [--graph <path-prefix>]",
       "",
       "Examples:",
-      "  npm run audit:ai-agent -- automation/n8n/workflows/release-announce.json",
-      "  npm run audit:ai-agent -- workflow.json reports/workflow-audit.md",
-      "  npm run audit:ai-agent -- workflow.json reports/workflow-audit.json",
+      "  node bin/audit.mjs workflow.json reports/workflow-audit.md",
+      "  node bin/audit.mjs workflow.json reports/workflow-audit.json",
+      "  node bin/audit.mjs workflow.json reports/workflow-audit.md --graph reports/workflow-exposure",
       "",
     ].join("\n"),
   );
 }
 
 function parseArgs(argv) {
-  const options = { input: "", format: "markdown", out: "" };
+  const options = { input: "", format: "markdown", out: "", graphPrefix: "" };
   for (let index = 0; index < argv.length; index += 1) {
     const value = argv[index];
     if (!options.input && !value.startsWith("--")) {
@@ -44,6 +48,10 @@ function parseArgs(argv) {
       options.out = value.slice("--out=".length);
       continue;
     }
+    if (value.startsWith("--graph=")) {
+      options.graphPrefix = value.slice("--graph=".length);
+      continue;
+    }
     if (value === "--format") {
       options.format = argv[index + 1] || "";
       index += 1;
@@ -51,6 +59,15 @@ function parseArgs(argv) {
     }
     if (value === "--out") {
       options.out = argv[index + 1] || "";
+      index += 1;
+      continue;
+    }
+    if (value === "--graph") {
+      const graphPrefix = argv[index + 1];
+      if (!graphPrefix || graphPrefix.startsWith("--")) {
+        throw new Error("--graph requires a path prefix.");
+      }
+      options.graphPrefix = graphPrefix;
       index += 1;
       continue;
     }
@@ -81,12 +98,46 @@ async function main() {
   const raw = await readFile(inputPath, "utf8");
   const workflow = JSON.parse(raw);
   const result = auditN8nWorkflow(workflow);
+  let graphPathForReport = "";
+
+  if (options.graphPrefix) {
+    const graphPrefix = path.resolve(options.graphPrefix);
+    await mkdir(path.dirname(graphPrefix), { recursive: true });
+    await Promise.all([
+      writeFile(
+        `${graphPrefix}.json`,
+        `${JSON.stringify(result.exposureGraph, null, 2)}\n`,
+        "utf8",
+      ),
+      writeFile(
+        `${graphPrefix}.mmd`,
+        renderExposureGraphMermaid(result.exposureGraph),
+        "utf8",
+      ),
+      writeFile(
+        `${graphPrefix}.svg`,
+        renderExposureGraphSvg(result.exposureGraph),
+        "utf8",
+      ),
+    ]);
+    process.stdout.write(`Exposure graph written to ${graphPrefix}.{json,mmd,svg}\n`);
+
+    if (options.out) {
+      graphPathForReport = path
+        .relative(path.dirname(path.resolve(options.out)), `${graphPrefix}.svg`)
+        .split(path.sep)
+        .map((segment) => encodeURIComponent(segment))
+        .join("/");
+    }
+  }
+
   const output =
     options.format === "json"
       ? `${JSON.stringify(result, null, 2)}\n`
       : renderMarkdownReport(
           result,
           path.relative(process.cwd(), inputPath).split(path.sep).join("/"),
+          { exposureGraphPath: graphPathForReport },
         );
 
   if (options.out) {

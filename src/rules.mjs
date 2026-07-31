@@ -1,3 +1,5 @@
+import { buildExposureGraph } from "./exposure-graph.mjs";
+
 const SEVERITY_WEIGHT = Object.freeze({
   critical: 25,
   high: 15,
@@ -256,8 +258,17 @@ function findPathAvoiding(adjacency, start, targetNames, blockedNames) {
   return null;
 }
 
-function finding(id, severity, title, evidence, recommendation, standard) {
-  return { id, severity, title, evidence: redact(evidence), recommendation, standard };
+function finding(id, severity, title, evidence, recommendation, standard, path = []) {
+  const item = {
+    id,
+    severity,
+    title,
+    evidence: redact(evidence),
+    recommendation,
+    standard,
+  };
+  if (path.length > 0) item.path = path.map((nodeName) => redact(nodeName));
+  return item;
 }
 
 function findDynamicUrlNodes(nodes) {
@@ -342,6 +353,7 @@ export function auditN8nWorkflow(workflow) {
         `Path: ${path.join(" -> ")}.`,
         "Add a deterministic validation step before the model. Enforce size, type and allowlist rules, separate instructions from data, and test direct and indirect prompt injection cases.",
         "OWASP LLM01: Prompt Injection",
+        path,
       ),
     );
     break;
@@ -359,6 +371,7 @@ export function auditN8nWorkflow(workflow) {
         `Path: ${path.join(" -> ")}.`,
         "Require explicit human approval for messages, writes, deletions, purchases, account changes and other high-impact actions. Use least-privilege credentials for the final action.",
         "OWASP LLM06: Excessive Agency",
+        path,
       ),
     );
     break;
@@ -415,6 +428,7 @@ export function auditN8nWorkflow(workflow) {
           : `Dynamic URL nodes behind a visible validation boundary: ${dynamicUrlNodes.map((node) => node.name).join(", ")}.`,
         "Parse URLs with a real URL parser, allowlist schemes and destinations, block private and metadata IP ranges, and disable redirects unless required.",
         "OWASP LLM06: Excessive Agency and SSRF boundary",
+        unvalidatedPath ?? [],
       ),
     );
   }
@@ -476,10 +490,11 @@ export function auditN8nWorkflow(workflow) {
   );
   const grade = score >= 90 ? "A" : score >= 75 ? "B" : score >= 60 ? "C" : score >= 40 ? "D" : "F";
 
+  const workflowName = String(workflow.name || "Unnamed workflow");
   return {
     schemaVersion: 1,
     workflow: {
-      name: String(workflow.name || "Unnamed workflow"),
+      name: workflowName,
       totalNodes: nodes.length,
       activeNodes: activeNodes.length,
       inputNodes: inputs.map((node) => node.name),
@@ -489,6 +504,7 @@ export function auditN8nWorkflow(workflow) {
     score,
     grade,
     findings,
+    exposureGraph: buildExposureGraph(workflowName, findings),
     limitations: [
       "Static analysis cannot prove runtime authorization, credential scopes, upstream controls or model behavior.",
       "A clean report is not a penetration-test result or a guarantee of security.",
@@ -497,7 +513,7 @@ export function auditN8nWorkflow(workflow) {
   };
 }
 
-export function renderMarkdownReport(result, sourcePath = "") {
+export function renderMarkdownReport(result, sourcePath = "", options = {}) {
   const counts = { critical: 0, high: 0, medium: 0, low: 0 };
   for (const item of result.findings) counts[item.severity] += 1;
 
@@ -519,6 +535,16 @@ export function renderMarkdownReport(result, sourcePath = "") {
     `- Model nodes: ${result.workflow.modelNodes.join(", ") || "None detected"}`,
     `- Write-capable nodes: ${result.workflow.sideEffectNodes.join(", ") || "None detected"}`,
     "",
+    ...(options.exposureGraphPath
+      ? [
+          "## Exposure graph",
+          "",
+          `![Risky workflow paths](${options.exposureGraphPath})`,
+          "",
+          "Only structured risky paths found by the static scanner are shown. Manual review remains required.",
+          "",
+        ]
+      : []),
     "## Findings",
     "",
   ].filter((line) => line !== null);

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 - 2026-07-31
+
+- Added structured exposure paths to static findings.
+- Added report-ready JSON, Mermaid and SVG exposure graphs.
+- Linked graph paths to existing scanner and SARIF rule IDs.
+
 ## 1.1.0 - 2026-07-31
 
 - Added a staging-safe security regression gate.

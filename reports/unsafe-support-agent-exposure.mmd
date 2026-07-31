@@ -1,0 +1,32 @@
+flowchart LR
+%% Demo - Unsafe Support Agent exposure graph
+subgraph path_0["AA-003 | HIGH"]
+  p0_n0["Public Support Webhook"]
+  p0_n1["Customer Support Agent"]
+  p0_n0 --> p0_n1
+end
+style path_0 fill:#0b0f14,stroke:#ef4444,color:#e5e7eb
+style p0_n0 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p0_n1 fill:#141b24,stroke:#ef4444,color:#f8fafc
+subgraph path_1["AA-004 | HIGH"]
+  p1_n0["Customer Support Agent"]
+  p1_n1["Send Account Email"]
+  p1_n0 --> p1_n1
+end
+style path_1 fill:#0b0f14,stroke:#ef4444,color:#e5e7eb
+style p1_n0 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p1_n1 fill:#141b24,stroke:#ef4444,color:#f8fafc
+subgraph path_2["AA-007 | HIGH"]
+  p2_n0["Public Support Webhook"]
+  p2_n1["Customer Support Agent"]
+  p2_n0 --> p2_n1
+  p2_n2["Send Account Email"]
+  p2_n1 --> p2_n2
+  p2_n3["Fetch Customer URL"]
+  p2_n2 --> p2_n3
+end
+style path_2 fill:#0b0f14,stroke:#ef4444,color:#e5e7eb
+style p2_n0 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p2_n1 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p2_n2 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p2_n3 fill:#141b24,stroke:#ef4444,color:#f8fafc

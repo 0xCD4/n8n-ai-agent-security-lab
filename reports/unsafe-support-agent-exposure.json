@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "workflow": "Demo - Unsafe Support Agent",
+  "paths": [
+    {
+      "findingId": "AA-003",
+      "severity": "high",
+      "title": "Untrusted input can reach a model without a visible validation boundary",
+      "nodes": [
+        "Public Support Webhook",
+        "Customer Support Agent"
+      ]
+    },
+    {
+      "findingId": "AA-004",
+      "severity": "high",
+      "title": "A model can reach an external write action without an approval step",
+      "nodes": [
+        "Customer Support Agent",
+        "Send Account Email"
+      ]
+    },
+    {
+      "findingId": "AA-007",
+      "severity": "high",
+      "title": "Review HTTP request URLs derived from workflow data",
+      "nodes": [
+        "Public Support Webhook",
+        "Customer Support Agent",
+        "Send Account Email",
+        "Fetch Customer URL"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node-1",
+      "label": "Public Support Webhook",
+      "severity": "high",
+      "findingIds": [
+        "AA-003",
+        "AA-007"
+      ]
+    },
+    {
+      "id": "node-2",
+      "label": "Customer Support Agent",
+      "severity": "high",
+      "findingIds": [
+        "AA-003",
+        "AA-004",
+        "AA-007"
+      ]
+    },
+    {
+      "id": "node-3",
+      "label": "Send Account Email",
+      "severity": "high",
+      "findingIds": [
+        "AA-004",
+        "AA-007"
+      ]
+    },
+    {
+      "id": "node-4",
+      "label": "Fetch Customer URL",
+      "severity": "high",
+      "findingIds": [
+        "AA-007"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "Public Support Webhook",
+      "target": "Customer Support Agent",
+      "severity": "high",
+      "findingIds": [
+        "AA-003",
+        "AA-007"
+      ]
+    },
+    {
+      "source": "Customer Support Agent",
+      "target": "Send Account Email",
+      "severity": "high",
+      "findingIds": [
+        "AA-004",
+        "AA-007"
+      ]
+    },
+    {
+      "source": "Send Account Email",
+      "target": "Fetch Customer URL",
+      "severity": "high",
+      "findingIds": [
+        "AA-007"
+      ]
+    }
+  ],
+  "note": "Only structured risky paths found by the static scanner are included."
+}

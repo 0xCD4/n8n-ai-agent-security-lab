@@ -15,6 +15,12 @@ The static review found 9 item(s): 0 critical, 4 high, 4 medium and 1 low.
 - Model nodes: Customer Support Agent
 - Write-capable nodes: Send Account Email, Fetch Customer URL
 
+## Exposure graph
+
+![Risky workflow paths](unsafe-support-agent-exposure.svg)
+
+Only structured risky paths found by the static scanner are shown. Manual review remains required.
+
 ## Findings
 
 ### AA-003 | HIGH | Untrusted input can reach a model without a visible validation boundary

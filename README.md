@@ -5,14 +5,30 @@
 
 A [CSINT Research](https://en.csintresearch.org/) side project that catches security regressions in n8n AI workflows before production.
 
-It provides two small, explainable checks:
+It provides three small, explainable outputs:
 
 - **Static audit:** follows paths through an exported workflow and reports risky security patterns.
 - **Regression gate:** sends synthetic requests to an isolated staging webhook and checks the behavior that must not change.
+- **Exposure graph:** turns structured risky paths into JSON, Mermaid and a dark, report-ready SVG.
 
 Workflow exports stay local. The scanner does not upload them or call an AI API.
 
 ![Unsafe and hardened workflow comparison](assets/unsafe-vs-hardened.png)
+
+## Exposure graph
+
+Generate a static graph beside the audit report:
+
+```bash
+node bin/audit.mjs \
+  workflows/unsafe-support-agent.json \
+  reports/unsafe-support-agent-audit.md \
+  --graph reports/unsafe-support-agent-exposure
+```
+
+The command writes `.json`, `.mmd` and `.svg` files. The JSON keeps scanner finding IDs so the same paths can be correlated with SARIF results. The graph contains only structured risky paths, not every workflow node.
+
+![Unsafe support agent exposure graph](reports/unsafe-support-agent-exposure.svg)
 
 ## Start in one minute
 
