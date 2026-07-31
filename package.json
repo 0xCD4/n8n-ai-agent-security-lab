@@ -8,14 +8,16 @@
     "n8n-ai-sec": "bin/gate.mjs"
   },
   "scripts": {
-    "test": "node test/audit.test.mjs && node test/gate.test.mjs && node test/n8n-staging-workflow.test.mjs",
+    "test": "node test/audit.test.mjs && node test/gate.test.mjs && node test/n8n-staging-workflow.test.mjs && node test/template-study.test.mjs",
     "audit:unsafe": "node bin/audit.mjs workflows/unsafe-support-agent.json reports/unsafe-support-agent-audit.md --graph reports/unsafe-support-agent-exposure",
     "audit:hardened": "node bin/audit.mjs workflows/hardened-support-agent.json reports/hardened-support-agent-audit.md",
     "audit": "npm run audit:unsafe && npm run audit:hardened",
     "demo:staging": "node examples/staging-target.mjs",
     "gate": "node bin/gate.mjs",
     "gate:demo": "node bin/demo-gate.mjs",
-    "verify:n8n": "node scripts/verify-n8n-staging.mjs"
+    "verify:n8n": "node scripts/verify-n8n-staging.mjs",
+    "study:templates:feasibility": "node scripts/audit-public-templates.mjs --count 20 --out research/template-study/feasibility-20",
+    "study:templates:top100": "node scripts/audit-public-templates.mjs --count 100 --out research/template-study/top-100"
   },
   "license": "MIT",
   "engines": {

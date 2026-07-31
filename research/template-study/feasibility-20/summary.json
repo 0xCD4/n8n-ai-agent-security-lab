@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 2,
+  "collection": {
+    "retrievedAt": "2026-07-31T15:06:23.323Z",
+    "requestedCount": 20,
+    "scannedCount": 20,
+    "failedDownloads": 0,
+    "searchUrl": "https://api.n8n.io/api/templates/search?rows=60&page=1&category=AI&apps=AI+Agent&sort=views%3Adesc",
+    "searchTotalWorkflows": 3541,
+    "selection": "Most-viewed free templates in the AI category containing the AI Agent node; deterministic ties by template ID.",
+    "rawWorkflowStorage": false
+  },
+  "sample": {
+    "templatesScanned": 20,
+    "totalViewsAtCollection": 3228469,
+    "activeNodes": {
+      "minimum": 5,
+      "median": 22.5,
+      "maximum": 52
+    }
+  },
+  "scores": {
+    "minimum": 39,
+    "median": 62,
+    "mean": 64.2,
+    "maximum": 91,
+    "grades": {
+      "A": 1,
+      "B": 2,
+      "C": 12,
+      "D": 4,
+      "F": 1
+    }
+  },
+  "templates": {
+    "withAnySignal": 20,
+    "withAnySignalPercent": 100,
+    "withCritical": 0,
+    "withCriticalPercent": 0,
+    "withHighOrCritical": 19,
+    "withHighOrCriticalPercent": 95,
+    "withStudyPriority": 6,
+    "withStudyPriorityPercent": 30
+  },
+  "findingInstancesBySeverity": {
+    "critical": 0,
+    "high": 25,
+    "medium": 43,
+    "low": 20
+  },
+  "manualReviewQueue": {
+    "templates": 6,
+    "findings": 8,
+    "policy": "Critical findings and high-severity AA-003, AA-004 or AA-007 path findings require template-level validation."
+  },
+  "signals": [
+    {
+      "id": "AA-006",
+      "severity": "high",
+      "title": "No rate or cost boundary was detected before model usage",
+      "templateCount": 17,
+      "severityCounts": {
+        "critical": 0,
+        "high": 17,
+        "medium": 0,
+        "low": 0
+      },
+      "sharePercent": 85
+    },
+    {
+      "id": "AA-003",
+      "severity": "high",
+      "title": "Untrusted input can reach a model without a visible validation boundary",
+      "templateCount": 15,
+      "severityCounts": {
+        "critical": 0,
+        "high": 2,
+        "medium": 13,
+        "low": 0
+      },
+      "sharePercent": 75
+    },
+    {
+      "id": "AA-004",
+      "severity": "high",
+      "title": "A model can reach an external write action without an approval step",
+      "templateCount": 6,
+      "severityCounts": {
+        "critical": 0,
+        "high": 6,
+        "medium": 0,
+        "low": 0
+      },
+      "sharePercent": 30
+    },
+    {
+      "id": "AA-008",
+      "severity": "medium",
+      "title": "Outbound requests do not show an explicit timeout or retry policy",
+      "templateCount": 11,
+      "severityCounts": {
+        "critical": 0,
+        "high": 0,
+        "medium": 11,
+        "low": 0
+      },
+      "sharePercent": 55
+    },
+    {
+      "id": "AA-005",
+      "severity": "medium",
+      "title": "No structured model-output validation was detected",
+      "templateCount": 6,
+      "severityCounts": {
+        "critical": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 0
+      },
+      "sharePercent": 30
+    },
+    {
+      "id": "AA-007",
+      "severity": "medium",
+      "title": "Review HTTP request URLs derived from workflow data",
+      "templateCount": 6,
+      "severityCounts": {
+        "critical": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 0
+      },
+      "sharePercent": 30
+    },
+    {
+      "id": "AA-009",
+      "severity": "medium",
+      "title": "External actions have no visible audit record",
+      "templateCount": 6,
+      "severityCounts": {
+        "critical": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 0
+      },
+      "sharePercent": 30
+    },
+    {
+      "id": "AA-002",
+      "severity": "medium",
+      "title": "Public webhook authentication is not enforced by the trigger",
+      "templateCount": 1,
+      "severityCounts": {
+        "critical": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0
+      },
+      "sharePercent": 5
+    },
+    {
+      "id": "AA-010",
+      "severity": "low",
+      "title": "No workflow-level failure route was detected",
+      "templateCount": 20,
+      "severityCounts": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 20
+      },
+      "sharePercent": 100
+    }
+  ],
+  "limitations": [
+    "These are heuristic static-analysis signals, not confirmed vulnerabilities.",
+    "No community workflow was imported, activated or executed.",
+    "Public exports cannot prove runtime authorization, credential scopes, upstream controls or model behavior.",
+    "Critical findings and high-severity path findings require manual validation before publication.",
+    "AA-006 remains an aggregate scanner signal, but it is not a template-level publication target because exports cannot reveal instance-level rate or cost controls.",
+    "The sample represents the most-viewed free AI Agent templates returned by the official API at collection time, not the entire template library."
+  ]
+}

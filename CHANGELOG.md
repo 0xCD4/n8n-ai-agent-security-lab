@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Added a bounded, official-API collector for public free n8n AI Agent templates.
+- Added anonymous aggregate summaries, source manifests and a private manual-review queue.
+- Added safety limits that prevent workflow execution, raw-export storage and non-official downloads.
+- Expanded static coverage for current n8n chat triggers, tool connections and read-only operations.
+- Added study-specific path triage without changing the scanner's canonical demo scoring.
+- Classified all 15 initial priority paths and recorded an anonymous validation summary.
+- Added a reproducible 100-template study command and aggregate output.
+
 ## 1.2.0 - 2026-07-31
 
 - Added structured exposure paths to static findings.

@@ -3,3 +3,5 @@ node_modules/
 .DS_Store
 Thumbs.db
 media/demo/frames/
+research/template-study/**/review-queue.private.json
+research/template-study/**/manual-validation.private.json

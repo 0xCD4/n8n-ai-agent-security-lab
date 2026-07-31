@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "collection": {
+    "retrievedAt": "2026-07-31T15:06:23.323Z",
+    "requestedCount": 20,
+    "scannedCount": 20,
+    "failedDownloads": 0,
+    "searchUrl": "https://api.n8n.io/api/templates/search?rows=60&page=1&category=AI&apps=AI+Agent&sort=views%3Adesc",
+    "searchTotalWorkflows": 3541,
+    "selection": "Most-viewed free templates in the AI category containing the AI Agent node; deterministic ties by template ID.",
+    "rawWorkflowStorage": false
+  },
+  "templates": [
+    {
+      "rank": 1,
+      "templateId": 1954,
+      "title": "AI agent chat",
+      "sourceUrl": "https://n8n.io/workflows/1954-ai-agent-chat/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/1954",
+      "totalViews": 780399,
+      "sha256": "a59378afd2f130fe8fb18ef0acf1fbd30d57bf4b4efb3f2c6d7fa281eb92bd3b",
+      "totalNodes": 5,
+      "activeNodes": 5
+    },
+    {
+      "rank": 2,
+      "templateId": 2465,
+      "title": "Building your first WhatsApp chatbot",
+      "sourceUrl": "https://n8n.io/workflows/2465-building-your-first-whatsapp-chatbot/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2465",
+      "totalViews": 331713,
+      "sha256": "1e15efdcd28f81c0e3b1736548f89fd88535eed0dceff4f05cebd96124e5e21b",
+      "totalNodes": 28,
+      "activeNodes": 28
+    },
+    {
+      "rank": 3,
+      "templateId": 2462,
+      "title": "Angie, personal AI assistant with Telegram voice and text",
+      "sourceUrl": "https://n8n.io/workflows/2462-angie-personal-ai-assistant-with-telegram-voice-and-text/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2462",
+      "totalViews": 326067,
+      "sha256": "b2b5ee69359a126f0182bd423e571a63a8b75e27dac8fae43e65e55079af31de",
+      "totalNodes": 15,
+      "activeNodes": 15
+    },
+    {
+      "rank": 4,
+      "templateId": 5338,
+      "title": "Generate AI viral videos with Seedance and upload to TikTok, YouTube & Instagram",
+      "sourceUrl": "https://n8n.io/workflows/5338-generate-ai-viral-videos-with-seedance-and-upload-to-tiktok-youtube-instagram/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/5338",
+      "totalViews": 214907,
+      "sha256": "8e9271f9f640ebb2ecc5fab0e04b6ad5d8def8337a56a30cf0a5027cd73cd613",
+      "totalNodes": 40,
+      "activeNodes": 39
+    },
+    {
+      "rank": 5,
+      "templateId": 2006,
+      "title": "AI agent that can scrape webpages",
+      "sourceUrl": "https://n8n.io/workflows/2006-ai-agent-that-can-scrape-webpages/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2006",
+      "totalViews": 211623,
+      "sha256": "079f52fdf603f1c0efe0278a82be4458e2b7683bc988d1ef9b35a5d33707c369",
+      "totalNodes": 20,
+      "activeNodes": 20
+    },
+    {
+      "rank": 6,
+      "templateId": 3066,
+      "title": "✨🤖Automate Multi-Platform Social Media Content Creation with AI",
+      "sourceUrl": "https://n8n.io/workflows/3066-automate-multi-platform-social-media-content-creation-with-ai/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/3066",
+      "totalViews": 205470,
+      "sha256": "1be49fa6c42fca68e3447c5defd6e39100d29516b301c6f922be3d4655aa9ee3",
+      "totalNodes": 57,
+      "activeNodes": 52
+    },
+    {
+      "rank": 7,
+      "templateId": 3050,
+      "title": "Build your first AI data analyst chatbot",
+      "sourceUrl": "https://n8n.io/workflows/3050-build-your-first-ai-data-analyst-chatbot/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/3050",
+      "totalViews": 133537,
+      "sha256": "7f529061d3d02dc170f44ce6479e814325fc7969a96a054513178e1a60e9b8f1",
+      "totalNodes": 31,
+      "activeNodes": 31
+    },
+    {
+      "rank": 8,
+      "templateId": 6270,
+      "title": "Build your first AI agent",
+      "sourceUrl": "https://n8n.io/workflows/6270-build-your-first-ai-agent/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/6270",
+      "totalViews": 99862,
+      "sha256": "07d7ea293417f1a20a920d8c6367c20aae1419d89ff7016144090dc048a66e63",
+      "totalNodes": 13,
+      "activeNodes": 13
+    },
+    {
+      "rank": 9,
+      "templateId": 2753,
+      "title": "RAG chatbot for company documents using Google Drive and Gemini",
+      "sourceUrl": "https://n8n.io/workflows/2753-rag-chatbot-for-company-documents-using-google-drive-and-gemini/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2753",
+      "totalViews": 94941,
+      "sha256": "4a511d68ce952921866396a5bc01333b79629c8a4774974a337a4f1df640f4df",
+      "totalNodes": 18,
+      "activeNodes": 18
+    },
+    {
+      "rank": 10,
+      "templateId": 2466,
+      "title": "Respond to WhatsApp messages with AI like a pro!",
+      "sourceUrl": "https://n8n.io/workflows/2466-respond-to-whatsapp-messages-with-ai-like-a-pro/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2466",
+      "totalViews": 91062,
+      "sha256": "55fe3b1c87838b550aaed29995bb8aa0d52027a950e81f5f67e9425fcc885696",
+      "totalNodes": 35,
+      "activeNodes": 35
+    },
+    {
+      "rank": 11,
+      "templateId": 2786,
+      "title": "Create a branded AI-powered website chatbot",
+      "sourceUrl": "https://n8n.io/workflows/2786-create-a-branded-ai-powered-website-chatbot/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2786",
+      "totalViews": 88237,
+      "sha256": "0bb9683db11a06504792c2d12f3f8df15c8edf55fecfff137cb72fe10c525cb6",
+      "totalNodes": 24,
+      "activeNodes": 23
+    },
+    {
+      "rank": 12,
+      "templateId": 4696,
+      "title": "Conversational Telegram bot with GPT-5/GPT-4o for text and voice messages",
+      "sourceUrl": "https://n8n.io/workflows/4696-conversational-telegram-bot-with-gpt-5-gpt-4o-for-text-and-voice-messages/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/4696",
+      "totalViews": 82466,
+      "sha256": "ea06f48a1005c1ba69aa405d724128fe21a5a02e80025a0ece8fd7167ab6b649",
+      "totalNodes": 11,
+      "activeNodes": 11
+    },
+    {
+      "rank": 13,
+      "templateId": 1953,
+      "title": "Suggest meeting slots using AI",
+      "sourceUrl": "https://n8n.io/workflows/1953-suggest-meeting-slots-using-ai/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/1953",
+      "totalViews": 78236,
+      "sha256": "57ef77f5d0fa373fb973f130b2437c8ef7eb90631ed0a7d9d7d012edfd7a3b98",
+      "totalNodes": 10,
+      "activeNodes": 10
+    },
+    {
+      "rank": 14,
+      "templateId": 2859,
+      "title": "Chat with Postgresql database",
+      "sourceUrl": "https://n8n.io/workflows/2859-chat-with-postgresql-database/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2859",
+      "totalViews": 73534,
+      "sha256": "9fc325382e29246ce0e45b3edc74d76d01f971b0fceca687625f88a75f9d5b07",
+      "totalNodes": 11,
+      "activeNodes": 11
+    },
+    {
+      "rank": 15,
+      "templateId": 1959,
+      "title": "AI chatbot that can search the web",
+      "sourceUrl": "https://n8n.io/workflows/1959-ai-chatbot-that-can-search-the-web/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/1959",
+      "totalViews": 71533,
+      "sha256": "db8d462d55d9bce55eaf34ab4998704a3aeb3fbd5e3555029339e48262bf962b",
+      "totalNodes": 9,
+      "activeNodes": 9
+    },
+    {
+      "rank": 16,
+      "templateId": 3586,
+      "title": "AI-powered WhatsApp chatbot 🤖📲 for text, voice, images & PDFs with memory 🧠",
+      "sourceUrl": "https://n8n.io/workflows/3586-ai-powered-whatsapp-chatbot-for-text-voice-images-pdfs-with-memory/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/3586",
+      "totalViews": 71396,
+      "sha256": "1dbf9a7c5c399279fd9f42cc8849dccb254c32c3d1cc00d063ceba517343c739",
+      "totalNodes": 32,
+      "activeNodes": 32
+    },
+    {
+      "rank": 17,
+      "templateId": 5035,
+      "title": "Generate & auto-post AI videos to social media with Veo3 and Blotato",
+      "sourceUrl": "https://n8n.io/workflows/5035-generate-auto-post-ai-videos-to-social-media-with-veo3-and-blotato/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/5035",
+      "totalViews": 71279,
+      "sha256": "13a81cf0a77a971072d90812b4396633be40708ab4d39f89ef41dbaa1b668c7e",
+      "totalNodes": 29,
+      "activeNodes": 29
+    },
+    {
+      "rank": 18,
+      "templateId": 2324,
+      "title": "AI web researcher for sales",
+      "sourceUrl": "https://n8n.io/workflows/2324-ai-web-researcher-for-sales/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2324",
+      "totalViews": 68630,
+      "sha256": "ae71861b59c2d71fe1b542c22a8b1565025c25e3390b435f9fb468b60d2b5657",
+      "totalNodes": 22,
+      "activeNodes": 22
+    },
+    {
+      "rank": 19,
+      "templateId": 2621,
+      "title": "AI agent to chat with files in Supabase Storage",
+      "sourceUrl": "https://n8n.io/workflows/2621-ai-agent-to-chat-with-files-in-supabase-storage/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2621",
+      "totalViews": 68149,
+      "sha256": "7f6b52c45525643ca946637b752a23a4aba7d4d72ffa043fb7003ef5d67d57fe",
+      "totalNodes": 33,
+      "activeNodes": 33
+    },
+    {
+      "rank": 20,
+      "templateId": 2982,
+      "title": "🤖 AI powered RAG chatbot for your docs + Google Drive + Gemini + Qdrant",
+      "sourceUrl": "https://n8n.io/workflows/2982-ai-powered-rag-chatbot-for-your-docs-google-drive-gemini-qdrant/",
+      "apiUrl": "https://api.n8n.io/workflows/templates/2982",
+      "totalViews": 65428,
+      "sha256": "bbf1dee2b7398cd41be13ffad0ae83baffe0b601c6c18d3be66ffb1deeb441d7",
+      "totalNodes": 50,
+      "activeNodes": 47
+    }
+  ]
+}

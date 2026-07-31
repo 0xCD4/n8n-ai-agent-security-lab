@@ -21,7 +21,10 @@ const SECRET_PATTERNS = [
 const UNTRUSTED_INPUT_TYPES = [
   "webhook",
   "formtrigger",
+  "chattrigger",
   "telegramtrigger",
+  "whatsapptrigger",
+  "googledrivetrigger",
   "rssfeedread",
   "emailreadimap",
   "gmailtrigger",
@@ -52,6 +55,19 @@ const SIDE_EFFECT_TYPE_MARKERS = [
   "mssql",
   "notion",
   "airtable",
+  "gmail",
+  "whatsapp",
+  "microsoftoutlook",
+  "googlecalendar",
+  "googledrive",
+  "googledocs",
+  "facebookgraphapi",
+  "twitter",
+  "linkedin",
+  "baserow",
+  "blotato",
+  "toolworkflow",
+  "mcpclienttool",
 ];
 
 const VALIDATION_MARKERS = [
@@ -120,10 +136,41 @@ function isModelNode(node) {
   );
 }
 
+function isDecisionModelNode(node) {
+  if (!isModelNode(node)) return false;
+  return includesAny(node.type, [
+    ".agent",
+    "chainllm",
+    "textclassifier",
+    "informationextractor",
+  ]);
+}
+
 function isHttpSideEffect(node) {
   if (!normalize(node.type).includes("httprequest")) return false;
   const method = normalize(node.parameters?.method || "get");
   return !["get", "head", "options"].includes(method);
+}
+
+function isReadOnlyToolWorkflow(node) {
+  if (!normalize(node.type).includes("toolworkflow")) return false;
+  const description = normalize(
+    `${node.name ?? ""} ${node.parameters?.description ?? ""} ${node.parameters?.toolDescription ?? ""}`,
+  );
+  const hasReadIntent = /\b(?:fetch|get|read|search|lookup|list|retrieve|query|filter)\b/.test(
+    description,
+  );
+  const hasWriteIntent =
+    /\b(?:create|update|delete|send|post|publish|insert|upsert|write|book|execute|upload|change)\b/.test(
+      description,
+    ) || /\bremove\b/.test(normalize(node.name));
+  return hasReadIntent && !hasWriteIntent;
+}
+
+function hasKnownReadOnlyDefault(node) {
+  const type = normalize(node.type);
+  const operation = normalize(node.parameters?.operation);
+  return !operation && type.includes("baserow");
 }
 
 function isSideEffect(node) {
@@ -133,23 +180,64 @@ function isSideEffect(node) {
 
   const operation = normalize(node.parameters?.operation);
   const name = normalize(node.name);
-  if (["read", "get", "getall", "lookup", "search", "list"].includes(operation)) return false;
-  if (!operation && /^(read|get|list|lookup|search)\b/.test(name)) return false;
+  if (hasKnownReadOnlyDefault(node) || isReadOnlyToolWorkflow(node)) return false;
+  const readOperations = [
+    "read",
+    "get",
+    "getall",
+    "lookup",
+    "search",
+    "list",
+    "download",
+    "retrieve",
+  ];
+  if (
+    readOperations.includes(operation) ||
+    readOperations.some((candidate) => operation.startsWith(candidate)) ||
+    operation.endsWith("get")
+  ) {
+    return false;
+  }
+  if (!operation && /^(read|get|list|lookup|search|download|retrieve)\b/.test(name)) {
+    return false;
+  }
   return true;
 }
 
 function isHighImpactSideEffect(node) {
   if (!isSideEffect(node)) return false;
   const text = normalize(node.name);
-  if (includesAny(text, ["notify", "notification", "review", "approval", "draft", "audit", "log"])) {
+  if (
+    includesAny(text, [
+      "notify",
+      "notification",
+      "review",
+      "approval",
+      "draft",
+      "audit",
+      "log",
+      "history",
+    ])
+  ) {
     return false;
   }
-  if (includesAny(node.type, ["googlesheets", "postgres", "mysql", "mssql"])) return false;
+  if (includesAny(node.type, ["googlesheets"])) return false;
+  if (includesAny(node.type, ["telegram", "whatsapp", "slack", "discord"])) {
+    return false;
+  }
   return true;
 }
 
 function isValidator(node) {
   return !isDisabled(node) && includesAny(nodeText(node), VALIDATION_MARKERS);
+}
+
+function isTrustedUrlResolver(node) {
+  if (isDisabled(node) || !normalize(node.type).includes("whatsapp")) return false;
+  return (
+    normalize(node.parameters?.resource) === "media" &&
+    normalize(node.parameters?.operation) === "mediaurlget"
+  );
 }
 
 function isApproval(node) {
@@ -203,12 +291,18 @@ function buildAdjacency(workflow) {
 
   for (const [source, outputs] of Object.entries(workflow.connections ?? {})) {
     const targets = [];
-    for (const channel of Object.values(outputs ?? {})) {
+    for (const [channelName, channel] of Object.entries(outputs ?? {})) {
       if (!Array.isArray(channel)) continue;
       for (const branch of channel) {
         if (!Array.isArray(branch)) continue;
         for (const edge of branch) {
-          if (edge?.node) targets.push(edge.node);
+          if (!edge?.node) continue;
+          if (normalize(channelName) === "ai_tool") {
+            const reverseTargets = adjacency.get(edge.node) ?? [];
+            adjacency.set(edge.node, [...new Set([...reverseTargets, source])]);
+          } else {
+            targets.push(edge.node);
+          }
         }
       }
     }
@@ -300,6 +394,7 @@ export function auditN8nWorkflow(workflow) {
   const adjacency = buildAdjacency(workflow);
   const inputs = activeNodes.filter(isUntrustedInput);
   const models = activeNodes.filter(isModelNode);
+  const decisionModels = activeNodes.filter(isDecisionModelNode);
   const sideEffects = activeNodes.filter(isSideEffect);
   const highImpactSideEffects = activeNodes.filter(isHighImpactSideEffect);
   const validators = new Set(
@@ -307,6 +402,10 @@ export function auditN8nWorkflow(workflow) {
       .filter((node) => !isModelNode(node) && isValidator(node))
       .map((node) => node.name),
   );
+  const urlBoundaries = new Set([
+    ...validators,
+    ...activeNodes.filter(isTrustedUrlResolver).map((node) => node.name),
+  ]);
   const approvals = new Set(activeNodes.filter(isApproval).map((node) => node.name));
   const loggers = activeNodes.filter(isLogger);
   const findings = [];
@@ -341,14 +440,22 @@ export function auditN8nWorkflow(workflow) {
     );
   }
 
-  const modelNames = new Set(models.map((node) => node.name));
+  const modelNames = new Set(decisionModels.map((node) => node.name));
+  const sideEffectNames = new Set(highImpactSideEffects.map((node) => node.name));
   for (const input of inputs) {
     const path = findPathAvoiding(adjacency, input.name, modelNames, validators);
     if (!path) continue;
+    const downstreamActionPath = findPathAvoiding(
+      adjacency,
+      path.at(-1),
+      sideEffectNames,
+      approvals,
+    );
+    const severity = downstreamActionPath && downstreamActionPath.length > 1 ? "high" : "medium";
     findings.push(
       finding(
         "AA-003",
-        "high",
+        severity,
         "Untrusted input can reach a model without a visible validation boundary",
         `Path: ${path.join(" -> ")}.`,
         "Add a deterministic validation step before the model. Enforce size, type and allowlist rules, separate instructions from data, and test direct and indirect prompt injection cases.",
@@ -359,10 +466,10 @@ export function auditN8nWorkflow(workflow) {
     break;
   }
 
-  const sideEffectNames = new Set(highImpactSideEffects.map((node) => node.name));
-  for (const model of models) {
-    const path = findPathAvoiding(adjacency, model.name, sideEffectNames, approvals);
-    if (!path) continue;
+  for (const model of decisionModels) {
+    const targets = new Set([...sideEffectNames].filter((name) => name !== model.name));
+    const path = findPathAvoiding(adjacency, model.name, targets, approvals);
+    if (!path || path.length < 2) continue;
     findings.push(
       finding(
         "AA-004",
@@ -379,21 +486,21 @@ export function auditN8nWorkflow(workflow) {
 
   const hasOutputValidation =
     activeNodes.some((node) => !isModelNode(node) && isValidator(node)) ||
-    models.every(hasInlineOutputValidation);
-  if (models.length > 0 && !hasOutputValidation) {
+    decisionModels.every(hasInlineOutputValidation);
+  if (decisionModels.length > 0 && !hasOutputValidation) {
     findings.push(
       finding(
         "AA-005",
         "medium",
         "No structured model-output validation was detected",
-        `Model-related nodes: ${models.map((node) => node.name).join(", ")}.`,
+        `Model-related nodes: ${decisionModels.map((node) => node.name).join(", ")}.`,
         "Validate model output against a strict schema before it is parsed, stored or passed to another tool. Reject unknown fields and unsafe values.",
         "OWASP LLM05: Improper Output Handling",
       ),
     );
   }
 
-  if (inputs.length > 0 && models.length > 0) {
+  if (inputs.length > 0 && decisionModels.length > 0) {
     const hasRateLimit = activeNodes.some((node) =>
       includesAny(nodeText(node), ["rate limit", "ratelimit", "throttle", "quota", "cooldown"]),
     );
@@ -415,7 +522,7 @@ export function auditN8nWorkflow(workflow) {
   if (dynamicUrlNodes.length > 0) {
     const dynamicNames = new Set(dynamicUrlNodes.map((node) => node.name));
     const unvalidatedPath = inputs
-      .map((input) => findPathAvoiding(adjacency, input.name, dynamicNames, validators))
+      .map((input) => findPathAvoiding(adjacency, input.name, dynamicNames, urlBoundaries))
       .find(Boolean);
     const severity = unvalidatedPath ? "high" : "medium";
     findings.push(

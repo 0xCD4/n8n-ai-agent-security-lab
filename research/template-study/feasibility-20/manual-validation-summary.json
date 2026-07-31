@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-07-31",
+  "initialPriorityPaths": 15,
+  "classifications": {
+    "plausible": 7,
+    "contextDependent": 1,
+    "likelyFalsePositive": 7
+  },
+  "confirmedVulnerabilities": 0,
+  "ruleRefinements": [
+    "Recognize Baserow's omitted-operation getAll default as read-only.",
+    "Recognize explicitly read-only sub-workflow tools.",
+    "Treat provider-resolved WhatsApp media URLs as a visible URL trust boundary."
+  ]
+}

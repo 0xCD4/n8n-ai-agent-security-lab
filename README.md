@@ -129,6 +129,19 @@ The regression gate can write:
 
 See [GitHub Actions integration](docs/github-actions.md).
 
+## Public template feasibility study
+
+The bounded research collector scans the most-viewed free public templates in the official n8n AI category that contain the AI Agent node:
+
+```bash
+npm run study:templates:feasibility
+npm run study:templates:top100
+```
+
+It fetches JSON only from the official n8n template API, keeps raw workflows in memory, never imports or executes them, and writes a source manifest plus anonymous aggregate statistics. Template-level findings stay in a git-ignored private review queue until a human validates them. The initial 15 priority paths were classified before the sample was expanded to 100 templates.
+
+Read the [template study method and publication boundary](research/template-study/README.md), the [manual validation summary](research/template-study/feasibility-20/manual-validation-summary.md) and the [100-template aggregate report](research/template-study/top-100/summary.md) before publishing results.
+
 ## Repository map
 
 | Path | Purpose |
@@ -137,6 +150,7 @@ See [GitHub Actions integration](docs/github-actions.md).
 | `contracts/` | Runtime behavior contracts |
 | `src/` | Scanner, target policy and report generation |
 | `test/` | Deterministic unit and contract tests |
+| `research/template-study/` | Bounded public-template collection method and aggregate outputs |
 | `workflows/unsafe-support-agent.json` | Intentionally unsafe teaching fixture |
 | `workflows/hardened-support-agent.json` | Hardened comparison fixture |
 | `workflows/security-regression-staging-target.json` | Importable, action-free n8n staging target |
