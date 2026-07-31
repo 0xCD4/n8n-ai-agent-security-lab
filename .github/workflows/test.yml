@@ -26,7 +26,7 @@ jobs:
         run: npm test
 
       - name: Regenerate example reports
-        run: npm run audit
+        run: npm run audit && npm run gate:demo
 
       - name: Verify reports are current
         run: git diff --exit-code -- reports

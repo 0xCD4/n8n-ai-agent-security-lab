@@ -1,14 +1,21 @@
 {
   "name": "n8n-ai-agent-security-lab",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "A defensive lab for comparing unsafe and hardened n8n AI workflows.",
+  "description": "A CSINT Research side project for static and staging-safe security checks of n8n AI workflows.",
   "type": "module",
+  "bin": {
+    "n8n-ai-sec": "bin/gate.mjs"
+  },
   "scripts": {
-    "test": "node test/audit.test.mjs",
+    "test": "node test/audit.test.mjs && node test/gate.test.mjs && node test/n8n-staging-workflow.test.mjs",
     "audit:unsafe": "node bin/audit.mjs workflows/unsafe-support-agent.json reports/unsafe-support-agent-audit.md",
     "audit:hardened": "node bin/audit.mjs workflows/hardened-support-agent.json reports/hardened-support-agent-audit.md",
-    "audit": "npm run audit:unsafe && npm run audit:hardened"
+    "audit": "npm run audit:unsafe && npm run audit:hardened",
+    "demo:staging": "node examples/staging-target.mjs",
+    "gate": "node bin/gate.mjs",
+    "gate:demo": "node bin/demo-gate.mjs",
+    "verify:n8n": "node scripts/verify-n8n-staging.mjs"
   },
   "license": "MIT",
   "engines": {

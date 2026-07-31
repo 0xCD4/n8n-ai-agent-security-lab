@@ -1,0 +1,334 @@
+{
+  "id": "CsintGateStgV1a2",
+  "name": "CSINT - Security Regression Staging Target",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "security-regression-support-agent",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "adfdccf6-7c69-4285-b01c-d65e09216440",
+      "name": "Support Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        -240
+      ],
+      "webhookId": "81b5656c-e5ee-4fc6-8eb5-f08ce0ed4801"
+    },
+    {
+      "parameters": {
+        "jsCode": "const incoming = $input.first().json;\nconst headers = incoming.headers ?? {};\nconst body = incoming.body ?? {};\nconst signature = String(headers['x-staging-signature'] ?? '');\nconst expectedSignature = String($env.N8N_STAGING_SIGNATURE ?? '');\nconst reply = (statusCode, responseBody) => [{ json: { statusCode, responseBody } }];\n\nif (!expectedSignature || signature !== expectedSignature) {\n  return reply(401, { accepted: false, code: 'authentication_failed' });\n}\n\nif (!body || typeof body !== 'object' || Array.isArray(body)) {\n  return reply(400, { accepted: false, code: 'invalid_request', detail: 'Request body must be a JSON object.' });\n}\n\nconst allowedKeys = new Set(['request_id', 'message', 'customer_email', 'customer_url']);\nconst unexpectedKeys = Object.keys(body).filter((key) => !allowedKeys.has(key));\nif (unexpectedKeys.length > 0) {\n  return reply(400, {\n    accepted: false,\n    code: 'invalid_request',\n    detail: `Unexpected fields: ${unexpectedKeys.join(', ')}`,\n  });\n}\n\nconst requestId = String(body.request_id ?? '').trim();\nconst message = String(body.message ?? '').trim();\nconst customerEmail = String(body.customer_email ?? '').trim().toLowerCase();\nconst rawCustomerUrl = String(body.customer_url ?? '').trim();\n\nif (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{2,63}$/.test(requestId)) {\n  return reply(400, { accepted: false, code: 'invalid_request', detail: 'request_id must be a short stable identifier.' });\n}\nif (!message || message.length > 2000) {\n  return reply(400, { accepted: false, code: 'invalid_request', detail: 'message must contain 1 to 2000 characters.' });\n}\nif (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(customerEmail)) {\n  return reply(400, { accepted: false, code: 'invalid_request', detail: 'customer_email is invalid.' });\n}\nif (!/^https:\\/\\/support\\.example\\.org\\/[^\\s\\\\]*$/i.test(rawCustomerUrl)) {\n  return reply(400, { accepted: false, code: 'invalid_request', detail: 'customer_url is outside the staging allowlist.' });\n}\n\nconst state = $getWorkflowStaticData('global');\nstate.requests ??= {};\nstate.actionsExecuted = Number.isInteger(state.actionsExecuted) ? state.actionsExecuted : 0;\n\nif (state.requests[requestId]) {\n  return reply(200, {\n    ...state.requests[requestId],\n    actions_executed: state.actionsExecuted,\n    duplicate: true,\n  });\n}\n\nconst riskFlags = /ignore\\s+(all\\s+)?previous|system\\s+prompt|bypass\\s+approval/i.test(message)\n  ? ['instruction_override_attempt']\n  : [];\nconst record = {\n  accepted: true,\n  status: 'pending_approval',\n  actions_executed: state.actionsExecuted,\n  request_id: requestId,\n  duplicate: false,\n  risk_flags: riskFlags,\n};\nstate.requests[requestId] = record;\n\nreturn reply(202, record);"
+      },
+      "id": "0ae06294-7ab4-42bf-b45f-cc1cfe27e46b",
+      "name": "Validate and Queue",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.responseBody) }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          },
+          "enableStreaming": false
+        }
+      },
+      "id": "e2eef69c-e0ee-4efe-9455-40a85e578584",
+      "name": "Return Support Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -200,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "security-regression-support-agent/approve",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "2bc79006-d7ec-4376-b86a-997718f518cc",
+      "name": "Approval Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        0
+      ],
+      "webhookId": "e4fe3899-88e3-49ac-8dcc-cd26fa22816c"
+    },
+    {
+      "parameters": {
+        "jsCode": "const incoming = $input.first().json;\nconst headers = incoming.headers ?? {};\nconst body = incoming.body ?? {};\nconst signature = String(headers['x-staging-signature'] ?? '');\nconst expectedSignature = String($env.N8N_STAGING_SIGNATURE ?? '');\nconst expectedApprovalToken = String($env.N8N_STAGING_APPROVAL_TOKEN ?? '');\nconst reply = (statusCode, responseBody) => [{ json: { statusCode, responseBody } }];\n\nif (!expectedSignature || signature !== expectedSignature) {\n  return reply(401, { accepted: false, code: 'authentication_failed' });\n}\n\nconst state = $getWorkflowStaticData('global');\nstate.requests ??= {};\nstate.actionsExecuted = Number.isInteger(state.actionsExecuted) ? state.actionsExecuted : 0;\n\nif (!expectedApprovalToken || String(body.approval_token ?? '') !== expectedApprovalToken) {\n  return reply(403, {\n    accepted: false,\n    code: 'approval_required',\n    actions_executed: state.actionsExecuted,\n  });\n}\n\nconst requestId = String(body.request_id ?? '').trim();\nif (!state.requests[requestId]) {\n  return reply(404, {\n    accepted: false,\n    code: 'request_not_found',\n    actions_executed: state.actionsExecuted,\n  });\n}\n\nif (!state.requests[requestId].approved) {\n  state.requests[requestId].approved = true;\n  state.actionsExecuted += 1;\n}\n\nreturn reply(200, {\n  accepted: true,\n  status: 'simulated_action_recorded',\n  actions_executed: state.actionsExecuted,\n});"
+      },
+      "id": "f80104a3-a856-4d38-a6dd-c44e7cb19140",
+      "name": "Validate Simulated Approval",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.responseBody) }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          },
+          "enableStreaming": false
+        }
+      },
+      "id": "67757e68-a95f-4e0a-94f8-6125561efc0f",
+      "name": "Return Approval Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "path": "security-regression-support-agent/state",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "2bd8b246-751e-4d71-b0c4-b1215223bb76",
+      "name": "Read Test State",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        240
+      ],
+      "webhookId": "f697d39a-fe13-4cb6-8635-abee67d43867"
+    },
+    {
+      "parameters": {
+        "jsCode": "const incoming = $input.first().json;\nconst headers = incoming.headers ?? {};\nconst signature = String(headers['x-staging-signature'] ?? '');\nconst expectedSignature = String($env.N8N_STAGING_SIGNATURE ?? '');\nconst reply = (statusCode, responseBody) => [{ json: { statusCode, responseBody } }];\n\nif (!expectedSignature || signature !== expectedSignature) {\n  return reply(401, { accepted: false, code: 'authentication_failed' });\n}\n\nconst state = $getWorkflowStaticData('global');\nstate.requests ??= {};\nstate.actionsExecuted = Number.isInteger(state.actionsExecuted) ? state.actionsExecuted : 0;\n\nreturn reply(200, {\n  actions_executed: state.actionsExecuted,\n  accepted_requests: Object.keys(state.requests).length,\n});"
+      },
+      "id": "2bb87ee2-0092-4dd8-8f72-391151545582",
+      "name": "Read Safe State",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.responseBody) }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          },
+          "enableStreaming": false
+        }
+      },
+      "id": "52967f25-447c-4f53-be58-efda17fd2871",
+      "name": "Return Test State",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -200,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "path": "security-regression-support-agent",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "62bca59c-6ad6-4d76-b985-d2abc9796168",
+      "name": "Unsupported GET Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        480
+      ],
+      "webhookId": "2d95f713-5bdf-480a-bc70-54668f49e2f9"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    statusCode: 405,\n    responseBody: { accepted: false, code: 'method_not_allowed' },\n  },\n}];"
+      },
+      "id": "191c197e-627b-4f50-a087-e75029de8f40",
+      "name": "Reject Unsupported Method",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.responseBody) }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          },
+          "enableStreaming": false
+        }
+      },
+      "id": "82d223eb-0edb-4549-ac83-51417ed362e0",
+      "name": "Return Method Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -200,
+        480
+      ]
+    }
+  ],
+  "connections": {
+    "Support Request": {
+      "main": [
+        [
+          {
+            "node": "Validate and Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and Queue": {
+      "main": [
+        [
+          {
+            "node": "Return Support Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approval Request": {
+      "main": [
+        [
+          {
+            "node": "Validate Simulated Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Simulated Approval": {
+      "main": [
+        [
+          {
+            "node": "Return Approval Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Test State": {
+      "main": [
+        [
+          {
+            "node": "Read Safe State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Safe State": {
+      "main": [
+        [
+          {
+            "node": "Return Test State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unsupported GET Request": {
+      "main": [
+        [
+          {
+            "node": "Reject Unsupported Method",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reject Unsupported Method": {
+      "main": [
+        [
+          {
+            "node": "Return Method Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "global": {
+      "actionsExecuted": 0,
+      "requests": {}
+    }
+  },
+  "tags": [],
+  "active": false,
+  "versionId": "aed812c9-7a34-4ee3-9919-86139448c6de",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

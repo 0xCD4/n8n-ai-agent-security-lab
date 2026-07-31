@@ -1,79 +1,150 @@
-# n8n AI Agent Security Lab
+# n8n AI Security Regression Gate
 
 [![test](https://github.com/0xCD4/n8n-ai-agent-security-lab/actions/workflows/test.yml/badge.svg)](https://github.com/0xCD4/n8n-ai-agent-security-lab/actions/workflows/test.yml)
+[![license](https://img.shields.io/badge/license-MIT-1f2933.svg)](LICENSE)
 
-This defensive lab compares two small n8n AI support workflows:
+A [CSINT Research](https://en.csintresearch.org/) side project that catches security regressions in n8n AI workflows before production.
 
-- `unsafe-support-agent.json` exposes common security and reliability mistakes.
-- `hardened-support-agent.json` adds authentication, input checks, an approval gate, bounded outbound calls, output validation, logging and an error route.
+It provides two small, explainable checks:
 
-The repository also contains a local static scanner. It does not upload the workflow or call an AI API.
+- **Static audit:** follows paths through an exported workflow and reports risky security patterns.
+- **Regression gate:** sends synthetic requests to an isolated staging webhook and checks the behavior that must not change.
+
+Workflow exports stay local. The scanner does not upload them or call an AI API.
 
 ![Unsafe and hardened workflow comparison](assets/unsafe-vs-hardened.png)
 
-## Results
+## Start in one minute
 
-| Workflow | Score | Findings |
-| --- | ---: | --- |
-| Unsafe support agent | 10/100, F | 9 findings, including 4 high severity |
-| Hardened support agent | 93/100, A | 1 medium finding kept for manual URL review |
-
-The remaining finding is intentional. A URL can be derived from workflow data after validation, so the scanner keeps it visible for manual review. A high score is not proof of runtime security.
-
-## Run the lab
-
-Requirements: Node.js 20 or newer. No package installation is needed.
+Requirements: Node.js 20 or newer.
 
 ```bash
 npm test
 npm run audit
+npm run gate:demo
 ```
 
-Run the scanner against your own exported workflow:
+No npm package installation is required.
+
+## Verify the real n8n fixture
+
+The repository includes an importable staging workflow and a matching runtime contract. With Docker Desktop running:
+
+```bash
+npm run verify:n8n
+```
+
+This command:
+
+1. creates a temporary n8n 2.21.5 instance
+2. imports and publishes the staging workflow
+3. runs all eight contract tests
+4. confirms that no simulated external action ran
+5. removes the temporary container and volume
+
+It does not use an existing n8n instance, volume or credential.
+
+## Current result
+
+| Workflow | Static result | Main finding |
+| --- | ---: | --- |
+| Unsafe support agent | 10/100, F | 9 findings, including 4 high severity |
+| Hardened support agent | 93/100, A | 1 medium item kept for manual URL review |
+| Runtime staging fixture | 8/8 passed | 0 simulated external actions |
+
+The score is a review aid, not proof that a workflow is secure.
+
+## What the gate checks
+
+| Check | Expected staging behavior |
+| --- | --- |
+| Missing authentication | Reject |
+| Invalid staging signature | Reject |
+| Missing or unexpected fields | Reject |
+| Prompt injection marker | Keep behind approval |
+| Invalid approval token | Reject |
+| Valid request | Queue without external action |
+| Repeated request ID | Return the same operation |
+| Unsupported method | Reject |
+
+The included runtime fixture contains no email, HTTP request, database or AI nodes. A valid approval only increments an isolated test counter.
+
+## Scan your own export
 
 ```bash
 node bin/audit.mjs path/to/workflow.json reports/my-audit.md
 ```
 
-Remove production data and credentials before storing or sharing an export.
+Remove credentials, customer data, private URLs and production payloads before storing or sharing an export.
 
-## What changes between the examples
+## Run a staging contract
 
-1. The webhook requires native authentication.
-2. Untrusted input is length-checked and normalized before model use.
-3. Outbound destinations are restricted to HTTPS and an explicit host allowlist.
-4. Model output is parsed and checked against a small schema.
-5. A person approves the recipient, message and destination before external actions.
-6. HTTP requests use a timeout, bounded retry and disabled redirects.
-7. External actions create an audit record.
-8. A workflow-level error route is configured.
+```bash
+export N8N_STAGING_SIGNATURE="replace-with-a-test-only-value"
 
-The input guard includes a visible rate and budget boundary, but a real deployment still needs a shared gateway or datastore-backed rate limiter.
+node bin/gate.mjs \
+  --workflow path/to/workflow.json \
+  --contract path/to/security-contract.json \
+  --target http://127.0.0.1:5678 \
+  --out reports/runtime-gate.md
+```
 
-## Video
+PowerShell:
 
-[Watch the 27-second unsafe workflow scan](assets/unsafe-support-agent-demo-en.mp4)
+```powershell
+$env:N8N_STAGING_SIGNATURE = "replace-with-a-test-only-value"
+```
 
-## Contribute
+Loopback targets are allowed by default. Remote targets require `--allow-remote`, an exact hostname allowlist and a narrow path allowlist. Redirects are not followed. Reports omit request headers and bodies.
 
-Open an issue if you have:
+Read the [security contract guide](docs/security-contract.md) before adapting the fixture.
 
-- a false positive with a redacted sample
-- a common unsafe workflow pattern that deserves a rule
-- an improvement to the hardened example
-- a request for another n8n security lab
+## Output formats
 
-Do not post client workflows, personal data, credentials or private URLs.
+The regression gate can write:
 
-## Need a manual review?
+- Markdown for human review
+- JSON for automation
+- JUnit for test pipelines
+- SARIF for code scanning
 
-The free scanner handles repeatable static checks. A manual review follows the important paths, checks assumptions the export cannot prove, and returns a prioritized remediation plan.
+See [GitHub Actions integration](docs/github-actions.md).
 
-[Read the EUR 99 pilot review scope](SERVICE.md) or visit [CSINT AI Agent Audit](https://en.csintresearch.org/ai-agent-audit).
+## Repository map
+
+| Path | Purpose |
+| --- | --- |
+| `bin/` | Static audit and regression gate commands |
+| `contracts/` | Runtime behavior contracts |
+| `src/` | Scanner, target policy and report generation |
+| `test/` | Deterministic unit and contract tests |
+| `workflows/unsafe-support-agent.json` | Intentionally unsafe teaching fixture |
+| `workflows/hardened-support-agent.json` | Hardened comparison fixture |
+| `workflows/security-regression-staging-target.json` | Importable, action-free n8n staging target |
+| `reports/` | Example audit and gate output |
 
 ## Safety boundary
 
-This project is defensive and educational. The unsafe workflow must remain inactive and must never receive credentials. The scanner is not a penetration test, compliance certification or security guarantee.
+This project is defensive and educational.
+
+- Never activate the unsafe workflow.
+- Never attach production credentials to a test fixture.
+- Run dynamic checks only against an isolated system you own or are authorized to test.
+- Do not treat a passing report as a penetration test, compliance result or security guarantee.
+
+Read [SECURITY.md](SECURITY.md) before reporting a sensitive issue.
+
+## Contributing
+
+Redacted false positives, small deterministic rules and safe runtime checks are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## CSINT Research
+
+Built and maintained by Ahmet Göker as a CSINT Research side project.
+
+- [CSINT Research](https://en.csintresearch.org/)
+- [AI agent workflow review](https://en.csintresearch.org/ai-agent-audit)
+- [Manual review scope](SERVICE.md)
 
 ## License
 

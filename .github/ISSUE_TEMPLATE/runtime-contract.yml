@@ -1,0 +1,37 @@
+name: Runtime contract issue
+description: Report a regression check that is missing, unsafe or inaccurate.
+title: "[Runtime contract] "
+labels:
+  - runtime-contract
+body:
+  - type: markdown
+    attributes:
+      value: Do not include a live webhook URL, credential, signature, customer payload or production response.
+  - type: input
+    id: test
+    attributes:
+      label: Test ID or behavior
+      placeholder: block-approval-bypass
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected staging behavior
+      description: Explain what a safe isolated workflow should do.
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Redacted observed behavior
+      description: Include only the status, failed check and minimal synthetic context.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed credentials, personal data, request bodies and private infrastructure details.
+          required: true

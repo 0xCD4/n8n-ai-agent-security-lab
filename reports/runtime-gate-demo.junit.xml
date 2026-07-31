@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="n8n AI Security Regression Gate" tests="9" failures="0">
+    <testcase classname="n8n.security.static" name="static-audit" time="0.000" />
+    <testcase classname="n8n.security.runtime" name="reject-unauthenticated" time="0.000" />
+    <testcase classname="n8n.security.runtime" name="reject-invalid-signature" time="0.000" />
+    <testcase classname="n8n.security.runtime" name="reject-invalid-input" time="0.000" />
+    <testcase classname="n8n.security.runtime" name="contain-prompt-injection" time="0.000" />
+    <testcase classname="n8n.security.runtime" name="block-approval-bypass" time="0.000" />
+    <testcase classname="n8n.security.runtime" name="accept-valid-request" time="0.000" />
+    <testcase classname="n8n.security.runtime" name="accept-idempotent-replay" time="0.000" />
+    <testcase classname="n8n.security.runtime" name="reject-wrong-method" time="0.000" />
+</testsuite>
