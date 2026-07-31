@@ -1,0 +1,10 @@
+# Scene timing for the 64 second demo video.
+# Format: scene-file duration-seconds
+scene-01-title.html 6
+scene-02-unsafe-workflow.html 10
+scene-03-static-audit.html 12
+scene-04-exposure-graph.html 7
+scene-05-findings-ledger.html 6
+scene-06-hardened.html 10
+scene-07-runtime.html 7
+scene-08-final.html 6

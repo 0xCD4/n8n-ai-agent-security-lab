@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="base.css">
+<style>
+/* Crop the real SVG to its findings ledger and enlarge it.
+   The ledger occupies roughly y 250..500 of the 1160x528 figure. */
+.crop {
+  margin-top: 44px;
+  align-self: center;
+  width: 1680px;
+  height: 610px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f7f9fa;
+  position: relative;
+}
+.crop img {
+  position: absolute;
+  width: 2320px; /* 2x of the 1160px viewBox */
+  left: -50px;
+  top: -500px;   /* 250 * 2 */
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="topbar"><span class="brand">CSINT Research</span><span>AI agent audit &middot; local scan</span></div>
+  <div class="stage">
+    <h2>Findings ledger: every ID maps to a proven path</h2>
+    <div class="crop">
+      <img src="../../../reports/unsafe-support-agent-exposure.svg" alt="Findings ledger detail">
+    </div>
+  </div>
+  <p class="footline">The same IDs appear in the Markdown report and in SARIF output for code scanning.</p>
+</div>
+</body>
+</html>

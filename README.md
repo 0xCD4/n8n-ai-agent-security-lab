@@ -12,6 +12,7 @@ It provides three small, explainable outputs:
 - **Exposure graph:** turns structured risky paths into JSON, Mermaid and a print-ready SVG report figure.
 
 Workflow exports stay local. The scanner does not upload them or call an AI API.
+First scan: `npm run audit`. See the [60 second demo](assets/security-review-demo-en.mp4) or the [sample review PDF](reports/sample-security-review.pdf).
 
 ![Unsafe and hardened workflow comparison](assets/unsafe-vs-hardened.png)
 
@@ -139,7 +140,9 @@ See [GitHub Actions integration](docs/github-actions.md).
 | `workflows/unsafe-support-agent.json` | Intentionally unsafe teaching fixture |
 | `workflows/hardened-support-agent.json` | Hardened comparison fixture |
 | `workflows/security-regression-staging-target.json` | Importable, action-free n8n staging target |
-| `reports/` | Example audit and gate output |
+| `reports/` | Example audit and gate output, plus the sample review PDF |
+| `media/` | Sources and build scripts for the demo video and the sample PDF |
+| `outreach/` | Launch copy for the pilot reviews |
 
 ## Safety boundary
 

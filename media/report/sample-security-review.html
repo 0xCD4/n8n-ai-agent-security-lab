@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sample AI Workflow Security Review</title>
+<style>
+/* Print-ready sample review. A4 pages, selectable text, accessible contrast. */
+:root {
+  --ink: #1f2933;
+  --ink-soft: #4a5560;
+  --line: #d5dbe1;
+  --panel: #f7f9fa;
+  --risk: #b91c1c;
+  --risk-soft: #fdecec;
+  --ok: #14532d;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@page { size: A4; margin: 0; }
+html, body {
+  background: #fff;
+  color: var(--ink);
+  font-family: "Segoe UI", "Liberation Sans", "DejaVu Sans", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+}
+.page {
+  width: 210mm;
+  height: 297mm;
+  padding: 16mm 17mm 20mm;
+  position: relative;
+  page-break-after: always;
+  overflow: hidden;
+}
+.page:last-child { page-break-after: auto; }
+.page-footer {
+  position: absolute;
+  left: 17mm;
+  right: 17mm;
+  bottom: 9mm;
+  display: flex;
+  justify-content: space-between;
+  font-size: 8pt;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line);
+  padding-top: 3mm;
+}
+.demo-banner {
+  border: 2px solid var(--risk);
+  background: var(--risk-soft);
+  color: var(--risk);
+  font-weight: 700;
+  text-align: center;
+  padding: 3mm;
+  font-size: 11pt;
+  letter-spacing: 0.06em;
+  margin-bottom: 8mm;
+}
+.brand {
+  font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+  font-size: 9pt;
+  color: var(--ink-soft);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10mm;
+}
+.brand strong { color: var(--ink); }
+h1 { font-size: 21pt; line-height: 1.2; margin-bottom: 6mm; }
+h2 { font-size: 14pt; margin-bottom: 4mm; }
+h3 { font-size: 11pt; margin-bottom: 2mm; }
+p { margin-bottom: 3mm; }
+.meta {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 2mm;
+  padding: 5mm 6mm;
+  margin-bottom: 6mm;
+  font-size: 9.5pt;
+}
+.meta table { border-collapse: collapse; width: 100%; }
+.meta td { padding: 1mm 0; vertical-align: top; }
+.meta td:first-child { width: 42mm; color: var(--ink-soft); }
+.mono { font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace; font-size: 9pt; }
+.score-line { font-size: 15pt; font-weight: 700; }
+.score-line .bad { color: var(--risk); }
+.score-line .good { color: var(--ok); }
+.note {
+  border-left: 3px solid var(--line);
+  padding: 2mm 0 2mm 4mm;
+  color: var(--ink-soft);
+  font-size: 9.5pt;
+  margin: 5mm 0;
+}
+.finding {
+  border: 1px solid var(--line);
+  border-radius: 2mm;
+  padding: 4mm 5mm;
+  margin-bottom: 4mm;
+}
+.finding-head {
+  display: flex;
+  gap: 3mm;
+  align-items: baseline;
+  margin-bottom: 1.5mm;
+}
+.sev {
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.8mm 2.5mm;
+  border-radius: 1mm;
+}
+.sev.high { background: var(--risk); color: #fff; }
+.sev.medium { background: var(--risk-soft); color: var(--risk); }
+.finding-id { font-weight: 700; font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace; font-size: 9.5pt; }
+.finding-title { font-weight: 650; font-size: 10.5pt; }
+.finding p { font-size: 9.5pt; margin-bottom: 1.5mm; }
+.finding .label { color: var(--ink-soft); }
+.graph img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 2mm; }
+table.result { border-collapse: collapse; width: 100%; margin-bottom: 5mm; font-size: 9.5pt; }
+table.result th, table.result td { border: 1px solid var(--line); padding: 2mm 3mm; text-align: left; }
+table.result th { background: var(--panel); font-weight: 650; }
+table.result td.num { text-align: right; font-variant-numeric: tabular-nums; }
+ul { margin: 0 0 3mm 5mm; }
+li { margin-bottom: 1.5mm; }
+.pass { color: var(--ok); font-weight: 700; font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace; font-size: 8.5pt; }
+.pilot-line { margin-top: 8mm; padding-top: 4mm; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 9.5pt; }
+</style>
+</head>
+<body>
+
+<!-- Page 1 -->
+<div class="page">
+  <div class="brand"><span><strong>CSINT Research</strong></span><span>AI agent workflow review</span></div>
+  <div class="demo-banner">DEMO REPORT: INTENTIONALLY UNSAFE WORKFLOW</div>
+  <h1>Sample AI Workflow Security Review</h1>
+  <div class="meta">
+    <table>
+      <tr><td>Prepared by</td><td>CSINT Research</td></tr>
+      <tr><td>Generation date</td><td>2026-07-31</td></tr>
+      <tr><td>Source workflow</td><td class="mono">workflows/unsafe-support-agent.json</td></tr>
+      <tr><td>Workflow name</td><td>Demo - Unsafe Support Agent</td></tr>
+      <tr><td>Scanner version</td><td>n8n-ai-agent-security-lab 1.2.0</td></tr>
+      <tr><td>Review type</td><td>Static path analysis with an isolated runtime contract comparison</td></tr>
+    </table>
+  </div>
+  <h2>Scope</h2>
+  <p>This sample reviews one exported n8n workflow: an intentionally unsafe customer support
+  agent that receives public webhook input, passes it to an AI agent node, sends an email and
+  calls a URL taken from workflow data. The fixture is published for teaching and testing.
+  It ships deactivated and was never connected to a production system.</p>
+  <h2>Result summary</h2>
+  <p class="score-line">Static score: <span class="bad">10/100 (F)</span></p>
+  <p>The static review found 9 items: 0 critical, 4 high, 4 medium and 1 low. Four findings
+  sit on a single connected path from the public entry point to an outbound HTTP request.
+  The five most important findings are documented on page 3, and the hardened comparison on
+  page 4 shows the same workflow after remediation.</p>
+  <h2>Limitation</h2>
+  <p class="note">A static score is a review aid, not proof of exploitation and not proof of
+  security. Static analysis cannot see runtime authorization, credential scopes, upstream
+  controls or model behavior. This document demonstrates the review format on a fixture
+  that is unsafe on purpose; a real report covers a redacted customer workflow.</p>
+  <div class="page-footer"><span>CSINT Research &middot; Sample security review (demo fixture)</span><span>Page 1 of 6</span></div>
+</div>
+
+<!-- Page 2 -->
+<div class="page">
+  <div class="brand"><span><strong>CSINT Research</strong></span><span>Sample security review</span></div>
+  <h2>Exposure graph</h2>
+  <p>The scanner turns structured risky paths into a single figure. Boxes are workflow nodes.
+  Arrows are data flow proven from the export. Finding IDs sit on each risky edge, and the
+  ledger below the flow maps every ID and severity back to the exact path.</p>
+  <div class="graph">
+    <img src="../../reports/unsafe-support-agent-exposure.svg" alt="Agent exposure graph for the unsafe support workflow">
+  </div>
+  <h3 style="margin-top:5mm;">How to read finding IDs and paths</h3>
+  <ul>
+    <li><strong>AA-003</strong> on the first edge: untrusted webhook input reaches the model with no validation boundary in between.</li>
+    <li><strong>AA-004</strong> on the second edge: model output reaches an email action with no approval step.</li>
+    <li><strong>AA-007</strong> spans the whole flow: the final HTTP request URL is derived from data that entered at the public webhook.</li>
+    <li>The same IDs appear in the Markdown report and in SARIF output, so a finding can be tracked from the graph to code scanning.</li>
+  </ul>
+  <p class="note">Only structured risky paths found by the static scanner are drawn. The graph
+  is not a full workflow diagram, and a node that does not appear here still needs manual review.</p>
+  <div class="page-footer"><span>CSINT Research &middot; Sample security review (demo fixture)</span><span>Page 2 of 6</span></div>
+</div>
+
+<!-- Page 3 -->
+<div class="page">
+  <div class="brand"><span><strong>CSINT Research</strong></span><span>Sample security review</span></div>
+  <h2>Five most important findings</h2>
+
+  <div class="finding">
+    <div class="finding-head"><span class="sev high">HIGH</span><span class="finding-id">AA-003</span>
+      <span class="finding-title">Untrusted input can reach a model without a visible validation boundary</span></div>
+    <p><span class="label">Path:</span> <span class="mono">Public Support Webhook &rarr; Customer Support Agent</span></p>
+    <p><span class="label">Remediation:</span> add a deterministic validation step before the model. Enforce size, type and allowlist rules, separate instructions from data, and test direct and indirect prompt injection cases.</p>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="sev high">HIGH</span><span class="finding-id">AA-004</span>
+      <span class="finding-title">A model can reach an external write action without an approval step</span></div>
+    <p><span class="label">Path:</span> <span class="mono">Customer Support Agent &rarr; Send Account Email</span></p>
+    <p><span class="label">Remediation:</span> require explicit human approval for messages, writes and account changes. Use least-privilege credentials for the final action.</p>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="sev high">HIGH</span><span class="finding-id">AA-006</span>
+      <span class="finding-title">No rate or cost boundary was detected before model usage</span></div>
+    <p><span class="label">Evidence:</span> <span class="mono">External inputs: Public Support Webhook</span></p>
+    <p><span class="label">Remediation:</span> add per-user and per-origin limits, a maximum input size, a model-call budget, timeouts and a bounded retry policy.</p>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="sev high">HIGH</span><span class="finding-id">AA-007</span>
+      <span class="finding-title">Review HTTP request URLs derived from workflow data</span></div>
+    <p><span class="label">Path:</span> <span class="mono">Public Support Webhook &rarr; Customer Support Agent &rarr; Send Account Email &rarr; Fetch Customer URL</span></p>
+    <p><span class="label">Remediation:</span> parse URLs with a real URL parser, allowlist schemes and destinations, block private and metadata IP ranges, and disable redirects unless required.</p>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="sev medium">MEDIUM</span><span class="finding-id">AA-002</span>
+      <span class="finding-title">Public webhook authentication is not enforced by the trigger</span></div>
+    <p><span class="label">Evidence:</span> <span class="mono">Webhook nodes without native authentication: Public Support Webhook</span></p>
+    <p><span class="label">Remediation:</span> use header, JWT or basic authentication at the webhook boundary. If custom validation is retained, reject before processing and rate-limit failures.</p>
+  </div>
+
+  <p class="note">The remaining findings (AA-005 output validation, AA-008 timeouts and retries,
+  AA-009 audit record, AA-010 failure route) are listed in the full Markdown report.</p>
+  <div class="page-footer"><span>CSINT Research &middot; Sample security review (demo fixture)</span><span>Page 3 of 6</span></div>
+</div>
+
+<!-- Page 4 -->
+<div class="page">
+  <div class="brand"><span><strong>CSINT Research</strong></span><span>Sample security review</span></div>
+  <h2>Hardened comparison</h2>
+  <table class="result">
+    <tr><th>Workflow</th><th>Static result</th><th>Findings</th></tr>
+    <tr><td>Demo - Unsafe Support Agent</td><td class="num">10/100 (F)</td><td>9 findings, 4 high severity</td></tr>
+    <tr><td>Demo - Hardened Support Agent</td><td class="num">93/100 (A)</td><td>1 medium finding kept for manual review</td></tr>
+  </table>
+  <h3>What changed</h3>
+  <ul>
+    <li>The webhook now requires authentication before any processing.</li>
+    <li>A validation node enforces input rules and a rate limit before the model.</li>
+    <li>Model output is checked against a schema before it is used.</li>
+    <li>A human approval step sits between the model and the email action.</li>
+    <li>The outbound fetch only accepts allowlisted destinations.</li>
+    <li>External actions are written to an audit log, and a failure route exists.</li>
+  </ul>
+  <h3>What remains for manual review</h3>
+  <p>One medium finding stays open on purpose. <span class="mono">AA-007</span>: the hardened
+  workflow still derives an outbound URL from workflow data. The workflow validates the scheme
+  and host first, but the scanner keeps every dynamic URL path visible so a person confirms the
+  allowlist is correct. The score was not forced to 100.</p>
+  <p class="note">This mirrors how a real review ends: automated checks close most paths, and
+  the items that need human judgement are named instead of hidden.</p>
+  <div class="page-footer"><span>CSINT Research &middot; Sample security review (demo fixture)</span><span>Page 4 of 6</span></div>
+</div>
+
+<!-- Page 5 -->
+<div class="page">
+  <div class="brand"><span><strong>CSINT Research</strong></span><span>Sample security review</span></div>
+  <h2>Runtime contract result</h2>
+  <p>The regression gate sends synthetic requests to an isolated staging copy of the hardened
+  workflow and checks the behavior that must not change. Result: <strong>8/8 checks passed.</strong></p>
+  <table class="result">
+    <tr><th>Check</th><th>Expected staging behavior</th><th>Result</th></tr>
+    <tr><td>Missing authentication</td><td>Reject</td><td><span class="pass">PASS</span></td></tr>
+    <tr><td>Invalid staging signature</td><td>Reject</td><td><span class="pass">PASS</span></td></tr>
+    <tr><td>Missing or unexpected fields</td><td>Reject</td><td><span class="pass">PASS</span></td></tr>
+    <tr><td>Prompt injection marker</td><td>Keep behind approval</td><td><span class="pass">PASS</span></td></tr>
+    <tr><td>Invalid approval token</td><td>Reject</td><td><span class="pass">PASS</span></td></tr>
+    <tr><td>Valid request</td><td>Queue without external action</td><td><span class="pass">PASS</span></td></tr>
+    <tr><td>Repeated request ID</td><td>Return the same operation</td><td><span class="pass">PASS</span></td></tr>
+    <tr><td>Unsupported method</td><td>Reject</td><td><span class="pass">PASS</span></td></tr>
+  </table>
+  <p>The staging fixture contains no email, HTTP request, database or AI nodes. A valid approval
+  only increments an isolated test counter, so the run ends with 0 simulated external actions.</p>
+  <h3>What this test proves, and what it does not</h3>
+  <ul>
+    <li>It proves the staging copy rejects unauthenticated, malformed and unapproved requests, and that a replayed request does not run twice.</li>
+    <li>It does not prove model safety, credential scope, production authorization or the absence of vulnerabilities.</li>
+    <li>It only tests the supplied workflow export against an explicitly allowlisted staging endpoint. Production systems are never touched.</li>
+  </ul>
+  <div class="page-footer"><span>CSINT Research &middot; Sample security review (demo fixture)</span><span>Page 5 of 6</span></div>
+</div>
+
+<!-- Page 6 -->
+<div class="page">
+  <div class="brand"><span><strong>CSINT Research</strong></span><span>Sample security review</span></div>
+  <h2>Review boundaries</h2>
+  <ul>
+    <li>This is a defensive static and configuration review with an isolated staging comparison. It is not a penetration test.</li>
+    <li>It is not a compliance certification and does not map findings to any regulatory framework.</li>
+    <li>It is not a security guarantee. A clean report means the reviewed paths showed no findings, nothing more.</li>
+    <li>Production systems are not attacked, changed or connected to at any point.</li>
+    <li>Findings reference public guidance: OWASP Top 10 for LLM Applications 2025 and the NIST AI RMF Generative AI Profile.</li>
+  </ul>
+  <h2>Recommendation</h2>
+  <p>Fix the highest findings first: the injection path into the model, the missing approval
+  step, the missing cost boundary and the dynamic outbound URL. Then rescan the export and
+  rerun the runtime contract so the fixes are confirmed by the same checks that found the
+  problems. Retest again after any later workflow change; the scanner is free and runs locally.</p>
+  <p class="pilot-line">Pilot scope: one redacted workflow, manual review, remediation notes and one retest.</p>
+  <div class="page-footer"><span>CSINT Research &middot; Sample security review (demo fixture)</span><span>Page 6 of 6</span></div>
+</div>
+
+</body>
+</html>

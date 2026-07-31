@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="base.css">
+<style>
+.flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 64px;
+}
+.node {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.node-box {
+  border: 2px solid var(--line);
+  border-left: 6px solid var(--risk);
+  border-radius: 10px;
+  background: var(--panel);
+  padding: 26px 28px 22px;
+  min-height: 150px;
+}
+.node-name {
+  font-size: 33px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.node-type {
+  margin-top: 10px;
+  font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+  font-size: 21px;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+.arrow {
+  align-self: center;
+  width: 64px;
+  flex: none;
+  text-align: center;
+  font-size: 44px;
+  color: var(--risk);
+  padding-bottom: 116px;
+}
+.node-risk {
+  margin-top: 22px;
+  font-size: 28px;
+  line-height: 1.35;
+  color: var(--risk);
+  max-width: 360px;
+}
+.node-risk .mono { font-size: 24px; color: var(--risk-dark); }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="topbar"><span class="brand">CSINT Research</span><span>AI agent audit &middot; local scan</span></div>
+  <div class="stage">
+    <h2>The intentionally unsafe teaching fixture</h2>
+    <div class="flow">
+      <div class="node">
+        <div class="node-box">
+          <p class="node-name">Public Support Webhook</p>
+          <p class="node-type">n8n-nodes-base.webhook</p>
+        </div>
+        <p class="node-risk">Unauthenticated webhook<br><span class="mono">"authentication": "none"</span></p>
+      </div>
+      <div class="arrow">&rarr;</div>
+      <div class="node">
+        <div class="node-box">
+          <p class="node-name">Customer Support Agent</p>
+          <p class="node-type">@n8n/n8n-nodes-langchain.agent</p>
+        </div>
+        <p class="node-risk">Untrusted input reaches the AI agent with no validation step</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+      <div class="node">
+        <div class="node-box">
+          <p class="node-name">Send Account Email</p>
+          <p class="node-type">n8n-nodes-base.emailSend</p>
+        </div>
+        <p class="node-risk">External action without an approval step</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+      <div class="node">
+        <div class="node-box">
+          <p class="node-name">Fetch Customer URL</p>
+          <p class="node-type">n8n-nodes-base.httpRequest</p>
+        </div>
+        <p class="node-risk">User-controlled URL<br><span class="mono">{{ $json.customer_url }}</span></p>
+      </div>
+    </div>
+  </div>
+  <p class="footline">workflows/unsafe-support-agent.json &middot; the fixture ships inactive and is never run</p>
+</div>
+</body>
+</html>

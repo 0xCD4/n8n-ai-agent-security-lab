@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="base.css">
+<style>
+.gate {
+  display: flex;
+  gap: 90px;
+  margin-top: 50px;
+  align-items: flex-start;
+}
+.result {
+  flex: none;
+  width: 560px;
+}
+.result .value {
+  margin-top: 36px;
+  font-size: 110px;
+  font-weight: 700;
+  color: var(--ok);
+  line-height: 1;
+}
+.result .value-label {
+  margin-top: 10px;
+  font-size: 34px;
+  color: var(--ink-soft);
+}
+.checks {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 44px;
+  font-size: 29px;
+  line-height: 1.35;
+}
+.check {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.check .pass {
+  flex: none;
+  font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--ok);
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="topbar"><span class="brand">CSINT Research</span><span>AI agent audit &middot; local scan</span></div>
+  <div class="stage">
+    <h2>Isolated runtime contract</h2>
+    <div class="gate">
+      <div class="result">
+        <span class="cmd">npm run gate:demo</span>
+        <p class="value">8/8</p>
+        <p class="value-label">runtime checks passed</p>
+      </div>
+      <div class="checks">
+        <div class="check"><span class="pass">PASS</span><span>Reject a request without authentication</span></div>
+        <div class="check"><span class="pass">PASS</span><span>Reject an invalid staging signature</span></div>
+        <div class="check"><span class="pass">PASS</span><span>Reject missing and unexpected input fields</span></div>
+        <div class="check"><span class="pass">PASS</span><span>Keep an instruction override behind approval</span></div>
+        <div class="check"><span class="pass">PASS</span><span>Block an invalid approval token</span></div>
+        <div class="check"><span class="pass">PASS</span><span>Accept a valid request without executing an action</span></div>
+        <div class="check"><span class="pass">PASS</span><span>Treat a repeated request as the same operation</span></div>
+        <div class="check"><span class="pass">PASS</span><span>Reject an unsupported webhook method</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="footline">The staging fixture contains no email, HTTP request, database or AI nodes. 0 simulated external actions.</p>
+</div>
+</body>
+</html>

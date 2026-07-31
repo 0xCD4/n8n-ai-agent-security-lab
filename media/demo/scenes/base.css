@@ -1,0 +1,106 @@
+/* Shared scene styles for the 1920x1080 demo video.
+   Quiet editorial design: light background, dark text, restrained red for risk. */
+
+:root {
+  --ink: #1f2933;
+  --ink-soft: #52606d;
+  --line: #d5dbe1;
+  --paper: #ffffff;
+  --panel: #f8fafb;
+  --risk: #b91c1c;
+  --risk-dark: #7f1d1d;
+  --ok: #14532d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Segoe UI", "Liberation Sans", "DejaVu Sans", sans-serif;
+}
+
+.frame {
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 120px 56px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 22px;
+  border-bottom: 2px solid #e4e7eb;
+  font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+  font-size: 26px;
+  color: var(--ink-soft);
+}
+
+.topbar .brand {
+  font-weight: 700;
+  color: #3e4c59;
+}
+
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1 {
+  font-size: 84px;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 56px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.lede {
+  margin-top: 30px;
+  font-size: 40px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 1400px;
+}
+
+.footline {
+  font-size: 26px;
+  color: var(--ink-soft);
+  font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+}
+
+.mono {
+  font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+}
+
+.risk {
+  color: var(--risk);
+}
+
+.cmd {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px 30px;
+  font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+  font-size: 34px;
+  color: var(--ink);
+}

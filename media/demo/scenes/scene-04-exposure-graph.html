@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="base.css">
+<style>
+.graph-wrap {
+  margin-top: 44px;
+  align-self: center;
+  width: 1620px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.graph-wrap img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="topbar"><span class="brand">CSINT Research</span><span>AI agent audit &middot; local scan</span></div>
+  <div class="stage">
+    <h2>Exposure graph: entry point to privileged action</h2>
+    <div class="graph-wrap">
+      <img src="../../../reports/unsafe-support-agent-exposure.svg" alt="Agent exposure graph">
+    </div>
+  </div>
+  <p class="footline">reports/unsafe-support-agent-exposure.svg &middot; finding IDs sit on each risky edge</p>
+</div>
+</body>
+</html>

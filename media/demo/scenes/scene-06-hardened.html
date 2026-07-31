@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="base.css">
+<style>
+.compare {
+  display: flex;
+  gap: 70px;
+  margin-top: 52px;
+}
+.card {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  padding: 36px 42px;
+}
+.card .label {
+  font-size: 30px;
+  color: var(--ink-soft);
+}
+.card .value {
+  margin-top: 12px;
+  font-size: 84px;
+  font-weight: 700;
+  line-height: 1;
+}
+.card .value.bad { color: var(--risk); }
+.card .value.good { color: var(--ok); }
+.card .detail {
+  margin-top: 18px;
+  font-size: 30px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.changes {
+  margin-top: 48px;
+  font-size: 33px;
+  line-height: 1.65;
+}
+.changes strong { font-weight: 700; }
+.changes .mono { font-size: 29px; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="topbar"><span class="brand">CSINT Research</span><span>AI agent audit &middot; local scan</span></div>
+  <div class="stage">
+    <h2>The hardened version of the same workflow</h2>
+    <div class="compare">
+      <div class="card">
+        <p class="label">Unsafe fixture</p>
+        <p class="value bad">10/100</p>
+        <p class="detail">9 findings, 4 high severity</p>
+      </div>
+      <div class="card">
+        <p class="label">Hardened fixture</p>
+        <p class="value good">93/100</p>
+        <p class="detail">1 medium finding kept open on purpose</p>
+      </div>
+    </div>
+    <p class="changes">
+      <strong>Added:</strong> authenticated webhook, input validation and rate limit, output schema check, human approval before the email, allowlisted URL fetch, audit log.<br>
+      <strong>Still open:</strong> <span class="mono">AA-007</span> <span class="risk">the outbound URL is derived from workflow data</span>, so the scanner keeps that path visible for manual review.
+    </p>
+  </div>
+  <p class="footline">reports/hardened-support-agent-audit.md &middot; the score was not forced to 100</p>
+</div>
+</body>
+</html>

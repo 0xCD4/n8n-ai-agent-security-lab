@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="base.css">
+<style>
+.columns {
+  display: flex;
+  gap: 90px;
+  margin-top: 56px;
+  align-items: flex-start;
+}
+.report-head {
+  margin-top: 40px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  padding: 34px 40px;
+  font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+  font-size: 29px;
+  line-height: 1.75;
+  color: var(--ink);
+}
+.report-head .score {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--risk);
+}
+.summary {
+  flex: none;
+  width: 640px;
+}
+.count {
+  font-size: 120px;
+  font-weight: 700;
+  line-height: 1;
+}
+.count-label {
+  margin-top: 8px;
+  font-size: 34px;
+  color: var(--ink-soft);
+}
+.sev {
+  margin-top: 44px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px 26px;
+  font-size: 34px;
+  align-items: center;
+}
+.chip {
+  display: inline-block;
+  min-width: 150px;
+  text-align: center;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+}
+.chip.high { background: var(--risk); color: #fff; }
+.chip.medium { background: #fde8e8; color: #9b1c1c; }
+.chip.low { background: #eef2f5; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="topbar"><span class="brand">CSINT Research</span><span>AI agent audit &middot; local scan</span></div>
+  <div class="stage">
+    <h2>Static audit of the unsafe fixture</h2>
+    <div class="columns">
+      <div>
+        <span class="cmd">npm run audit</span>
+        <div class="report-head">
+          Workflow: Demo - Unsafe Support Agent<br>
+          Source: workflows/unsafe-support-agent.json<br>
+          <span class="score">Score: 10/100 (F)</span>
+        </div>
+      </div>
+      <div class="summary">
+        <p class="count">9</p>
+        <p class="count-label">findings on risky paths</p>
+        <div class="sev">
+          <span class="chip high">4 HIGH</span><span>injection path, missing approval, no cost boundary, dynamic URL</span>
+          <span class="chip medium">4 MEDIUM</span><span>authentication, output validation, timeouts, audit record</span>
+          <span class="chip low">1 LOW</span><span>no failure route</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="footline">A static score is a review aid. It does not prove that the workflow was exploited.</p>
+</div>
+</body>
+</html>
