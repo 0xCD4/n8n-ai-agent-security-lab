@@ -1,7 +1,7 @@
 # AI Agent Security and Reliability Audit
 
 Workflow: Demo - Hardened Support Agent
-Source: workflows\hardened-support-agent.json
+Source: workflows/hardened-support-agent.json
 Score: 93/100 (A)
 
 ## Executive summary

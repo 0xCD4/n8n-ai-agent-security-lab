@@ -84,7 +84,10 @@ async function main() {
   const output =
     options.format === "json"
       ? `${JSON.stringify(result, null, 2)}\n`
-      : renderMarkdownReport(result, path.relative(process.cwd(), inputPath));
+      : renderMarkdownReport(
+          result,
+          path.relative(process.cwd(), inputPath).split(path.sep).join("/"),
+        );
 
   if (options.out) {
     const outputPath = path.resolve(options.out);

@@ -1,7 +1,7 @@
 # AI Agent Security and Reliability Audit
 
 Workflow: Demo - Unsafe Support Agent
-Source: workflows\unsafe-support-agent.json
+Source: workflows/unsafe-support-agent.json
 Score: 10/100 (F)
 
 ## Executive summary
