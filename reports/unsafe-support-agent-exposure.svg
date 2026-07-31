@@ -1,45 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1066" height="628" viewBox="0 0 1066 628" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="528" viewBox="0 0 1160 528" role="img" aria-labelledby="title description">
 <title id="title">AI agent exposure graph</title>
 <desc id="description">Only structured risky paths found by the static scanner are included.</desc>
 <defs>
-<pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
-<path d="M 24 0 L 0 0 0 24" fill="none" stroke="#1f2937" stroke-width="1" opacity="0.45"/>
-</pattern>
-<marker id="arrow-critical" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f87171"/></marker>
-<marker id="arrow-high" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444"/></marker>
-<marker id="arrow-medium" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/></marker>
-<marker id="arrow-low" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/></marker>
+<marker id="arrow-critical" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0.8 L 9.5 5 L 0 9.2 z" fill="#7f1d1d"/></marker>
+<marker id="arrow-high" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0.8 L 9.5 5 L 0 9.2 z" fill="#b91c1c"/></marker>
+<marker id="arrow-medium" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0.8 L 9.5 5 L 0 9.2 z" fill="#b45309"/></marker>
+<marker id="arrow-low" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 0.8 L 9.5 5 L 0 9.2 z" fill="#526172"/></marker>
 </defs>
-<rect width="1066" height="628" fill="#0b0f14"/>
-<rect width="1066" height="628" fill="url(#grid)"/>
-<text x="48" y="46" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="700">Agent Exposure Graph</text>
-<text x="48" y="76" fill="#94a3b8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15">Demo - Unsafe Support Agent</text>
-<text x="1018" y="46" fill="#94a3b8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="end" letter-spacing="1.5">CSINT RESEARCH</text>
-<text x="48" y="130" fill="#ef4444" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700" letter-spacing="1">AA-003  HIGH</text>
-<text x="166" y="130" fill="#cbd5e1" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14">Untrusted input can reach a model without a visible validation boundary</text>
-<line x1="238" y1="198" x2="296" y2="198" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-high)"/>
-<rect x="48" y="164" width="190" height="68" rx="8" fill="#141b24" stroke="#ef4444" stroke-width="1.5"/>
-<text x="64" y="204" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600">Public Support Webhook</text>
-<rect x="308" y="164" width="190" height="68" rx="8" fill="#141b24" stroke="#ef4444" stroke-width="1.5"/>
-<text x="324" y="204" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600">Customer Support Agent</text>
-<text x="48" y="286" fill="#ef4444" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700" letter-spacing="1">AA-004  HIGH</text>
-<text x="166" y="286" fill="#cbd5e1" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14">A model can reach an external write action without an approval step</text>
-<line x1="238" y1="354" x2="296" y2="354" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-high)"/>
-<rect x="48" y="320" width="190" height="68" rx="8" fill="#141b24" stroke="#ef4444" stroke-width="1.5"/>
-<text x="64" y="360" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600">Customer Support Agent</text>
-<rect x="308" y="320" width="190" height="68" rx="8" fill="#141b24" stroke="#ef4444" stroke-width="1.5"/>
-<text x="324" y="360" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600">Send Account Email</text>
-<text x="48" y="442" fill="#ef4444" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700" letter-spacing="1">AA-007  HIGH</text>
-<text x="166" y="442" fill="#cbd5e1" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14">Review HTTP request URLs derived from workflow data</text>
-<line x1="238" y1="510" x2="296" y2="510" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-high)"/>
-<rect x="48" y="476" width="190" height="68" rx="8" fill="#141b24" stroke="#ef4444" stroke-width="1.5"/>
-<text x="64" y="516" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600">Public Support Webhook</text>
-<line x1="498" y1="510" x2="556" y2="510" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-high)"/>
-<rect x="308" y="476" width="190" height="68" rx="8" fill="#141b24" stroke="#ef4444" stroke-width="1.5"/>
-<text x="324" y="516" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600">Customer Support Agent</text>
-<line x1="758" y1="510" x2="816" y2="510" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-high)"/>
-<rect x="568" y="476" width="190" height="68" rx="8" fill="#141b24" stroke="#ef4444" stroke-width="1.5"/>
-<text x="584" y="516" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600">Send Account Email</text>
-<rect x="828" y="476" width="190" height="68" rx="8" fill="#141b24" stroke="#ef4444" stroke-width="1.5"/>
-<text x="844" y="516" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600">Fetch Customer URL</text>
+<rect width="1160" height="528" fill="#f6f8fa"/>
+<rect x="0.5" y="0.5" width="1159" height="527" fill="none" stroke="#cfd8e0"/>
+<text x="44" y="46" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="20" font-weight="700">Agent Exposure Graph</text>
+<text x="44" y="69" fill="#5b6b7c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13">Demo - Unsafe Support Agent</text>
+<text x="1071.6" y="46" fill="#b91c1c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="12.5" font-weight="700" letter-spacing="0.4">3 HIGH</text>
+<rect x="1057.6" y="37" width="9" height="9" rx="2" fill="#b91c1c"/>
+<line x1="44" y1="92" x2="1116" y2="92" stroke="#dde3e9" stroke-width="1"/>
+<text x="44" y="118" fill="#8494a5" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6">RISKY DATA FLOW</text>
+<line x1="237" y1="185" x2="335" y2="185" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow-high)"/>
+<text x="286" y="162" fill="#b91c1c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.3">AA-003</text>
+<text x="286" y="175" fill="#b91c1c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.3">AA-007</text>
+<line x1="531" y1="185" x2="629" y2="185" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow-high)"/>
+<text x="580" y="162" fill="#b91c1c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.3">AA-004</text>
+<text x="580" y="175" fill="#b91c1c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.3">AA-007</text>
+<line x1="825" y1="185" x2="923" y2="185" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow-high)"/>
+<text x="874" y="175" fill="#b91c1c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.3">AA-007</text>
+<text x="45" y="142" fill="#8494a5" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">ENTRY POINT</text>
+<rect x="44" y="152" width="190" height="66" rx="4" fill="#ffffff" stroke="#bcc8d4" stroke-width="1"/>
+<rect x="45" y="156" width="3.5" height="58" rx="1.75" fill="#b91c1c"/>
+<text x="139" y="180.5" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="600" text-anchor="middle">Public Support</text>
+<text x="139" y="199.5" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="600" text-anchor="middle">Webhook</text>
+<rect x="338" y="152" width="190" height="66" rx="4" fill="#ffffff" stroke="#bcc8d4" stroke-width="1"/>
+<rect x="339" y="156" width="3.5" height="58" rx="1.75" fill="#b91c1c"/>
+<text x="433" y="180.5" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="600" text-anchor="middle">Customer Support</text>
+<text x="433" y="199.5" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="600" text-anchor="middle">Agent</text>
+<rect x="632" y="152" width="190" height="66" rx="4" fill="#ffffff" stroke="#bcc8d4" stroke-width="1"/>
+<rect x="633" y="156" width="3.5" height="58" rx="1.75" fill="#b91c1c"/>
+<text x="727" y="190" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="600" text-anchor="middle">Send Account Email</text>
+<rect x="926" y="152" width="190" height="66" rx="4" fill="#ffffff" stroke="#bcc8d4" stroke-width="1"/>
+<rect x="927" y="156" width="3.5" height="58" rx="1.75" fill="#b91c1c"/>
+<text x="1021" y="190" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="600" text-anchor="middle">Fetch Customer URL</text>
+<line x1="44" y1="250" x2="1116" y2="250" stroke="#dde3e9" stroke-width="1"/>
+<text x="44" y="276" fill="#8494a5" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6">FINDINGS</text>
+<rect x="44" y="294" width="46" height="19" rx="3" fill="#b91c1c"/>
+<text x="67" y="307.5" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.8">HIGH</text>
+<text x="104" y="308" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" font-weight="700">AA-003</text>
+<text x="168.8" y="308" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13">Untrusted input can reach a model without a visible validation boundary</text>
+<text x="168.8" y="329" fill="#5b6b7c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="12">Public Support Webhook → Customer Support Agent</text>
+<line x1="44" y1="349" x2="1116" y2="349" stroke="#e7ecf1" stroke-width="1"/>
+<rect x="44" y="360" width="46" height="19" rx="3" fill="#b91c1c"/>
+<text x="67" y="373.5" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.8">HIGH</text>
+<text x="104" y="374" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" font-weight="700">AA-004</text>
+<text x="168.8" y="374" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13">A model can reach an external write action without an approval step</text>
+<text x="168.8" y="395" fill="#5b6b7c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="12">Customer Support Agent → Send Account Email</text>
+<line x1="44" y1="415" x2="1116" y2="415" stroke="#e7ecf1" stroke-width="1"/>
+<rect x="44" y="426" width="46" height="19" rx="3" fill="#b91c1c"/>
+<text x="67" y="439.5" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.8">HIGH</text>
+<text x="104" y="440" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" font-weight="700">AA-007</text>
+<text x="168.8" y="440" fill="#1b2733" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13">Review HTTP request URLs derived from workflow data</text>
+<text x="168.8" y="461" fill="#5b6b7c" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="12">Public Support Webhook → Customer Support Agent → Send Account Email → Fetch Customer URL</text>
+<line x1="44" y1="494" x2="1116" y2="494" stroke="#dde3e9" stroke-width="1"/>
+<text x="44" y="515" fill="#8494a5" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11">Only structured risky paths found by the static scanner are included.</text>
+<text x="1116" y="515" fill="#8494a5" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="10" font-weight="700" text-anchor="end" letter-spacing="1.6">CSINT RESEARCH</text>
 </svg>

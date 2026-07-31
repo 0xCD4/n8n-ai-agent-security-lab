@@ -9,7 +9,7 @@ It provides three small, explainable outputs:
 
 - **Static audit:** follows paths through an exported workflow and reports risky security patterns.
 - **Regression gate:** sends synthetic requests to an isolated staging webhook and checks the behavior that must not change.
-- **Exposure graph:** turns structured risky paths into JSON, Mermaid and a dark, report-ready SVG.
+- **Exposure graph:** turns structured risky paths into JSON, Mermaid and a print-ready SVG report figure.
 
 Workflow exports stay local. The scanner does not upload them or call an AI API.
 
@@ -27,6 +27,8 @@ node bin/audit.mjs \
 ```
 
 The command writes `.json`, `.mmd` and `.svg` files. The JSON keeps scanner finding IDs so the same paths can be correlated with SARIF results. The graph contains only structured risky paths, not every workflow node.
+
+The SVG is a self-contained report figure: one merged data flow from the entry point to the final privileged action, finding IDs on each risky edge, and a findings ledger that maps every ID and severity back to the exact path the scanner proved. It uses system fonts only and stays readable on screens, in PDF exports and in printed reports.
 
 ![Unsafe support agent exposure graph](reports/unsafe-support-agent-exposure.svg)
 
