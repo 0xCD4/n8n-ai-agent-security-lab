@@ -1,0 +1,258 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "n8n-ai-sec-map",
+          "informationUri": "https://github.com/0xCD4/n8n-ai-agent-security-lab",
+          "rules": [
+            {
+              "id": "MW-001",
+              "shortDescription": {
+                "text": "Public input reaches a credentialed action across workflows"
+              },
+              "help": {
+                "text": "Authenticate the entry point, add an explicit approval gate before the action, and use a narrow credential in the called workflow."
+              }
+            },
+            {
+              "id": "MW-002",
+              "shortDescription": {
+                "text": "Model output reaches a credentialed action across workflows"
+              },
+              "help": {
+                "text": "Constrain model output, add a human approval boundary, and separate read credentials from write credentials."
+              }
+            },
+            {
+              "id": "MW-003-02",
+              "shortDescription": {
+                "text": "credential-02 is reused across 2 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-03",
+              "shortDescription": {
+                "text": "credential-03 is reused across 2 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-04",
+              "shortDescription": {
+                "text": "credential-04 is reused across 2 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-05",
+              "shortDescription": {
+                "text": "credential-05 is reused across 2 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-15",
+              "shortDescription": {
+                "text": "credential-15 is reused across 3 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-19",
+              "shortDescription": {
+                "text": "credential-19 is reused across 2 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-21",
+              "shortDescription": {
+                "text": "credential-21 is reused across 2 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-25",
+              "shortDescription": {
+                "text": "credential-25 is reused across 3 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-37",
+              "shortDescription": {
+                "text": "credential-37 is reused across 2 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-003-41",
+              "shortDescription": {
+                "text": "credential-41 is reused across 2 workflows"
+              },
+              "help": {
+                "text": "Review the real permission scope and split intake/read credentials from approved send/write credentials."
+              }
+            },
+            {
+              "id": "MW-004-01",
+              "shortDescription": {
+                "text": "Sub-workflow target could not be resolved (ambiguous)"
+              },
+              "help": {
+                "text": "Export the complete workflow set with stable workflow IDs, then review the unresolved call before deployment."
+              }
+            },
+            {
+              "id": "MW-004-02",
+              "shortDescription": {
+                "text": "Sub-workflow target could not be resolved (unresolved)"
+              },
+              "help": {
+                "text": "Export the complete workflow set with stable workflow IDs, then review the unresolved call before deployment."
+              }
+            },
+            {
+              "id": "MW-004-03",
+              "shortDescription": {
+                "text": "Sub-workflow target could not be resolved (unresolved)"
+              },
+              "help": {
+                "text": "Export the complete workflow set with stable workflow IDs, then review the unresolved call before deployment."
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "MW-001",
+          "level": "error",
+          "message": {
+            "text": "The exported call graph contains a cross-workflow path from an untrusted trigger to a credentialed side effect without an explicit approval boundary."
+          }
+        },
+        {
+          "ruleId": "MW-002",
+          "level": "error",
+          "message": {
+            "text": "The exported call graph contains a cross-workflow path from a model node to a credentialed side effect without an explicit approval boundary."
+          }
+        },
+        {
+          "ruleId": "MW-003-02",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: Threads Credentials Setup, Threads Posting Automation. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-03",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: BlueSky Post, Email Responder Agent. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-04",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: Newsletter Capture Automation, YouTube Automation. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-05",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: Lead Capture CRM, Notion Daily Briefing. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-15",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: Contact Agent Template, Email Agent Template, Research Agent Template. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-19",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: Email Responder Agent, RD-Calendar Agent. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-21",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: RD-Calendar Agent, RD-Notion Agent. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-25",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: BlueSky Post, Email Responder Agent, URL Status Workflow. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-37",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: Social Media Manager AI Agent, Social Media Manager Telegram Trigger. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-003-41",
+          "level": "warning",
+          "message": {
+            "text": "The same exported credential reference appears in: Social Media Manager AI Agent, Social Media Manager Telegram Trigger. The report intentionally omits its raw name and ID."
+          }
+        },
+        {
+          "ruleId": "MW-004-01",
+          "level": "warning",
+          "message": {
+            "text": "Email Responder Agent / Calendar Agent refers to a workflow that is not uniquely present in this export set."
+          }
+        },
+        {
+          "ruleId": "MW-004-02",
+          "level": "warning",
+          "message": {
+            "text": "Parent Agent / Notion Agent refers to a workflow that is not uniquely present in this export set."
+          }
+        },
+        {
+          "ruleId": "MW-004-03",
+          "level": "warning",
+          "message": {
+            "text": "Parent Agent / Calendar Agent refers to a workflow that is not uniquely present in this export set."
+          }
+        }
+      ]
+    }
+  ]
+}

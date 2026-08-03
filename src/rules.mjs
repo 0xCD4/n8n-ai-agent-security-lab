@@ -444,6 +444,23 @@ function credentialReferenceKeys(node) {
   return [...new Set(references)];
 }
 
+export function classifyWorkflowNode(node) {
+  return {
+    untrustedInput: isUntrustedInput(node),
+    model: isModelNode(node),
+    sideEffect: isSideEffect(node),
+    explicitApproval: isExplicitApprovalBoundary(node),
+  };
+}
+
+export function workflowAdjacency(workflow) {
+  return buildAdjacency(workflow);
+}
+
+export function workflowCredentialReferenceKeys(node) {
+  return credentialReferenceKeys(node);
+}
+
 function indexCredentialUsage(nodeByName, laneNames) {
   const usage = new Map();
   for (const nodeName of laneNames) {

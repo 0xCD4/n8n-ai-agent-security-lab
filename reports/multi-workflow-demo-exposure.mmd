@@ -1,0 +1,39 @@
+flowchart LR
+%% Multi-workflow demo exposure graph
+subgraph path_0["MW-001 | HIGH"]
+  p0_n0["Public support intake / Public Webhook"]
+  p0_n1["Public support intake / Support Agent"]
+  p0_n0 --> p0_n1
+  p0_n2["Public support intake / Run Privileged Action"]
+  p0_n1 --> p0_n2
+  p0_n3["Privileged action / Called by Another Workflow"]
+  p0_n2 --> p0_n3
+  p0_n4["Privileged action / Privileged Model Lookup"]
+  p0_n3 --> p0_n4
+  p0_n5["Privileged action / Send External Email"]
+  p0_n4 --> p0_n5
+end
+style path_0 fill:#0b0f14,stroke:#ef4444,color:#e5e7eb
+style p0_n0 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p0_n1 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p0_n2 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p0_n3 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p0_n4 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p0_n5 fill:#141b24,stroke:#ef4444,color:#f8fafc
+subgraph path_1["MW-002 | HIGH"]
+  p1_n0["Public support intake / Support Agent"]
+  p1_n1["Public support intake / Run Privileged Action"]
+  p1_n0 --> p1_n1
+  p1_n2["Privileged action / Called by Another Workflow"]
+  p1_n1 --> p1_n2
+  p1_n3["Privileged action / Privileged Model Lookup"]
+  p1_n2 --> p1_n3
+  p1_n4["Privileged action / Send External Email"]
+  p1_n3 --> p1_n4
+end
+style path_1 fill:#0b0f14,stroke:#ef4444,color:#e5e7eb
+style p1_n0 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p1_n1 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p1_n2 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p1_n3 fill:#141b24,stroke:#ef4444,color:#f8fafc
+style p1_n4 fill:#141b24,stroke:#ef4444,color:#f8fafc

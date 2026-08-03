@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "workflow": "Public n8n workflow repository snapshot",
+  "paths": [
+    {
+      "findingId": "MW-001",
+      "severity": "high",
+      "title": "Public input reaches a credentialed action across workflows",
+      "nodes": [
+        "Voice Agent Template / Telegram Trigger",
+        "Voice Agent Template / Switch",
+        "Voice Agent Template / AI Agent",
+        "Voice Agent Template / Email Agent",
+        "Email Agent Template / When Executed by Another Workflow",
+        "Email Agent Template / AI Agent",
+        "Email Agent Template / Send Email"
+      ]
+    },
+    {
+      "findingId": "MW-002",
+      "severity": "high",
+      "title": "Model output reaches a credentialed action across workflows",
+      "nodes": [
+        "Voice Agent Template / AI Agent",
+        "Voice Agent Template / Email Agent",
+        "Email Agent Template / When Executed by Another Workflow",
+        "Email Agent Template / AI Agent",
+        "Email Agent Template / Send Email"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node-1",
+      "label": "Voice Agent Template / Telegram Trigger",
+      "severity": "high",
+      "findingIds": [
+        "MW-001"
+      ]
+    },
+    {
+      "id": "node-2",
+      "label": "Voice Agent Template / Switch",
+      "severity": "high",
+      "findingIds": [
+        "MW-001"
+      ]
+    },
+    {
+      "id": "node-3",
+      "label": "Voice Agent Template / AI Agent",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "id": "node-4",
+      "label": "Voice Agent Template / Email Agent",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "id": "node-5",
+      "label": "Email Agent Template / When Executed by Another Workflow",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "id": "node-6",
+      "label": "Email Agent Template / AI Agent",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "id": "node-7",
+      "label": "Email Agent Template / Send Email",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "Voice Agent Template / Telegram Trigger",
+      "target": "Voice Agent Template / Switch",
+      "severity": "high",
+      "findingIds": [
+        "MW-001"
+      ]
+    },
+    {
+      "source": "Voice Agent Template / Switch",
+      "target": "Voice Agent Template / AI Agent",
+      "severity": "high",
+      "findingIds": [
+        "MW-001"
+      ]
+    },
+    {
+      "source": "Voice Agent Template / AI Agent",
+      "target": "Voice Agent Template / Email Agent",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "source": "Voice Agent Template / Email Agent",
+      "target": "Email Agent Template / When Executed by Another Workflow",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "source": "Email Agent Template / When Executed by Another Workflow",
+      "target": "Email Agent Template / AI Agent",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "source": "Email Agent Template / AI Agent",
+      "target": "Email Agent Template / Send Email",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    }
+  ],
+  "note": "Only cross-workflow risky paths proven from the supplied exports are included."
+}

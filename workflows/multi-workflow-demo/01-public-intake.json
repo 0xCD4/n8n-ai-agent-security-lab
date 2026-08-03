@@ -1,0 +1,39 @@
+{
+  "id": "public-intake-01",
+  "name": "Public support intake",
+  "nodes": [
+    {
+      "name": "Public Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": { "authentication": "none" }
+    },
+    {
+      "name": "Support Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "parameters": {},
+      "credentials": {
+        "openAiApi": { "id": "demo-shared-credential", "name": "Demo shared credential" }
+      }
+    },
+    {
+      "name": "Run Privileged Action",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "privileged-action-01",
+          "mode": "list",
+          "cachedResultName": "Privileged action"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Public Webhook": {
+      "main": [[{ "node": "Support Agent", "type": "main", "index": 0 }]]
+    },
+    "Run Privileged Action": {
+      "ai_tool": [[{ "node": "Support Agent", "type": "ai_tool", "index": 0 }]]
+    }
+  }
+}

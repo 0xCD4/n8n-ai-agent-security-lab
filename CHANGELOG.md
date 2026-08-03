@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added a local multi-workflow trust-boundary map for exported n8n workflow sets.
+- Added cross-workflow public-input and model-to-credentialed-action path checks.
+- Added unresolved sub-workflow and credential-reuse review signals with redacted credential aliases.
+- Added JSON, Markdown, SARIF, Mermaid and SVG workspace-map outputs.
 - Added a bounded, official-API collector for public free n8n AI Agent templates.
 - Added anonymous aggregate summaries, source manifests and a private manual-review queue.
 - Added safety limits that prevent workflow execution, raw-export storage and non-official downloads.

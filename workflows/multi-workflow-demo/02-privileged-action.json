@@ -1,0 +1,35 @@
+{
+  "id": "privileged-action-01",
+  "name": "Privileged action",
+  "nodes": [
+    {
+      "name": "Called by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "parameters": {}
+    },
+    {
+      "name": "Privileged Model Lookup",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "parameters": {},
+      "credentials": {
+        "openAiApi": { "id": "demo-shared-credential", "name": "Demo shared credential" }
+      }
+    },
+    {
+      "name": "Send External Email",
+      "type": "n8n-nodes-base.emailSend",
+      "parameters": { "operation": "send" },
+      "credentials": {
+        "smtp": { "id": "demo-smtp-credential", "name": "Demo SMTP credential" }
+      }
+    }
+  ],
+  "connections": {
+    "Called by Another Workflow": {
+      "main": [[{ "node": "Privileged Model Lookup", "type": "main", "index": 0 }]]
+    },
+    "Privileged Model Lookup": {
+      "main": [[{ "node": "Send External Email", "type": "main", "index": 0 }]]
+    }
+  }
+}

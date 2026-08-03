@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "workflow": "Multi-workflow demo",
+  "paths": [
+    {
+      "findingId": "MW-001",
+      "severity": "high",
+      "title": "Public input reaches a credentialed action across workflows",
+      "nodes": [
+        "Public support intake / Public Webhook",
+        "Public support intake / Support Agent",
+        "Public support intake / Run Privileged Action",
+        "Privileged action / Called by Another Workflow",
+        "Privileged action / Privileged Model Lookup",
+        "Privileged action / Send External Email"
+      ]
+    },
+    {
+      "findingId": "MW-002",
+      "severity": "high",
+      "title": "Model output reaches a credentialed action across workflows",
+      "nodes": [
+        "Public support intake / Support Agent",
+        "Public support intake / Run Privileged Action",
+        "Privileged action / Called by Another Workflow",
+        "Privileged action / Privileged Model Lookup",
+        "Privileged action / Send External Email"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node-1",
+      "label": "Public support intake / Public Webhook",
+      "severity": "high",
+      "findingIds": [
+        "MW-001"
+      ]
+    },
+    {
+      "id": "node-2",
+      "label": "Public support intake / Support Agent",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "id": "node-3",
+      "label": "Public support intake / Run Privileged Action",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "id": "node-4",
+      "label": "Privileged action / Called by Another Workflow",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "id": "node-5",
+      "label": "Privileged action / Privileged Model Lookup",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "id": "node-6",
+      "label": "Privileged action / Send External Email",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "Public support intake / Public Webhook",
+      "target": "Public support intake / Support Agent",
+      "severity": "high",
+      "findingIds": [
+        "MW-001"
+      ]
+    },
+    {
+      "source": "Public support intake / Support Agent",
+      "target": "Public support intake / Run Privileged Action",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "source": "Public support intake / Run Privileged Action",
+      "target": "Privileged action / Called by Another Workflow",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "source": "Privileged action / Called by Another Workflow",
+      "target": "Privileged action / Privileged Model Lookup",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    },
+    {
+      "source": "Privileged action / Privileged Model Lookup",
+      "target": "Privileged action / Send External Email",
+      "severity": "high",
+      "findingIds": [
+        "MW-001",
+        "MW-002"
+      ]
+    }
+  ],
+  "note": "Only cross-workflow risky paths proven from the supplied exports are included."
+}

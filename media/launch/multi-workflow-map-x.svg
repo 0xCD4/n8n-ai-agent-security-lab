@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">n8n multi-workflow trust boundary map launch</title>
+<desc id="desc">Measured static analysis of 24 public workflow exports and 297 nodes.</desc>
+<rect width="1600" height="900" fill="#20262b"/>
+<rect x="46" y="42" width="1508" height="816" rx="10" fill="#fbfaf6"/>
+<g font-family="Segoe UI, Arial, sans-serif">
+<text x="96" y="98" font-size="15" fill="#171b1f" font-family="Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="2.8">CSINT RESEARCH / BUILD NOTE</text>
+<text x="1504" y="98" font-size="15" fill="#6f7376" font-family="Segoe UI, Arial, sans-serif" text-anchor="end">03.08.2026  /  dff5ff6</text>
+<line x1="96" y1="122" x2="1504" y2="122" stroke="#30353a"/>
+<text x="96" y="211" font-size="55" fill="#171b1f" font-family="Georgia, Times New Roman, serif" font-weight="700">n8n workflows are not isolated files.</text>
+<text x="96" y="260" font-size="24" fill="#4e555a" font-family="Segoe UI, Arial, sans-serif">A local trust-boundary map for exported workflow sets.</text>
+<rect x="96" y="314" width="230" height="137" rx="8" fill="#ffffff" stroke="#c8c4ba" stroke-width="1"/>
+<text x="124" y="357" font-size="18" fill="#696d70" font-family="Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="1.6">WORKFLOWS</text>
+<text x="124" y="426" font-size="58" fill="#181d22" font-family="Segoe UI, Arial, sans-serif" font-weight="750">24</text>
+<rect x="350" y="314" width="230" height="137" rx="8" fill="#ffffff" stroke="#c8c4ba" stroke-width="1"/>
+<text x="378" y="357" font-size="18" fill="#696d70" font-family="Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="1.6">NODES</text>
+<text x="378" y="426" font-size="58" fill="#181d22" font-family="Segoe UI, Arial, sans-serif" font-weight="750">297</text>
+<rect x="604" y="314" width="230" height="137" rx="8" fill="#ffffff" stroke="#c8c4ba" stroke-width="1"/>
+<text x="632" y="357" font-size="18" fill="#696d70" font-family="Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="1.6">CALLS</text>
+<text x="632" y="426" font-size="58" fill="#181d22" font-family="Segoe UI, Arial, sans-serif" font-weight="750">8</text>
+<rect x="858" y="314" width="230" height="137" rx="8" fill="#ffffff" stroke="#c8c4ba" stroke-width="1"/>
+<text x="886" y="357" font-size="18" fill="#696d70" font-family="Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="1.6">RESOLVED</text>
+<text x="886" y="426" font-size="58" fill="#181d22" font-family="Segoe UI, Arial, sans-serif" font-weight="750">5</text>
+<rect x="1112" y="314" width="230" height="137" rx="8" fill="#ffffff" stroke="#c8c4ba" stroke-width="1"/>
+<text x="1140" y="357" font-size="18" fill="#696d70" font-family="Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="1.6">NEED REVIEW</text>
+<text x="1140" y="426" font-size="58" fill="#181d22" font-family="Segoe UI, Arial, sans-serif" font-weight="750">3</text>
+<rect x="96" y="500" width="1408" height="131" rx="8" fill="#20262b"/>
+<text x="138" y="553" font-size="17" fill="#f5f2ea" font-family="Segoe UI, Arial, sans-serif" font-weight="700">PUBLIC TRIGGER</text>
+<text x="454" y="553" font-size="17" fill="#f5f2ea" font-family="Segoe UI, Arial, sans-serif" font-weight="700">PARENT AGENT</text>
+<text x="756" y="553" font-size="17" fill="#f5f2ea" font-family="Segoe UI, Arial, sans-serif" font-weight="700">SUB-WORKFLOW</text>
+<text x="1111" y="553" font-size="17" fill="#f5f2ea" font-family="Segoe UI, Arial, sans-serif" font-weight="700">CREDENTIALED ACTION</text>
+<path d="M 139 587 L 1457 587" fill="none" stroke="#d4cfc4" stroke-width="2"/>
+<circle cx="210" cy="587" r="8" fill="#d4cfc4"/><circle cx="520" cy="587" r="8" fill="#d4cfc4"/><circle cx="825" cy="587" r="8" fill="#d4cfc4"/><circle cx="1245" cy="587" r="10" fill="#b33a32"/>
+<text x="96" y="693" font-size="17" fill="#8d1f1f" font-family="Segoe UI, Arial, sans-serif" font-weight="800" letter-spacing="2.2">MEASURED REVIEW SIGNALS</text>
+<text x="96" y="751" font-size="42" fill="#171b1f" font-family="Segoe UI, Arial, sans-serif" font-weight="750">10</text><text x="150" y="751" font-size="20" fill="#4e555a" font-family="Segoe UI, Arial, sans-serif">credential-reference reuse signals</text>
+<text x="813" y="751" font-size="42" fill="#8d1f1f" font-family="Segoe UI, Arial, sans-serif" font-weight="750">2</text><text x="862" y="751" font-size="20" fill="#4e555a" font-family="Segoe UI, Arial, sans-serif">cross-workflow high review paths</text>
+<line x1="96" y1="795" x2="1504" y2="795" stroke="#b8b6b0"/>
+<text x="96" y="827" font-size="14" fill="#6f7376" font-family="Segoe UI, Arial, sans-serif">Public GitHub snapshot. Static parsing only; nothing imported or executed.</text>
+<text x="1504" y="827" font-size="14" fill="#6f7376" font-family="Segoe UI, Arial, sans-serif" font-weight="700" text-anchor="end">RAW CREDENTIAL NAMES AND IDs OMITTED</text>
+</g></svg>

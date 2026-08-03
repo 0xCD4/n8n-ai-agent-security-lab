@@ -1,0 +1,599 @@
+{
+  "schemaVersion": 1,
+  "name": "Public n8n workflow repository snapshot",
+  "summary": {
+    "workflows": 24,
+    "nodes": 297,
+    "workflowCalls": 8,
+    "resolvedCalls": 5,
+    "unresolvedCalls": 3,
+    "credentialAliases": 43,
+    "findings": 15,
+    "highFindings": 2
+  },
+  "workflows": [
+    {
+      "key": "workflow-01",
+      "name": "RD-Calendar Agent",
+      "source": "AI Voice Assistant/calendar-agent.json",
+      "nodeCount": 13,
+      "credentialAliases": [
+        "credential-10",
+        "credential-21"
+      ]
+    },
+    {
+      "key": "workflow-02",
+      "name": "Contact Agent Template",
+      "source": "AI Voice Assistant/contacts-agent.json",
+      "nodeCount": 13,
+      "credentialAliases": [
+        "credential-15"
+      ]
+    },
+    {
+      "key": "workflow-03",
+      "name": "Email Agent Template",
+      "source": "AI Voice Assistant/email-agent.json",
+      "nodeCount": 14,
+      "credentialAliases": [
+        "credential-06",
+        "credential-15"
+      ]
+    },
+    {
+      "key": "workflow-04",
+      "name": "RD-Notion Agent",
+      "source": "AI Voice Assistant/notion-agent.json",
+      "nodeCount": 11,
+      "credentialAliases": [
+        "credential-21",
+        "credential-36"
+      ]
+    },
+    {
+      "key": "workflow-05",
+      "name": "Voice Agent Template",
+      "source": "AI Voice Assistant/parent-voice-agent.json",
+      "nodeCount": 17,
+      "credentialAliases": []
+    },
+    {
+      "key": "workflow-06",
+      "name": "Research Agent Template",
+      "source": "AI Voice Assistant/research-agent.json",
+      "nodeCount": 6,
+      "credentialAliases": [
+        "credential-15"
+      ]
+    },
+    {
+      "key": "workflow-07",
+      "name": "Employee Onboarding",
+      "source": "Azure Employee Onboarding.json",
+      "nodeCount": 13,
+      "credentialAliases": [
+        "credential-28",
+        "credential-29",
+        "credential-32",
+        "credential-33",
+        "credential-34"
+      ]
+    },
+    {
+      "key": "workflow-08",
+      "name": "BlueSky Post",
+      "source": "BlueSky Automation.json",
+      "nodeCount": 13,
+      "credentialAliases": [
+        "credential-03",
+        "credential-20",
+        "credential-25"
+      ]
+    },
+    {
+      "key": "workflow-09",
+      "name": "RD-Calendar Agent",
+      "source": "email-responder-agent/calendar-sub-agent.json",
+      "nodeCount": 14,
+      "credentialAliases": [
+        "credential-09",
+        "credential-19"
+      ]
+    },
+    {
+      "key": "workflow-10",
+      "name": "Email Responder Agent",
+      "source": "email-responder-agent/email-responder-agent.json",
+      "nodeCount": 15,
+      "credentialAliases": [
+        "credential-03",
+        "credential-08",
+        "credential-12",
+        "credential-19",
+        "credential-25"
+      ]
+    },
+    {
+      "key": "workflow-11",
+      "name": "Lead Capture CRM",
+      "source": "Lead Capture CRM.json",
+      "nodeCount": 4,
+      "credentialAliases": [
+        "credential-05",
+        "credential-27",
+        "credential-39"
+      ]
+    },
+    {
+      "key": "workflow-12",
+      "name": "Calendar Agent",
+      "source": "Multi-Agent AI Assistant/calendar-agent.json",
+      "nodeCount": 14,
+      "credentialAliases": []
+    },
+    {
+      "key": "workflow-13",
+      "name": "Notion Agent",
+      "source": "Multi-Agent AI Assistant/notion-agent.json",
+      "nodeCount": 12,
+      "credentialAliases": []
+    },
+    {
+      "key": "workflow-14",
+      "name": "Parent Agent",
+      "source": "Multi-Agent AI Assistant/parent-agent.json",
+      "nodeCount": 12,
+      "credentialAliases": []
+    },
+    {
+      "key": "workflow-15",
+      "name": "Newsletter Capture Automation",
+      "source": "newsletter-capture-automation.json",
+      "nodeCount": 15,
+      "credentialAliases": [
+        "credential-04",
+        "credential-07",
+        "credential-11",
+        "credential-30"
+      ]
+    },
+    {
+      "key": "workflow-16",
+      "name": "Notion Daily Briefing",
+      "source": "Notion Daily Briefing.json",
+      "nodeCount": 5,
+      "credentialAliases": [
+        "credential-05",
+        "credential-35"
+      ]
+    },
+    {
+      "key": "workflow-17",
+      "name": "Social Media Manager AI Agent",
+      "source": "Social Media Manager/Social Media AI Agent.json",
+      "nodeCount": 19,
+      "credentialAliases": [
+        "credential-01",
+        "credential-14",
+        "credential-23",
+        "credential-37",
+        "credential-41"
+      ]
+    },
+    {
+      "key": "workflow-18",
+      "name": "Social Media Manager Telegram Trigger",
+      "source": "Social Media Manager/Telegram Social Media Manager.json",
+      "nodeCount": 14,
+      "credentialAliases": [
+        "credential-37",
+        "credential-40",
+        "credential-41"
+      ]
+    },
+    {
+      "key": "workflow-19",
+      "name": "Threads Credentials Setup",
+      "source": "Threads Automation/Threads Credentials Setup.json",
+      "nodeCount": 4,
+      "credentialAliases": [
+        "credential-02"
+      ]
+    },
+    {
+      "key": "workflow-20",
+      "name": "Threads Posting Automation",
+      "source": "Threads Automation/Threads Posting Automation.json",
+      "nodeCount": 15,
+      "credentialAliases": [
+        "credential-02",
+        "credential-17",
+        "credential-24"
+      ]
+    },
+    {
+      "key": "workflow-21",
+      "name": "Twitter Auto Replier",
+      "source": "Twitter-Auto-Reply-Agent.json",
+      "nodeCount": 5,
+      "credentialAliases": [
+        "credential-22",
+        "credential-26",
+        "credential-38",
+        "credential-42"
+      ]
+    },
+    {
+      "key": "workflow-22",
+      "name": "URL Status Workflow",
+      "source": "URL Uptime and Error Logging.JSON",
+      "nodeCount": 17,
+      "credentialAliases": [
+        "credential-25",
+        "credential-31"
+      ]
+    },
+    {
+      "key": "workflow-23",
+      "name": "My workflow 4",
+      "source": "X Post Generator.json",
+      "nodeCount": 14,
+      "credentialAliases": []
+    },
+    {
+      "key": "workflow-24",
+      "name": "YouTube Automation",
+      "source": "You Tube Automation.json",
+      "nodeCount": 18,
+      "credentialAliases": [
+        "credential-04",
+        "credential-13",
+        "credential-16",
+        "credential-18",
+        "credential-43"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "sourceWorkflow": "Voice Agent Template",
+      "sourceNode": "Calendar Agent",
+      "targetWorkflow": "Calendar Agent",
+      "status": "resolved"
+    },
+    {
+      "sourceWorkflow": "Voice Agent Template",
+      "sourceNode": "Notion Agent",
+      "targetWorkflow": "Notion Agent",
+      "status": "resolved"
+    },
+    {
+      "sourceWorkflow": "Voice Agent Template",
+      "sourceNode": "Email Agent",
+      "targetWorkflow": "Email Agent Template",
+      "status": "resolved"
+    },
+    {
+      "sourceWorkflow": "Voice Agent Template",
+      "sourceNode": "Contact Agent",
+      "targetWorkflow": "Contact Agent Template",
+      "status": "resolved"
+    },
+    {
+      "sourceWorkflow": "Voice Agent Template",
+      "sourceNode": "Research Agent",
+      "targetWorkflow": "Research Agent Template",
+      "status": "resolved"
+    },
+    {
+      "sourceWorkflow": "Email Responder Agent",
+      "sourceNode": "Calendar Agent",
+      "targetWorkflow": null,
+      "status": "ambiguous"
+    },
+    {
+      "sourceWorkflow": "Parent Agent",
+      "sourceNode": "Notion Agent",
+      "targetWorkflow": null,
+      "status": "unresolved"
+    },
+    {
+      "sourceWorkflow": "Parent Agent",
+      "sourceNode": "Calendar Agent",
+      "targetWorkflow": null,
+      "status": "unresolved"
+    }
+  ],
+  "findings": [
+    {
+      "id": "MW-001",
+      "severity": "high",
+      "title": "Public input reaches a credentialed action across workflows",
+      "description": "The exported call graph contains a cross-workflow path from an untrusted trigger to a credentialed side effect without an explicit approval boundary.",
+      "remediation": "Authenticate the entry point, add an explicit approval gate before the action, and use a narrow credential in the called workflow.",
+      "path": [
+        "Voice Agent Template / Telegram Trigger",
+        "Voice Agent Template / Switch",
+        "Voice Agent Template / AI Agent",
+        "Voice Agent Template / Email Agent",
+        "Email Agent Template / When Executed by Another Workflow",
+        "Email Agent Template / AI Agent",
+        "Email Agent Template / Send Email"
+      ]
+    },
+    {
+      "id": "MW-002",
+      "severity": "high",
+      "title": "Model output reaches a credentialed action across workflows",
+      "description": "The exported call graph contains a cross-workflow path from a model node to a credentialed side effect without an explicit approval boundary.",
+      "remediation": "Constrain model output, add a human approval boundary, and separate read credentials from write credentials.",
+      "path": [
+        "Voice Agent Template / AI Agent",
+        "Voice Agent Template / Email Agent",
+        "Email Agent Template / When Executed by Another Workflow",
+        "Email Agent Template / AI Agent",
+        "Email Agent Template / Send Email"
+      ]
+    },
+    {
+      "id": "MW-003-02",
+      "severity": "medium",
+      "title": "credential-02 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: Threads Credentials Setup, Threads Posting Automation. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-03",
+      "severity": "medium",
+      "title": "credential-03 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: BlueSky Post, Email Responder Agent. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-04",
+      "severity": "medium",
+      "title": "credential-04 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: Newsletter Capture Automation, YouTube Automation. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-05",
+      "severity": "medium",
+      "title": "credential-05 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: Lead Capture CRM, Notion Daily Briefing. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-15",
+      "severity": "medium",
+      "title": "credential-15 is reused across 3 workflows",
+      "description": "The same exported credential reference appears in: Contact Agent Template, Email Agent Template, Research Agent Template. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-19",
+      "severity": "medium",
+      "title": "credential-19 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: Email Responder Agent, RD-Calendar Agent. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-21",
+      "severity": "medium",
+      "title": "credential-21 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: RD-Calendar Agent, RD-Notion Agent. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-25",
+      "severity": "medium",
+      "title": "credential-25 is reused across 3 workflows",
+      "description": "The same exported credential reference appears in: BlueSky Post, Email Responder Agent, URL Status Workflow. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-37",
+      "severity": "medium",
+      "title": "credential-37 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: Social Media Manager AI Agent, Social Media Manager Telegram Trigger. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-003-41",
+      "severity": "medium",
+      "title": "credential-41 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: Social Media Manager AI Agent, Social Media Manager Telegram Trigger. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    },
+    {
+      "id": "MW-004-01",
+      "severity": "medium",
+      "title": "Sub-workflow target could not be resolved (ambiguous)",
+      "description": "Email Responder Agent / Calendar Agent refers to a workflow that is not uniquely present in this export set.",
+      "remediation": "Export the complete workflow set with stable workflow IDs, then review the unresolved call before deployment.",
+      "path": []
+    },
+    {
+      "id": "MW-004-02",
+      "severity": "medium",
+      "title": "Sub-workflow target could not be resolved (unresolved)",
+      "description": "Parent Agent / Notion Agent refers to a workflow that is not uniquely present in this export set.",
+      "remediation": "Export the complete workflow set with stable workflow IDs, then review the unresolved call before deployment.",
+      "path": []
+    },
+    {
+      "id": "MW-004-03",
+      "severity": "medium",
+      "title": "Sub-workflow target could not be resolved (unresolved)",
+      "description": "Parent Agent / Calendar Agent refers to a workflow that is not uniquely present in this export set.",
+      "remediation": "Export the complete workflow set with stable workflow IDs, then review the unresolved call before deployment.",
+      "path": []
+    }
+  ],
+  "exposureGraph": {
+    "schemaVersion": 1,
+    "workflow": "Public n8n workflow repository snapshot",
+    "paths": [
+      {
+        "findingId": "MW-001",
+        "severity": "high",
+        "title": "Public input reaches a credentialed action across workflows",
+        "nodes": [
+          "Voice Agent Template / Telegram Trigger",
+          "Voice Agent Template / Switch",
+          "Voice Agent Template / AI Agent",
+          "Voice Agent Template / Email Agent",
+          "Email Agent Template / When Executed by Another Workflow",
+          "Email Agent Template / AI Agent",
+          "Email Agent Template / Send Email"
+        ]
+      },
+      {
+        "findingId": "MW-002",
+        "severity": "high",
+        "title": "Model output reaches a credentialed action across workflows",
+        "nodes": [
+          "Voice Agent Template / AI Agent",
+          "Voice Agent Template / Email Agent",
+          "Email Agent Template / When Executed by Another Workflow",
+          "Email Agent Template / AI Agent",
+          "Email Agent Template / Send Email"
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "node-1",
+        "label": "Voice Agent Template / Telegram Trigger",
+        "severity": "high",
+        "findingIds": [
+          "MW-001"
+        ]
+      },
+      {
+        "id": "node-2",
+        "label": "Voice Agent Template / Switch",
+        "severity": "high",
+        "findingIds": [
+          "MW-001"
+        ]
+      },
+      {
+        "id": "node-3",
+        "label": "Voice Agent Template / AI Agent",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "id": "node-4",
+        "label": "Voice Agent Template / Email Agent",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "id": "node-5",
+        "label": "Email Agent Template / When Executed by Another Workflow",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "id": "node-6",
+        "label": "Email Agent Template / AI Agent",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "id": "node-7",
+        "label": "Email Agent Template / Send Email",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "Voice Agent Template / Telegram Trigger",
+        "target": "Voice Agent Template / Switch",
+        "severity": "high",
+        "findingIds": [
+          "MW-001"
+        ]
+      },
+      {
+        "source": "Voice Agent Template / Switch",
+        "target": "Voice Agent Template / AI Agent",
+        "severity": "high",
+        "findingIds": [
+          "MW-001"
+        ]
+      },
+      {
+        "source": "Voice Agent Template / AI Agent",
+        "target": "Voice Agent Template / Email Agent",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "source": "Voice Agent Template / Email Agent",
+        "target": "Email Agent Template / When Executed by Another Workflow",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "source": "Email Agent Template / When Executed by Another Workflow",
+        "target": "Email Agent Template / AI Agent",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "source": "Email Agent Template / AI Agent",
+        "target": "Email Agent Template / Send Email",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      }
+    ],
+    "note": "Only cross-workflow risky paths proven from the supplied exports are included."
+  },
+  "limitations": [
+    "Static exports do not reveal the real permissions granted to a credential.",
+    "Dynamic or missing workflow targets require manual review.",
+    "A clean result is not proof that the workflows are secure."
+  ]
+}

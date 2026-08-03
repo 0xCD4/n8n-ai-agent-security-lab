@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "collectedOn": "2026-08-03",
+  "source": {
+    "repository": "https://github.com/dvasquez08/n8n-workflows",
+    "commit": "dff5ff6075c50a8fc1500218887b147ec05300f2"
+  },
+  "method": {
+    "input": "All JSON workflow exports present at the pinned commit",
+    "execution": "Static parsing only; no workflow was imported, activated or executed",
+    "storage": "Raw third-party exports were not copied into this repository",
+    "privacy": "Published reports replace exported credential references with local aliases"
+  },
+  "report": "../../../reports/public-multi-workflow-snapshot.json"
+}

@@ -5,11 +5,12 @@
 
 A [CSINT Research](https://en.csintresearch.org/) side project that catches security regressions in n8n AI workflows before production.
 
-It provides three small, explainable outputs:
+It provides four small, explainable outputs:
 
 - **Static audit:** follows paths through an exported workflow and reports risky security patterns.
 - **Regression gate:** sends synthetic requests to an isolated staging webhook and checks the behavior that must not change.
 - **Exposure graph:** turns structured risky paths into JSON, Mermaid and a print-ready SVG report figure.
+- **Workspace map:** resolves calls between exported workflows and reports trust-boundary paths, unresolved targets and credential reuse without printing raw credential names or IDs.
 
 Workflow exports stay local. The scanner does not upload them or call an AI API.
 First scan: `npm run audit`. See the [60 second demo](assets/security-review-demo-en.mp4) or the [sample review PDF](reports/sample-security-review.pdf).
@@ -100,6 +101,20 @@ The static scan distinguishes raw model-derived request URLs from destinations s
 
 Remove credentials, customer data, private URLs and production payloads before storing or sharing an export.
 
+## Map trust boundaries across workflows
+
+Export the related workflows into one directory, then scan the directory as a set:
+
+```bash
+node bin/map.mjs path/to/workflow-exports \
+  --name "Support automation" \
+  --out reports/support-automation
+```
+
+The command writes JSON, Markdown, SARIF, Mermaid and SVG outputs. It resolves `Execute Sub-workflow` and `Call n8n Workflow Tool` references when the target export and a stable workflow ID are present. The report flags public-input or model-to-credentialed-action paths that cross a workflow boundary without an explicit approval step. It also assigns local aliases such as `credential-01` to reused credential references; raw exported credential names and IDs are omitted from every report.
+
+Try the intentionally unsafe, action-free export fixture with `npm run map:demo`. The fixture is for deterministic testing and must not be activated.
+
 ## Run a staging contract
 
 ```bash
@@ -150,7 +165,7 @@ Read the [template study method and publication boundary](research/template-stud
 
 | Path | Purpose |
 | --- | --- |
-| `bin/` | Static audit and regression gate commands |
+| `bin/` | Static audit, multi-workflow map and regression gate commands |
 | `contracts/` | Runtime behavior contracts |
 | `src/` | Scanner, target policy and report generation |
 | `test/` | Deterministic unit and contract tests |

@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "name": "Multi-workflow demo",
+  "summary": {
+    "workflows": 2,
+    "nodes": 6,
+    "workflowCalls": 1,
+    "resolvedCalls": 1,
+    "unresolvedCalls": 0,
+    "credentialAliases": 2,
+    "findings": 3,
+    "highFindings": 2
+  },
+  "workflows": [
+    {
+      "key": "workflow-01",
+      "name": "Public support intake",
+      "source": "01-public-intake.json",
+      "nodeCount": 3,
+      "credentialAliases": [
+        "credential-01"
+      ]
+    },
+    {
+      "key": "workflow-02",
+      "name": "Privileged action",
+      "source": "02-privileged-action.json",
+      "nodeCount": 3,
+      "credentialAliases": [
+        "credential-01",
+        "credential-02"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "sourceWorkflow": "Public support intake",
+      "sourceNode": "Run Privileged Action",
+      "targetWorkflow": "Privileged action",
+      "status": "resolved"
+    }
+  ],
+  "findings": [
+    {
+      "id": "MW-001",
+      "severity": "high",
+      "title": "Public input reaches a credentialed action across workflows",
+      "description": "The exported call graph contains a cross-workflow path from an untrusted trigger to a credentialed side effect without an explicit approval boundary.",
+      "remediation": "Authenticate the entry point, add an explicit approval gate before the action, and use a narrow credential in the called workflow.",
+      "path": [
+        "Public support intake / Public Webhook",
+        "Public support intake / Support Agent",
+        "Public support intake / Run Privileged Action",
+        "Privileged action / Called by Another Workflow",
+        "Privileged action / Privileged Model Lookup",
+        "Privileged action / Send External Email"
+      ]
+    },
+    {
+      "id": "MW-002",
+      "severity": "high",
+      "title": "Model output reaches a credentialed action across workflows",
+      "description": "The exported call graph contains a cross-workflow path from a model node to a credentialed side effect without an explicit approval boundary.",
+      "remediation": "Constrain model output, add a human approval boundary, and separate read credentials from write credentials.",
+      "path": [
+        "Public support intake / Support Agent",
+        "Public support intake / Run Privileged Action",
+        "Privileged action / Called by Another Workflow",
+        "Privileged action / Privileged Model Lookup",
+        "Privileged action / Send External Email"
+      ]
+    },
+    {
+      "id": "MW-003-01",
+      "severity": "medium",
+      "title": "credential-01 is reused across 2 workflows",
+      "description": "The same exported credential reference appears in: Privileged action, Public support intake. The report intentionally omits its raw name and ID.",
+      "remediation": "Review the real permission scope and split intake/read credentials from approved send/write credentials.",
+      "path": []
+    }
+  ],
+  "exposureGraph": {
+    "schemaVersion": 1,
+    "workflow": "Multi-workflow demo",
+    "paths": [
+      {
+        "findingId": "MW-001",
+        "severity": "high",
+        "title": "Public input reaches a credentialed action across workflows",
+        "nodes": [
+          "Public support intake / Public Webhook",
+          "Public support intake / Support Agent",
+          "Public support intake / Run Privileged Action",
+          "Privileged action / Called by Another Workflow",
+          "Privileged action / Privileged Model Lookup",
+          "Privileged action / Send External Email"
+        ]
+      },
+      {
+        "findingId": "MW-002",
+        "severity": "high",
+        "title": "Model output reaches a credentialed action across workflows",
+        "nodes": [
+          "Public support intake / Support Agent",
+          "Public support intake / Run Privileged Action",
+          "Privileged action / Called by Another Workflow",
+          "Privileged action / Privileged Model Lookup",
+          "Privileged action / Send External Email"
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "node-1",
+        "label": "Public support intake / Public Webhook",
+        "severity": "high",
+        "findingIds": [
+          "MW-001"
+        ]
+      },
+      {
+        "id": "node-2",
+        "label": "Public support intake / Support Agent",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "id": "node-3",
+        "label": "Public support intake / Run Privileged Action",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "id": "node-4",
+        "label": "Privileged action / Called by Another Workflow",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "id": "node-5",
+        "label": "Privileged action / Privileged Model Lookup",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "id": "node-6",
+        "label": "Privileged action / Send External Email",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "Public support intake / Public Webhook",
+        "target": "Public support intake / Support Agent",
+        "severity": "high",
+        "findingIds": [
+          "MW-001"
+        ]
+      },
+      {
+        "source": "Public support intake / Support Agent",
+        "target": "Public support intake / Run Privileged Action",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "source": "Public support intake / Run Privileged Action",
+        "target": "Privileged action / Called by Another Workflow",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "source": "Privileged action / Called by Another Workflow",
+        "target": "Privileged action / Privileged Model Lookup",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      },
+      {
+        "source": "Privileged action / Privileged Model Lookup",
+        "target": "Privileged action / Send External Email",
+        "severity": "high",
+        "findingIds": [
+          "MW-001",
+          "MW-002"
+        ]
+      }
+    ],
+    "note": "Only cross-workflow risky paths proven from the supplied exports are included."
+  },
+  "limitations": [
+    "Static exports do not reveal the real permissions granted to a credential.",
+    "Dynamic or missing workflow targets require manual review.",
+    "A clean result is not proof that the workflows are secure."
+  ]
+}
