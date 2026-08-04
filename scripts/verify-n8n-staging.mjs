@@ -1,12 +1,17 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import net from "node:net";
 import path from "node:path";
 import process from "node:process";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
+import {
+  buildDynamicLabReceipt,
+  renderDynamicLabMarkdown,
+} from "../src/dynamic-lab-report.mjs";
+import { buildEvidenceSubject } from "../src/evidence-fingerprint.mjs";
 import { runSecurityRegressionGate } from "../src/runtime-gate.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -19,6 +24,7 @@ const stagingSignature = "demo-staging-signature";
 const approvalToken = "demo-approval-token";
 let containerCreated = false;
 let volumeCreated = false;
+let verification = null;
 
 function runDocker(args, { allowFailure = false, quiet = false } = {}) {
   const result = spawnSync("docker", args, {
@@ -116,6 +122,23 @@ async function waitForWebhook(baseUrl) {
   throw new Error(`Published staging webhook did not become ready: ${lastStatus}`);
 }
 
+async function readFinalState(baseUrl) {
+  const response = await fetchWithTimeout(
+    `${baseUrl}/webhook/security-regression-support-agent/state`,
+    {
+      headers: { "x-staging-signature": stagingSignature },
+    },
+  );
+  const payload = await response.json();
+  if (!response.ok || !Number.isInteger(payload.actions_executed)) {
+    throw new Error("The isolated action counter could not be verified.");
+  }
+  if (payload.actions_executed !== 0) {
+    throw new Error(`The isolated workflow recorded ${payload.actions_executed} action(s).`);
+  }
+  return payload;
+}
+
 async function verify() {
   runDocker(["info"], { quiet: true });
   const hostPort = await reserveLoopbackPort();
@@ -185,13 +208,10 @@ async function verify() {
   await waitForHealth(baseUrl);
   await waitForWebhook(baseUrl);
 
-  const [workflow, contract] = await Promise.all([
-    readFile(path.join(root, "workflows", "hardened-support-agent.json"), "utf8").then(
-      JSON.parse,
-    ),
-    readFile(path.join(root, "contracts", "n8n-staging.contract.json"), "utf8").then(
-      JSON.parse,
-    ),
+  const [workflow, executedWorkflow, contract] = await Promise.all([
+    readFile(path.join(root, "workflows", "hardened-support-agent.json"), "utf8").then(JSON.parse),
+    readFile(path.join(root, "workflows", "security-regression-staging-target.json"), "utf8").then(JSON.parse),
+    readFile(path.join(root, "contracts", "n8n-staging.contract.json"), "utf8").then(JSON.parse),
   ]);
   const result = await runSecurityRegressionGate({
     workflow,
@@ -221,24 +241,79 @@ async function verify() {
     throw new Error(`Regression gate failed in n8n: ${failedTests || "static blocker"}`);
   }
 
+  const finalState = await readFinalState(baseUrl);
+
   process.stdout.write(
     [
       "Isolated n8n verification passed.",
       `Static audit: ${result.static.score}/100 (${result.static.grade})`,
       `Runtime contract: ${result.runtime.passed}/${result.runtime.total} passed`,
-      "External actions executed: 0",
+      `External actions executed: ${finalState.actions_executed}`,
       "",
     ].join("\n"),
   );
+
+  return {
+    result,
+    finalState,
+    subjects: {
+      staticWorkflow: buildEvidenceSubject(
+        "Static review input",
+        "workflows/hardened-support-agent.json",
+        workflow,
+      ),
+      executedWorkflow: buildEvidenceSubject(
+        "Executed staging workflow",
+        "workflows/security-regression-staging-target.json",
+        executedWorkflow,
+      ),
+      securityContract: buildEvidenceSubject(
+        "Runtime security contract",
+        "contracts/n8n-staging.contract.json",
+        contract,
+      ),
+    },
+  };
 }
 
+const cleanup = { containerRemoved: false, volumeRemoved: false };
 try {
-  await verify();
+  verification = await verify();
 } finally {
   if (containerCreated) {
-    runDocker(["rm", "-f", containerName], { allowFailure: true, quiet: true });
+    cleanup.containerRemoved =
+      runDocker(["rm", "-f", containerName], { allowFailure: true, quiet: true }).status === 0;
   }
   if (volumeCreated) {
-    runDocker(["volume", "rm", volumeName], { allowFailure: true, quiet: true });
+    cleanup.volumeRemoved =
+      runDocker(["volume", "rm", volumeName], { allowFailure: true, quiet: true }).status === 0;
+  }
+}
+
+if (verification) {
+  const receipt = buildDynamicLabReceipt(verification.result, {
+    image,
+    finalState: verification.finalState,
+    subjects: verification.subjects,
+    cleanup,
+  });
+  const reportDir = path.join(root, "reports");
+  await mkdir(reportDir, { recursive: true });
+  await Promise.all([
+    writeFile(
+      path.join(reportDir, "dynamic-workflow-lab.json"),
+      `${JSON.stringify(receipt, null, 2)}\n`,
+      "utf8",
+    ),
+    writeFile(
+      path.join(reportDir, "dynamic-workflow-lab.md"),
+      renderDynamicLabMarkdown(receipt),
+      "utf8",
+    ),
+  ]);
+  process.stdout.write("Dynamic lab receipt written to reports/dynamic-workflow-lab.{json,md}\n");
+
+  if (!cleanup.containerRemoved || !cleanup.volumeRemoved) {
+    throw new Error("The isolated n8n container or volume was not removed cleanly.");
   }
 }

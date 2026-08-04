@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 2,
+  "kind": "csint-n8n-dynamic-lab-receipt",
+  "verifiedAt": "2026-08-04T16:56:26.729Z",
+  "subjects": {
+    "staticWorkflow": {
+      "label": "Static review input",
+      "sourcePath": "workflows/hardened-support-agent.json",
+      "fingerprintAlgorithm": "sha256-canonical-json-v1",
+      "canonicalSha256": "005dfd75240873c07f8ed9bdc83e3b05e77a45e5ac1cbf6e43e117b8a960ab15"
+    },
+    "executedWorkflow": {
+      "label": "Executed staging workflow",
+      "sourcePath": "workflows/security-regression-staging-target.json",
+      "fingerprintAlgorithm": "sha256-canonical-json-v1",
+      "canonicalSha256": "0256a2bbf7eaa5601acedae7505cce55f4285de6a351ed87b2134365b7b0bfe9"
+    },
+    "securityContract": {
+      "label": "Runtime security contract",
+      "sourcePath": "contracts/n8n-staging.contract.json",
+      "fingerprintAlgorithm": "sha256-canonical-json-v1",
+      "canonicalSha256": "0a0d0bad2fc897de30279d341a937147ff389a19d32bb9793b74142c8b52f9d0"
+    }
+  },
+  "environment": {
+    "runtime": "n8n",
+    "image": "docker.n8n.io/n8nio/n8n:2.21.5",
+    "isolation": "ephemeral Docker container",
+    "network": "loopback-only test target",
+    "credentials": "test-only environment values",
+    "cleanup": {
+      "containerRemoved": true,
+      "volumeRemoved": true
+    }
+  },
+  "outcome": {
+    "decision": "pass",
+    "passed": true,
+    "externalActionsExecuted": 0,
+    "acceptedRequests": 2
+  },
+  "static": {
+    "score": 93,
+    "grade": "A",
+    "blockers": 0
+  },
+  "runtime": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "checks": {
+      "passed": 56,
+      "total": 56
+    },
+    "scenarios": [
+      {
+        "id": "reject-unauthenticated",
+        "name": "Reject a request without authentication",
+        "passed": true,
+        "status": 401,
+        "durationMs": 53,
+        "observationStatus": null,
+        "observationDurationMs": null,
+        "checks": {
+          "passed": 6,
+          "total": 6
+        }
+      },
+      {
+        "id": "reject-invalid-signature",
+        "name": "Reject an invalid staging signature",
+        "passed": true,
+        "status": 401,
+        "durationMs": 45,
+        "observationStatus": null,
+        "observationDurationMs": null,
+        "checks": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      {
+        "id": "reject-invalid-input",
+        "name": "Reject missing and unexpected input fields",
+        "passed": true,
+        "status": 400,
+        "durationMs": 36,
+        "observationStatus": null,
+        "observationDurationMs": null,
+        "checks": {
+          "passed": 5,
+          "total": 5
+        }
+      },
+      {
+        "id": "contain-prompt-injection",
+        "name": "Keep an instruction override behind approval",
+        "passed": true,
+        "status": 202,
+        "durationMs": 37,
+        "observationStatus": 200,
+        "observationDurationMs": 36,
+        "checks": {
+          "passed": 11,
+          "total": 11
+        }
+      },
+      {
+        "id": "block-approval-bypass",
+        "name": "Block an invalid approval token",
+        "passed": true,
+        "status": 403,
+        "durationMs": 38,
+        "observationStatus": 200,
+        "observationDurationMs": 38,
+        "checks": {
+          "passed": 8,
+          "total": 8
+        }
+      },
+      {
+        "id": "accept-valid-request",
+        "name": "Accept a valid request without executing an action",
+        "passed": true,
+        "status": 202,
+        "durationMs": 45,
+        "observationStatus": null,
+        "observationDurationMs": null,
+        "checks": {
+          "passed": 11,
+          "total": 11
+        }
+      },
+      {
+        "id": "accept-idempotent-replay",
+        "name": "Treat a repeated request as the same operation",
+        "passed": true,
+        "status": 200,
+        "durationMs": 40,
+        "observationStatus": null,
+        "observationDurationMs": null,
+        "checks": {
+          "passed": 7,
+          "total": 7
+        }
+      },
+      {
+        "id": "reject-wrong-method",
+        "name": "Reject an unsupported webhook method",
+        "passed": true,
+        "status": 405,
+        "durationMs": 30,
+        "observationStatus": null,
+        "observationDurationMs": null,
+        "checks": {
+          "passed": 4,
+          "total": 4
+        }
+      }
+    ]
+  },
+  "boundaries": [
+    "No production credentials are mounted.",
+    "No email, chat, database or HTTP action node is allowed to contact a live service.",
+    "The target is bound to loopback and removed after the run.",
+    "Approval, replay, authentication and prompt-injection containment are checked with synthetic requests."
+  ],
+  "limitations": [
+    "The gate only tests the supplied workflow export and explicitly allowlisted staging endpoints.",
+    "Passing results do not prove model safety, credential scope, production authorization or absence of vulnerabilities.",
+    "Use redacted fixtures and isolated test credentials. Never point the gate at production.",
+    "No language model is invoked. The prompt-injection scenario measures the deterministic controls around an agent workflow, not the model's resistance to manipulation.",
+    "This receipt covers the bundled action-free fixture. It is not permission to execute an arbitrary uploaded workflow."
+  ]
+}

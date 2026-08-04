@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added a local `receipt` output for customer-controlled staging contracts, recording the supplied candidate fingerprint and an explicit zero-action canary check.
+- Bound dynamic receipts to canonical SHA-256 fingerprints of the exact executed workflow and security contract.
+- Reframed the manual pilot around baseline-versus-candidate release review and a client-ready evidence record.
+- Added a redacted dynamic-lab receipt generated from the real isolated n8n run.
+- Added an explicit final action-counter check and container/volume cleanup evidence.
 - Added a local multi-workflow trust-boundary map for exported n8n workflow sets.
 - Added cross-workflow public-input and model-to-credentialed-action path checks.
 - Added unresolved sub-workflow and credential-reuse review signals with redacted credential aliases.

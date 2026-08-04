@@ -49,7 +49,7 @@ export function validateSecurityContract(contract) {
 
   assertKnownKeys(
     contract,
-    new Set(["$schema", "schemaVersion", "name", "target", "gate", "tests"]),
+    new Set(["$schema", "schemaVersion", "name", "target", "gate", "receipt", "tests"]),
     "Security contract",
   );
 
@@ -129,6 +129,31 @@ export function validateSecurityContract(contract) {
     throw new Error("gate.requireRuntime must be true for a regression gate.");
   }
 
+  if (contract.receipt !== undefined) {
+    if (!isPlainObject(contract.receipt)) {
+      throw new Error("receipt must be an object.");
+    }
+    assertKnownKeys(contract.receipt, new Set(["externalActionEvidence"]), "receipt");
+    const evidence = contract.receipt.externalActionEvidence;
+    if (!isPlainObject(evidence)) {
+      throw new Error("receipt.externalActionEvidence must be an object.");
+    }
+    assertKnownKeys(
+      evidence,
+      new Set(["testId", "source", "pointer"]),
+      "receipt.externalActionEvidence",
+    );
+    if (typeof evidence.testId !== "string" || !/^[a-z0-9][a-z0-9-]{1,63}$/.test(evidence.testId)) {
+      throw new Error("receipt.externalActionEvidence.testId must name a contract test.");
+    }
+    if (evidence.source !== "response" && evidence.source !== "observation") {
+      throw new Error("receipt.externalActionEvidence.source must be response or observation.");
+    }
+    if (typeof evidence.pointer !== "string" || !evidence.pointer.startsWith("/")) {
+      throw new Error("receipt.externalActionEvidence.pointer must be a JSON Pointer.");
+    }
+  }
+
   if (!Array.isArray(contract.tests) || contract.tests.length === 0) {
     throw new Error("Security contract requires at least one runtime test.");
   }
@@ -159,6 +184,22 @@ export function validateSecurityContract(contract) {
       assertKnownKeys(test.observe, new Set(["request", "expect"]), `${label}.observe`);
       validateRequest(test.observe.request, `${label}.observe.request`);
       validateExpectation(test.observe.expect, `${label}.observe.expect`);
+    }
+  }
+
+  if (contract.receipt) {
+    const evidence = contract.receipt.externalActionEvidence;
+    const evidenceTest = contract.tests.find((test) => test.id === evidence.testId);
+    if (!evidenceTest) {
+      throw new Error("receipt.externalActionEvidence.testId does not match a contract test.");
+    }
+    const expectation =
+      evidence.source === "observation" ? evidenceTest.observe?.expect : evidenceTest.expect;
+    if (!expectation) {
+      throw new Error("receipt.externalActionEvidence points to a missing observation.");
+    }
+    if (expectation.json?.equals?.[evidence.pointer] !== 0) {
+      throw new Error("receipt.externalActionEvidence must point to a contract equality of zero.");
     }
   }
 

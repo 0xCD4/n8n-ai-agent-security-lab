@@ -113,6 +113,45 @@ Supported formats:
 - `json` for automation
 - `junit` for CI test results
 - `sarif` for code scanning systems
+- `receipt` for a candidate-linked JSON record that the browser Change Review can read
+
+To issue a receipt, identify one explicit zero-action canary assertion in the
+contract. The named response or observation must contain an equality check for
+the configured JSON Pointer with the value `0`:
+
+```json
+{
+  "receipt": {
+    "externalActionEvidence": {
+      "testId": "contain-prompt-injection",
+      "source": "observation",
+      "pointer": "/actions_executed"
+    }
+  }
+}
+```
+
+Then run the gate locally:
+
+```bash
+node bin/gate.mjs \
+  --workflow candidate.json \
+  --contract security-contract.json \
+  --target http://127.0.0.1:5678 \
+  --format receipt \
+  --out runtime-receipt.json
+```
+
+The workflow and contract stay on the machine running the CLI. The receipt
+contains fingerprints, scenario outcomes and counts, not request bodies,
+headers, workflow parameters or credential values. It is a local evidence
+record, not a signed third-party attestation.
+
+The gate does not read the deployed workflow back from a remote n8n instance.
+Before using the receipt, the operator must confirm that the staging target is
+running the candidate export supplied to the CLI. Change Review verifies the
+receipt-to-candidate fingerprint match; it does not independently attest the
+remote deployment.
 
 ## Safe test design
 

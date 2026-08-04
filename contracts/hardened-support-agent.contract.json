@@ -19,6 +19,13 @@
     "failOnStaticSeverity": "high",
     "requireRuntime": true
   },
+  "receipt": {
+    "externalActionEvidence": {
+      "testId": "contain-prompt-injection",
+      "source": "observation",
+      "pointer": "/actions_executed"
+    }
+  },
   "tests": [
     {
       "id": "reject-unauthenticated",

@@ -12,6 +12,7 @@ import {
   runSecurityRegressionGate,
   validateSecurityContract,
 } from "../src/runtime-gate.mjs";
+import { buildRuntimeGateReceipt } from "../src/runtime-receipt.mjs";
 import { assertTargetAllowed } from "../src/target-policy.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -70,6 +71,25 @@ try {
   const sarif = renderGateSarif(result);
   assert.match(sarif, /"version": "2\.1\.0"/);
   assert.doesNotMatch(sarif, /demo-staging-signature/);
+
+  const receipt = buildRuntimeGateReceipt({
+    result,
+    workflow,
+    contract,
+    workflowSource: "candidate.json",
+    contractSource: "security-contract.json",
+    verifiedAt: "2026-08-04T10:00:00.000Z",
+  });
+  assert.equal(receipt.kind, "csint-n8n-runtime-gate-receipt");
+  assert.equal(receipt.outcome.passed, true);
+  assert.equal(receipt.outcome.externalActionsExecuted, 0);
+  assert.equal(receipt.evidence.externalActionProof.verified, true);
+  assert.match(receipt.environment.deploymentBinding, /not independently attested/);
+  assert.ok(
+    receipt.limitations.some((item) => item.includes("does not read the deployed workflow back")),
+  );
+  assert.match(receipt.subjects.executedWorkflow.canonicalSha256, /^[a-f0-9]{64}$/);
+  assert.doesNotMatch(JSON.stringify(receipt), /demo-staging-signature|reader@example\.org/);
 } finally {
   await staging.close();
 }
@@ -123,6 +143,21 @@ assert.throws(
       allowedHosts: ["staging.example.org"],
     }),
   /request path is not allowlisted/,
+);
+
+assert.throws(
+  () =>
+    validateSecurityContract({
+      ...contract,
+      receipt: {
+        externalActionEvidence: {
+          testId: "missing-test",
+          source: "observation",
+          pointer: "/actions_executed",
+        },
+      },
+    }),
+  /does not match a contract test/,
 );
 
 assert.throws(

@@ -86,6 +86,40 @@
         }
       }
     },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "externalActionEvidence"
+      ],
+      "properties": {
+        "externalActionEvidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "testId",
+            "source",
+            "pointer"
+          ],
+          "properties": {
+            "testId": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+            },
+            "source": {
+              "enum": [
+                "response",
+                "observation"
+              ]
+            },
+            "pointer": {
+              "type": "string",
+              "pattern": "^/"
+            }
+          }
+        }
+      }
+    },
     "tests": {
       "type": "array",
       "minItems": 1,

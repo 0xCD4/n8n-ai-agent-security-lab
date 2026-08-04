@@ -20,6 +20,23 @@ https://github.com/0xCD4/n8n-ai-agent-security-lab
 
 I would be interested in redacted examples of false positives or common agent workflow patterns that deserve another rule.
 
+## Reddit - candidate-linked staging receipt
+
+**Title:** I added a local receipt that links n8n staging checks to a candidate workflow export
+
+I kept running into a small release-control gap with n8n. A staging check can pass, but the execution log alone does not tell me which local export was reviewed with it.
+
+The local runner now fingerprints the candidate export and security contract, sends synthetic requests only to loopback or an explicitly allowlisted staging host, records the checks, and includes a named zero-action canary. Change Review uses the runtime evidence only when the receipt fingerprint matches the candidate selected in the browser.
+
+The included action-free fixture passed 8 scenarios and 56 assertions with 0 simulated external actions. It contains no email, database, AI or outbound HTTP action nodes.
+
+Important boundary: the generic runner does not independently read the workflow deployed on a remote n8n instance. The operator must confirm that staging is running the supplied candidate. The receipt records that association; it is not a third-party attestation, penetration test or safety certificate.
+
+Code, workflow and contract:
+https://github.com/0xCD4/n8n-ai-agent-security-lab/tree/main
+
+How do you currently link staging evidence to the workflow version being released?
+
 ## Telegram
 
 Unsafe and hardened n8n AI workflows are now available in one defensive lab.
@@ -29,10 +46,10 @@ The unsafe support agent scores 10/100. The hardened version adds authenticated 
 Repository:
 https://github.com/0xCD4/n8n-ai-agent-security-lab
 
-Manual review:
-https://en.csintresearch.org/ai-agent-audit
+Self-service change review:
+https://en.csintresearch.org/ai-security#change-review
 
 ## Reply when someone asks for a review
 
-Yes. The free scanner is useful for repeatable static checks. For a real workflow I also trace the five highest-risk paths manually, check permissions and approval boundaries, and retest the fixes. The pilot scope is EUR 99 for one workflow with up to 40 active nodes:
-https://en.csintresearch.org/ai-agent-audit
+The change review is self-service. Choose the current export and the candidate in your browser, then download the record yourself. Both files and the report stay on your device. If you need runtime evidence, the local runner creates a receipt carrying the candidate fingerprint. You still need to confirm that staging is running that export:
+https://en.csintresearch.org/ai-security#change-review

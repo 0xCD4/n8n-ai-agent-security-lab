@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>n8n candidate-linked staging receipt</title>
+    <style>
+      :root {
+        --paper: #f5f3ec;
+        --ink: #14231e;
+        --muted: #627069;
+        --green: #1f5b49;
+        --green-soft: #dfe9e3;
+        --warm: #9a7844;
+        --line: #c9cec8;
+        --white: #fffef9;
+      }
+
+      * { box-sizing: border-box; }
+
+      html,
+      body {
+        width: 1600px;
+        height: 900px;
+        margin: 0;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(20, 35, 30, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(20, 35, 30, 0.025) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+      }
+
+      main {
+        position: relative;
+        height: 100%;
+        padding: 58px 72px 46px;
+        display: grid;
+        grid-template-rows: auto auto 1fr auto;
+        gap: 24px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 18px;
+        border-bottom: 2px solid var(--ink);
+      }
+
+      .brand,
+      .kicker,
+      .node-label,
+      .metric-label,
+      .foot-label {
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-weight: 700;
+      }
+
+      .brand { font-size: 17px; }
+      .header-note { color: var(--muted); font-size: 16px; }
+
+      .intro {
+        display: grid;
+        grid-template-columns: 1.35fr 0.65fr;
+        gap: 72px;
+        align-items: end;
+      }
+
+      .kicker {
+        color: var(--warm);
+        font-size: 15px;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 950px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 58px;
+        line-height: 1.05;
+        font-weight: 500;
+        letter-spacing: -0.025em;
+      }
+
+      .dek {
+        margin: 0 0 4px;
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1.45;
+      }
+
+      .evidence {
+        min-height: 420px;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: 30px 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1.48fr) minmax(430px, 0.92fr);
+        gap: 46px;
+      }
+
+      .binding {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 92px 1fr;
+        align-items: center;
+      }
+
+      .node {
+        position: relative;
+        min-height: 230px;
+        padding: 27px 28px 24px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        box-shadow: 0 10px 30px rgba(20, 35, 30, 0.055);
+      }
+
+      .node::before {
+        content: "";
+        position: absolute;
+        left: -1px;
+        top: 28px;
+        bottom: 28px;
+        width: 5px;
+        background: var(--green);
+      }
+
+      .node-label {
+        color: var(--green);
+        font-size: 13px;
+        margin-bottom: 22px;
+      }
+
+      .node h2 {
+        margin: 0 0 12px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 31px;
+        line-height: 1.12;
+        font-weight: 500;
+      }
+
+      .node p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.48;
+      }
+
+      .fingerprint {
+        margin-top: 24px;
+        display: inline-block;
+        padding: 9px 11px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-family: "Courier New", monospace;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .connector {
+        position: relative;
+        height: 2px;
+        background: var(--green);
+      }
+
+      .connector::before,
+      .connector::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 11px;
+        height: 11px;
+        margin-top: -6px;
+        border-radius: 50%;
+        background: var(--paper);
+        border: 2px solid var(--green);
+      }
+
+      .connector::before { left: -2px; }
+      .connector::after { right: -2px; }
+
+      .match {
+        position: absolute;
+        left: 50%;
+        top: calc(50% + 24px);
+        transform: translateX(-50%);
+        width: 160px;
+        color: var(--green);
+        text-align: center;
+        font-size: 13px;
+        line-height: 1.35;
+        font-weight: 700;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-rows: repeat(3, 1fr);
+        background: var(--ink);
+        color: var(--white);
+      }
+
+      .metric {
+        display: grid;
+        grid-template-columns: 124px 1fr;
+        align-items: center;
+        gap: 22px;
+        padding: 19px 28px;
+        border-bottom: 1px solid rgba(255,255,255,0.16);
+      }
+
+      .metric:last-child { border-bottom: 0; }
+      .metric-value {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 65px;
+        line-height: 0.9;
+        color: #f3d9a8;
+      }
+
+      .metric-label {
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .metric-label span {
+        display: block;
+        margin-top: 5px;
+        color: #bac5bf;
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: 400;
+        font-size: 15px;
+      }
+
+      footer {
+        display: grid;
+        grid-template-columns: 1.18fr 0.82fr;
+        align-items: center;
+        gap: 52px;
+      }
+
+      .boundary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 22px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .boundary span::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 9px;
+        border: 2px solid var(--green);
+        border-radius: 50%;
+      }
+
+      .repo {
+        justify-self: end;
+        text-align: right;
+      }
+
+      .foot-label {
+        color: var(--warm);
+        font-size: 11px;
+        margin-bottom: 5px;
+      }
+
+      .repo-address {
+        font-family: "Courier New", monospace;
+        font-size: 15px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="brand">CSINT / n8n security lab</div>
+        <div class="header-note">Local release evidence · no production actions</div>
+      </header>
+
+      <section class="intro">
+        <div>
+          <div class="kicker">Candidate-linked staging receipt</div>
+          <h1>Is this receipt linked to the workflow export under review?</h1>
+        </div>
+        <p class="dek">Change Review uses the receipt only when its candidate fingerprint matches the selected export.</p>
+      </section>
+
+      <section class="evidence">
+        <div class="binding">
+          <article class="node">
+            <div class="node-label">01 · Candidate workflow</div>
+            <h2>Release candidate selected locally</h2>
+            <p>The export stays on the operator's computer. A fingerprint is calculated before any staging check runs.</p>
+            <div class="fingerprint">SHA-256 fingerprint</div>
+          </article>
+
+          <div class="connector" aria-hidden="true"></div>
+          <div class="match">HASH MATCH</div>
+
+          <article class="node">
+            <div class="node-label">02 · Staging receipt</div>
+            <h2>Evidence linked to the candidate export</h2>
+            <p>The runner records checks and scope. Change Review rejects a receipt whose candidate fingerprint differs.</p>
+            <div class="fingerprint">Receipt accepted</div>
+          </article>
+        </div>
+
+        <aside class="metrics">
+          <div class="metric">
+            <div class="metric-value">8</div>
+            <div class="metric-label">Scenarios<span>Isolated n8n staging fixture</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">56</div>
+            <div class="metric-label">Assertions<span>Recorded checks passed</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">0</div>
+            <div class="metric-label">External actions<span>Zero-action canary remained clean</span></div>
+          </div>
+        </aside>
+      </section>
+
+      <footer>
+        <div class="boundary">
+          <span>Synthetic requests only</span>
+          <span>Loopback or exact allowlisted host</span>
+          <span>Operator verifies staging deployment</span>
+        </div>
+        <div class="repo">
+          <div class="foot-label">Open-source code and workflow</div>
+          <div class="repo-address">github.com/0xCD4/n8n-ai-agent-security-lab</div>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

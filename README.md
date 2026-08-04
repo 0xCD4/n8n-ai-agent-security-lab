@@ -5,12 +5,13 @@
 
 A [CSINT Research](https://en.csintresearch.org/) side project that catches security regressions in n8n AI workflows before production.
 
-It provides four small, explainable outputs:
+It provides four small, explainable outputs and one release-review surface:
 
 - **Static audit:** follows paths through an exported workflow and reports risky security patterns.
 - **Regression gate:** sends synthetic requests to an isolated staging webhook and checks the behavior that must not change.
 - **Exposure graph:** turns structured risky paths into JSON, Mermaid and a print-ready SVG report figure.
 - **Workspace map:** resolves calls between exported workflows and reports trust-boundary paths, unresolved targets and credential reuse without printing raw credential names or IDs.
+- **Workflow change review:** compares a baseline and candidate, accepts a staging receipt only when its recorded candidate fingerprint matches the export selected for review, and produces a client-ready change record.
 
 Workflow exports stay local. The scanner does not upload them or call an AI API.
 First scan: `npm run audit`. See the [60 second demo](assets/security-review-demo-en.mp4) or the [sample review PDF](reports/sample-security-review.pdf).
@@ -61,8 +62,47 @@ This command:
 3. runs all eight contract tests
 4. confirms that no simulated external action ran
 5. removes the temporary container and volume
+6. writes a redacted JSON and Markdown run receipt to `reports/dynamic-workflow-lab.*`
 
 It does not use an existing n8n instance, volume or credential.
+
+The receipt contains scenario status codes, assertion counts, the final action
+counter, cleanup status, and canonical SHA-256 fingerprints for the exact
+executed workflow and security contract. It omits request bodies, headers, test
+tokens and the temporary loopback address. The prompt-injection scenario checks
+the workflow controls around approval; it does not call a language model or
+claim that a model resisted manipulation.
+
+For a customer-controlled staging target, the gate can also create a
+candidate-linked receipt without uploading the workflow to CSINT:
+
+```bash
+node bin/gate.mjs --workflow candidate.json --contract security-contract.json \
+  --target http://127.0.0.1:5678 --format receipt --out runtime-receipt.json
+```
+
+The contract must name a passing zero-action canary assertion under
+`receipt.externalActionEvidence`. Remote targets remain blocked unless the
+operator adds `--allow-remote`, the exact hostname and narrow path prefixes.
+The resulting record is designed for the browser Change Review; it is not a
+signed attestation or a production safety certificate.
+
+The generic gate does not read the deployed workflow back from n8n. The
+operator must separately confirm that the selected staging target is running
+the fingerprinted candidate export. The receipt records that local association;
+it does not independently attest the remote deployment.
+
+## Review a workflow change
+
+The [CSINT workflow change review](https://en.csintresearch.org/ai-security#change-review)
+combines two local workflow scans with the bound staging receipt. It records
+added or removed risk, strengthened or weakened controls, new outbound domains,
+credential-type changes and the limits that still need a person to verify.
+
+The downloadable JSON, Markdown and print-ready HTML reports omit prompt,
+parameter and credential values. A runtime receipt whose recorded candidate
+fingerprint matches the selected export can support the decision; a mismatched
+or failed receipt cannot approve the candidate.
 
 ## Current result
 
@@ -175,7 +215,7 @@ Read the [template study method and publication boundary](research/template-stud
 | `workflows/security-regression-staging-target.json` | Importable, action-free n8n staging target |
 | `reports/` | Example audit and gate output, plus the sample review PDF |
 | `media/` | Sources and build scripts for the demo video and the sample PDF |
-| `outreach/` | Launch copy for the pilot reviews |
+| `outreach/` | User-controlled outreach drafts for the self-service workspace |
 
 ## Safety boundary
 

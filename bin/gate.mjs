@@ -9,8 +9,9 @@ import {
   renderGateMarkdown,
   renderGateSarif,
 } from "../src/reporters.mjs";
+import { buildRuntimeGateReceipt } from "../src/runtime-receipt.mjs";
 
-const FORMATS = new Set(["markdown", "json", "junit", "sarif"]);
+const FORMATS = new Set(["markdown", "json", "junit", "sarif", "receipt"]);
 
 function printUsage() {
   process.stdout.write(
@@ -23,7 +24,7 @@ function printUsage() {
       "Options:",
       "  --target <url>       Override contract.target.baseUrl",
       "  --allow-remote       Permit an exact allowlisted remote test webhook",
-      "  --format <format>    markdown, json, junit or sarif",
+      "  --format <format>    markdown, json, junit, sarif or receipt",
       "  --out <file>         Write the report to a file",
       "  --help               Show this help",
       "",
@@ -85,6 +86,7 @@ function parseArgs(argv) {
 }
 
 function inferFormat(outputPath, requestedFormat) {
+  if (requestedFormat === "receipt") return "receipt";
   if (!outputPath) return requestedFormat;
   const extension = path.extname(outputPath).toLowerCase();
   if (extension === ".json") return "json";
@@ -113,7 +115,7 @@ export async function runGateCommand(argv = process.argv.slice(2)) {
 
   options.format = inferFormat(options.out, options.format);
   if (!FORMATS.has(options.format)) {
-    throw new Error("--format must be markdown, json, junit or sarif.");
+    throw new Error("--format must be markdown, json, junit, sarif or receipt.");
   }
 
   const workflowPath = path.resolve(options.workflow);
@@ -132,7 +134,17 @@ export async function runGateCommand(argv = process.argv.slice(2)) {
     targetOverride: options.target,
     allowRemote: options.allowRemote,
   });
-  const output = render(result, options.format);
+  const receipt =
+    options.format === "receipt"
+      ? buildRuntimeGateReceipt({
+          result,
+          workflow,
+          contract,
+          workflowSource: sourcePath || path.basename(workflowPath),
+          contractSource: path.relative(process.cwd(), contractPath).split(path.sep).join("/"),
+        })
+      : null;
+  const output = receipt ? `${JSON.stringify(receipt, null, 2)}\n` : render(result, options.format);
 
   if (options.out) {
     const outputPath = path.resolve(options.out);
@@ -143,7 +155,7 @@ export async function runGateCommand(argv = process.argv.slice(2)) {
     process.stdout.write(output);
   }
 
-  return result.passed ? 0 : 1;
+  return (receipt ? receipt.outcome.passed : result.passed) ? 0 : 1;
 }
 
 runGateCommand()
