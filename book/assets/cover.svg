@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1800" role="img" aria-labelledby="title desc">
+  <title id="title">Building Safer n8n Systems</title>
+  <desc id="desc">A book cover with a simple workflow node path</desc>
+  <rect width="1400" height="1800" fill="#f4f0e7"/>
+  <path d="M0 0H1400V38H0z" fill="#123a63"/>
+  <path d="M92 0V1800M1308 0V1800" stroke="#d7cfbf" stroke-width="2"/>
+  <text x="120" y="165" fill="#123a63" font-family="Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="5">CSINT RESEARCH FIELD GUIDE 01</text>
+  <text x="120" y="350" fill="#111827" font-family="Georgia, serif" font-size="108" font-weight="700">Building Safer</text>
+  <text x="120" y="470" fill="#111827" font-family="Georgia, serif" font-size="108" font-weight="700">n8n Systems</text>
+  <text x="120" y="555" fill="#52606d" font-family="Arial, sans-serif" font-size="34">A plain English guide to review queues</text>
+  <text x="120" y="604" fill="#52606d" font-family="Arial, sans-serif" font-size="34">local security checks and human approval</text>
+  <path d="M240 995H465M600 995H825M960 995H1185" stroke="#123a63" stroke-width="8"/>
+  <path d="M443 976L475 995L443 1014M803 976L835 995L803 1014M1163 976L1195 995L1163 1014" fill="none" stroke="#123a63" stroke-width="8" stroke-linecap="square"/>
+  <g font-family="Arial, sans-serif">
+    <rect x="110" y="900" width="260" height="190" rx="18" fill="#fff" stroke="#123a63" stroke-width="5"/>
+    <text x="145" y="958" fill="#9a5b12" font-size="22" font-weight="700">INPUT</text>
+    <text x="145" y="1025" fill="#111827" font-size="34" font-weight="700">Research</text>
+    <text x="145" y="1065" fill="#111827" font-size="34" font-weight="700">queue</text>
+    <rect x="470" y="900" width="260" height="190" rx="18" fill="#fff" stroke="#123a63" stroke-width="5"/>
+    <text x="505" y="958" fill="#9a5b12" font-size="22" font-weight="700">CONTROL</text>
+    <text x="505" y="1025" fill="#111827" font-size="34" font-weight="700">Human</text>
+    <text x="505" y="1065" fill="#111827" font-size="34" font-weight="700">review</text>
+    <rect x="830" y="900" width="260" height="190" rx="18" fill="#fff" stroke="#123a63" stroke-width="5"/>
+    <text x="865" y="958" fill="#9a5b12" font-size="22" font-weight="700">EVIDENCE</text>
+    <text x="865" y="1025" fill="#111827" font-size="34" font-weight="700">Security</text>
+    <text x="865" y="1065" fill="#111827" font-size="34" font-weight="700">checks</text>
+    <rect x="1190" y="945" width="100" height="100" rx="50" fill="#123a63"/>
+    <path d="M1223 995L1243 1015L1270 978" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <rect x="110" y="1265" width="1180" height="2" fill="#c7bdab"/>
+  <text x="120" y="1380" fill="#111827" font-family="Arial, sans-serif" font-size="31">Static review. Runtime evidence. Clear limits.</text>
+  <text x="120" y="1625" fill="#123a63" font-family="Arial, sans-serif" font-size="30" font-weight="700">AHMET GÖKER</text>
+  <text x="120" y="1672" fill="#52606d" font-family="Arial, sans-serif" font-size="24">CSINT Research</text>
+</svg>
