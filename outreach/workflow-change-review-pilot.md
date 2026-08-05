@@ -1,57 +1,52 @@
-# Self-service Workflow Change Review outreach
+# n8n Client Handoff Release Check validation plan
 
-These are drafts, not a sending list. Verify every company, name and public fact before using them. Never invent a personal detail and never send automatically.
+This is a user-controlled outreach plan. Verify every company, contact channel, and public fact before use. Do not invent personal details, use guessed addresses, send bulk messages, or follow up more than once.
 
-## Who is a good fit
+## Paid pilot
 
-- an n8n agency that releases client workflows and maintains them after handoff
-- an internal automation team with versioned exports or a staging instance
-- a team adding AI Agent, HTTP, email, CRM, database or code nodes
-- a team that needs a release record a client or manager can read
+- EUR 89
+- one baseline and one release candidate
+- up to 30 active nodes in the candidate
+- changed nodes, connections, external domains, credential types, approvals, and key reliability boundaries
+- up to five prioritised release blockers
+- client-ready Markdown or print record tied to the checked files by SHA-256
+- delivery within 48 hours
+- no call, recheck, workflow repair, production access, penetration test, certification, or security guarantee
 
-Skip teams looking for a generic vulnerability scanner or production testing without written authorization.
+The customer runs the local checker. Only the report or screen they choose to share is reviewed. Never request a raw workflow, credential, secret, customer payload, or production access.
 
-## What to verify before writing
+## Good fit
 
-- the company currently offers n8n or AI automation work
-- one public page, case study or job post supports that fact
-- the likely need is workflow change control or client handoff
-- the product page and example report are live
+- an n8n agency or freelancer with a client handoff in the next 30 days
+- a major update to a workflow already used by a client
+- a workflow takeover where the receiving team needs a written change and blocker record
+
+Skip generic build, debugging, and repair jobs. Those buyers expect a working implementation, not a review-only deliverable.
+
+## Verify before contact
+
+- the company currently offers n8n delivery or maintenance
+- a public source supports that fact
+- an upcoming handoff, update, or takeover is plausible but not claimed as fact without evidence
+- the product page and sample report are live
 - the company publishes a business contact channel
 
-Record the source URL and checked date beside each draft. Keep `UNKNOWN` where a fact cannot be confirmed.
+Record the source URL and checked date. Keep `UNKNOWN` where a fact cannot be verified.
 
-## First email
+## First message
 
-Subject: a clearer release record for n8n workflow changes
+Hi <name>, I review n8n release candidates before client handoff. Your workflow files stay on your device; I work from a locally generated report. The deliverable is a client-ready change and blocker record, not a generic security scan. I am looking for one EUR 89 paid pilot on an upcoming delivery. Is that relevant to any handoff this month?
 
-Hi <name>,
+Product: https://en.csintresearch.org/ai-security#assisted-review
 
-I saw that <company> works on <specific, verified n8n or automation project>.
-
-I built a small self-service review for n8n releases. It compares the workflow running today with the candidate, shows which security boundaries changed, and creates a report that can stay with the client handoff.
-
-The workflow files and report stay in the browser. If you want runtime evidence, the staging check also runs on your own machine and records the candidate fingerprint. Your team remains responsible for confirming that staging is running that export. I do not receive the workflow or need production access.
-
-You can see the product here:
-https://en.csintresearch.org/ai-security#change-review
-
-If this matches how you release client automations, I would value one honest reply about what is missing.
-
-Ahmet
-
-## Short LinkedIn message
-
-Hi <name>, I saw your work on <verified project>. I built a self-service n8n change review for agencies and automation teams. It compares the current workflow with the candidate and creates a client-ready release record. Files stay on your device and the optional staging receipt runs locally. If this is close to your release process, I would value your honest feedback: https://en.csintresearch.org/ai-security#change-review
+Sample: https://en.csintresearch.org/demos/ai-agent-audit/workflow-change-receipt.html
 
 ## One follow-up
 
-Hi <name>, one short follow-up on the n8n change review. It is for a real before-and-after release, not a broad security scan. The team runs it themselves and keeps the workflow files locally. If this is not relevant to your work, no problem and I will not follow up again.
+Hi <name>, checking once in case an n8n client handoff is coming up. I am testing a fixed EUR 89 release review where workflow files stay local. No problem if it is not relevant; a quick "not needed" is useful too.
 
-## Send boundary
+## Funnel record
 
-- drafts require the user's explicit approval before sending
-- use a company-published business address or contact form
-- no bulk mail, purchased lists, guessed addresses or hidden tracking
-- one follow-up at most
-- record `drafted`, `approved`, `sent`, `replied` and `closed` as separate states
+Track `verified`, `drafted`, `approved`, `sent`, `delivered`, `reply`, `qualified`, `call`, `report_shared`, `paid`, `delivered_service`, and `closed` separately. A view, like, free scan, or polite reply is not a sale.
+
+Continue if at least one real payment arrives. If approximately 32 verified direct prospects, six narrow applications, and one follow-up produce no meaningful replies, stop this offer instead of building more features.

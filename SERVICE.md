@@ -2,9 +2,25 @@
 
 Compare the workflow running today with the version you plan to release. The workspace produces a client-ready change record: what changed, which security boundaries improved or weakened, what was tested, and what still needs a person to verify.
 
-Access is activated through a CSINT account and Stripe checkout. After payment, the tools open inside the AI Security workspace.
+The first two real automated scans in the local tool are available through a CSINT account without a card. They are not human reviews. Paid self-service access opens through Stripe when public checkout is enabled. Agencies and freelancers with an upcoming client delivery can request a manually scheduled paid handoff review without sending the raw workflow or granting production access.
 
-## Included
+## Client Handoff Release Check
+
+The paid pilot turns one release comparison into a client-ready handoff record:
+
+- **Price:** EUR 89.
+- **Scope:** one baseline and one release candidate with up to 30 active nodes in the candidate.
+- **Review:** changed nodes, connections, external domains, credential types, approval points, and key reliability boundaries.
+- **Deliverable:** up to five prioritised release blockers and a client-ready Markdown or print record tied to the checked files by SHA-256.
+- **Delivery:** within 48 hours. A call and corrected-candidate recheck are not included.
+
+The customer runs the workspace on their own device. Only the local report or screen they choose to share is reviewed. Do not email a raw workflow, credential, secret, production payload, or customer record. Scope, delivery date, and payment are confirmed before work starts.
+
+This service does not include workflow development or repair, live debugging, infrastructure or RBAC review, penetration testing, compliance certification, or a security guarantee.
+
+[View the sample handoff record](https://en.csintresearch.org/demos/ai-agent-audit/workflow-change-receipt.html)
+
+## Self-service workspace output
 
 - baseline and candidate workflow comparison
 - local security comparison with SHA-256 fingerprints for both files
@@ -13,7 +29,7 @@ Access is activated through a CSINT account and Stripe checkout. After payment, 
 - repeatable reviews after each workflow change
 - an optional local staging receipt carrying the candidate fingerprint
 
-## What I review
+## What the local analysis covers
 
 - new, removed or reconfigured nodes and connections
 - webhook authentication and untrusted input boundaries
