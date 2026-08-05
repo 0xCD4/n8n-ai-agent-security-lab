@@ -5,7 +5,7 @@ This file contains draft sales copy, not published listings. The user decides wh
 ## Offer
 
 - **Buyer:** an n8n agency or freelancer preparing a client delivery, major update, or workflow takeover.
-- **Paid pilot:** EUR 89.
+- **Paid pilot:** USD 99.
 - **Scope:** one baseline and one release candidate, with up to 30 active nodes in the candidate.
 - **Deliverable:** changed nodes, connections, external domains, credential types, approval and key reliability boundaries; up to five prioritised release blockers; a client-ready Markdown or print record tied to the checked files by SHA-256.
 - **Delivery:** within 48 hours.
@@ -69,7 +69,7 @@ Hi <name>,
 
 Your scope already calls for <one exact testing, handoff, review, documentation, or release requirement from the post>. I can review the release candidate against the previous n8n export without requesting production credentials or live access.
 
-You run the checker locally. I review the generated report, identify release blockers, and return a client-ready change record covering nodes, connections, external targets, credential types, approval boundaries, and key failure controls. The fixed EUR 89 pilot covers one baseline and one candidate with up to 30 active nodes and delivery within 48 hours.
+You run the checker locally. I review the generated report, identify release blockers, and return a client-ready change record covering nodes, connections, external targets, credential types, approval boundaries, and key failure controls. The fixed USD 99 pilot covers one baseline and one candidate with up to 30 active nodes and delivery within 48 hours.
 
 This is independent release and handoff QA rather than workflow implementation, so I suggest it only where a second review before delivery is useful.
 
@@ -77,11 +77,11 @@ Ahmet
 
 ## Short direct message
 
-Hi <name>, I review n8n release candidates before client handoff. Your workflow files stay on your device; I work from a locally generated report. The deliverable is a client-ready change and blocker record, not a generic security scan. I am looking for one EUR 89 paid pilot on an upcoming delivery. Is that relevant to any handoff this month?
+Hi <name>, I review n8n release candidates before client handoff. Your workflow files stay on your device; I work from a locally generated report. The deliverable is a client-ready change and blocker record, not a generic security scan. I am looking for one USD 99 paid pilot on an upcoming delivery. Is that relevant to any handoff this month?
 
 ## One follow-up
 
-Hi <name>, checking once in case an n8n client handoff is coming up. I am testing a fixed EUR 89 release review where workflow files stay local. No problem if it is not relevant; a quick "not needed" is useful too.
+Hi <name>, checking once in case an n8n client handoff is coming up. I am testing a fixed USD 99 release review where workflow files stay local. No problem if it is not relevant; a quick "not needed" is useful too.
 
 ## Objection replies
 

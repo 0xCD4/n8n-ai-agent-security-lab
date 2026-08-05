@@ -8,7 +8,7 @@ The first two real automated scans in the local tool are available through a CSI
 
 The paid pilot turns one release comparison into a client-ready handoff record:
 
-- **Price:** EUR 89.
+- **Price:** USD 99.
 - **Scope:** one baseline and one release candidate with up to 30 active nodes in the candidate.
 - **Review:** changed nodes, connections, external domains, credential types, approval points, and key reliability boundaries.
 - **Deliverable:** up to five prioritised release blockers and a client-ready Markdown or print record tied to the checked files by SHA-256.

@@ -4,7 +4,7 @@ This is a user-controlled outreach plan. Verify every company, contact channel, 
 
 ## Paid pilot
 
-- EUR 89
+- USD 99
 - one baseline and one release candidate
 - up to 30 active nodes in the candidate
 - changed nodes, connections, external domains, credential types, approvals, and key reliability boundaries
@@ -35,7 +35,7 @@ Record the source URL and checked date. Keep `UNKNOWN` where a fact cannot be ve
 
 ## First message
 
-Hi <name>, I review n8n release candidates before client handoff. Your workflow files stay on your device; I work from a locally generated report. The deliverable is a client-ready change and blocker record, not a generic security scan. I am looking for one EUR 89 paid pilot on an upcoming delivery. Is that relevant to any handoff this month?
+Hi <name>, I review n8n release candidates before client handoff. Your workflow files stay on your device; I work from a locally generated report. The deliverable is a client-ready change and blocker record, not a generic security scan. I am looking for one USD 99 paid pilot on an upcoming delivery. Is that relevant to any handoff this month?
 
 Product: https://en.csintresearch.org/ai-security#assisted-review
 
@@ -43,7 +43,7 @@ Sample: https://en.csintresearch.org/demos/ai-agent-audit/workflow-change-receip
 
 ## One follow-up
 
-Hi <name>, checking once in case an n8n client handoff is coming up. I am testing a fixed EUR 89 release review where workflow files stay local. No problem if it is not relevant; a quick "not needed" is useful too.
+Hi <name>, checking once in case an n8n client handoff is coming up. I am testing a fixed USD 99 release review where workflow files stay local. No problem if it is not relevant; a quick "not needed" is useful too.
 
 ## Funnel record
 
