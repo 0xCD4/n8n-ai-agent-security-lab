@@ -9,7 +9,12 @@
     "n8n-ai-sec-map": "bin/map.mjs"
   },
   "scripts": {
-    "test": "node test/audit.test.mjs && node test/multi-workflow.test.mjs && node test/gate.test.mjs && node test/n8n-staging-workflow.test.mjs && node test/template-study.test.mjs && node test/dynamic-lab-report.test.mjs",
+    "test": "node test/audit.test.mjs && node test/input-security.test.mjs && node test/multi-workflow.test.mjs && node test/gate.test.mjs && node test/n8n-staging-workflow.test.mjs && node test/template-study.test.mjs && node test/dynamic-lab-report.test.mjs && node test/release-rehearsal-unit.test.mjs && node test/release-rehearsal-capture.test.mjs && node test/release-rehearsal-docker-unit.test.mjs && node test/release-rehearsal-n8n-unit.test.mjs && node test/release-rehearsal-n8n-export-unit.test.mjs && node test/release-rehearsal-action-unit.test.mjs && node test/release-rehearsal-cli-unit.test.mjs",
+    "test:release-rehearsal:docker": "node test/release-rehearsal-docker.test.mjs",
+    "test:release-rehearsal:n8n": "node test/release-rehearsal-n8n.test.mjs",
+    "test:release-rehearsal:n8n-export": "node test/release-rehearsal-n8n-export.test.mjs",
+    "test:release-rehearsal:action": "node test/release-rehearsal-action.test.mjs",
+    "test:release-rehearsal:cli": "node test/release-rehearsal-cli.test.mjs",
     "audit:unsafe": "node bin/audit.mjs workflows/unsafe-support-agent.json reports/unsafe-support-agent-audit.md --graph reports/unsafe-support-agent-exposure",
     "audit:hardened": "node bin/audit.mjs workflows/hardened-support-agent.json reports/hardened-support-agent-audit.md",
     "audit": "npm run audit:unsafe && npm run audit:hardened",

@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import {
@@ -98,5 +100,65 @@ delete intake.connections["Run Privileged Action"].ai_tool;
 const approvedResult = publicWorkflowSetResult(analyzeWorkflowSet(approvedEntries));
 assert.equal(approvedResult.findings.some((finding) => finding.id === "MW-001"), false);
 assert.equal(approvedResult.findings.some((finding) => finding.id === "MW-002"), false);
+
+// Export discovery is intentionally bounded because workflow JSON is untrusted
+// input. These fixtures are synthetic and contain no live nodes or credentials.
+const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "n8n-ai-sec-input-"));
+try {
+  const safeFixture = JSON.stringify({
+    name: "Synthetic parser fixture",
+    nodes: [
+      {
+        name: "Manual Trigger",
+        type: "n8n-nodes-base.manualTrigger",
+        parameters: {},
+      },
+    ],
+    connections: {},
+  });
+  await writeFile(path.join(temporaryRoot, "safe.json"), safeFixture, "utf8");
+  assert.equal((await loadWorkflowSet(temporaryRoot)).length, 1);
+
+  await assert.rejects(
+    loadWorkflowSet(temporaryRoot, { maxFileBytes: 32 }),
+    /exceeds the file size limit/,
+  );
+  await assert.rejects(
+    loadWorkflowSet(temporaryRoot, { maxTotalBytes: 32 }),
+    /exceeds the total JSON size limit/,
+  );
+  await assert.rejects(
+    loadWorkflowSet(temporaryRoot, { maxTotalNodes: 0 }),
+    /maxTotalNodes must be a positive integer/,
+  );
+
+  await writeFile(path.join(temporaryRoot, "malformed.json"), "{not-json", "utf8");
+  await assert.rejects(loadWorkflowSet(temporaryRoot), /is not valid JSON/);
+  await rm(path.join(temporaryRoot, "malformed.json"));
+
+  const duplicateNodeFixture = JSON.stringify({
+    name: "Duplicate names",
+    nodes: [
+      { name: "Same", type: "n8n-nodes-base.noOp", parameters: {} },
+      { name: "Same", type: "n8n-nodes-base.noOp", parameters: {} },
+    ],
+    connections: {},
+  });
+  await writeFile(path.join(temporaryRoot, "duplicate.json"), duplicateNodeFixture, "utf8");
+  await assert.rejects(loadWorkflowSet(temporaryRoot), /duplicate node name/);
+  await rm(path.join(temporaryRoot, "duplicate.json"));
+
+  await writeFile(path.join(temporaryRoot, "second.json"), safeFixture, "utf8");
+  await assert.rejects(
+    loadWorkflowSet(temporaryRoot, { maxFiles: 1 }),
+    /exceeds the JSON file limit/,
+  );
+  await assert.rejects(
+    loadWorkflowSet(temporaryRoot, { maxTotalNodes: 1 }),
+    /exceeds the total node limit/,
+  );
+} finally {
+  await rm(temporaryRoot, { recursive: true, force: true });
+}
 
 process.stdout.write("multi-workflow tests passed\n");

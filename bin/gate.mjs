@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { runSecurityRegressionGate } from "../src/runtime-gate.mjs";
@@ -10,6 +10,8 @@ import {
   renderGateSarif,
 } from "../src/reporters.mjs";
 import { buildRuntimeGateReceipt } from "../src/runtime-receipt.mjs";
+import { readBoundedJsonFile } from "../src/safe-json.mjs";
+import { readWorkflowFile } from "../src/workflow-input.mjs";
 
 const FORMATS = new Set(["markdown", "json", "junit", "sarif", "receipt"]);
 
@@ -120,12 +122,14 @@ export async function runGateCommand(argv = process.argv.slice(2)) {
 
   const workflowPath = path.resolve(options.workflow);
   const contractPath = path.resolve(options.contract);
-  const [workflowRaw, contractRaw] = await Promise.all([
-    readFile(workflowPath, "utf8"),
-    readFile(contractPath, "utf8"),
+  const [workflow, contract] = await Promise.all([
+    readWorkflowFile(workflowPath, { label: "Workflow export" }),
+    readBoundedJsonFile(contractPath, {
+      label: "Security contract",
+      maxBytes: 1024 * 1024,
+      maxValues: 50_000,
+    }),
   ]);
-  const workflow = JSON.parse(workflowRaw);
-  const contract = JSON.parse(contractRaw);
   const sourcePath = path.relative(process.cwd(), workflowPath).split(path.sep).join("/");
   const result = await runSecurityRegressionGate({
     workflow,

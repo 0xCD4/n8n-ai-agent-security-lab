@@ -1,0 +1,104 @@
+{
+  "id": "csint-phase7-example-v1",
+  "name": "Synthetic release rehearsal candidate",
+  "active": false,
+  "nodes": [
+    {
+      "id": "entry-webhook",
+      "name": "Synthetic Entry",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "webhookId": "33333333-3333-4333-8333-333333333333",
+      "position": [0, 0],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "phase7-example",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "synthetic-input",
+      "name": "Synthetic Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [240, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "synthetic-input-assignment",
+              "name": "syntheticState",
+              "type": "string",
+              "value": "phase7-example-input"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "submit-order",
+      "name": "Submit Synthetic Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 0],
+      "parameters": {
+        "method": "PATCH",
+        "url": "https://orders.example.invalid/v1/synthetic?mode=example-query-value-32fd",
+        "authentication": "none",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{\"kind\":\"synthetic-action\",\"payload\":\"example-workflow-payload-41f2\"}",
+        "options": {
+          "redirect": {
+            "followRedirects": false
+          },
+          "response": {
+            "response": {
+              "fullResponse": false,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 5000
+        }
+      }
+    },
+    {
+      "id": "synthetic-final",
+      "name": "Synthetic Final",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [720, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "synthetic-final-assignment",
+              "name": "syntheticResult",
+              "type": "string",
+              "value": "phase7-example-finished"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Synthetic Entry": {
+      "main": [[{"node": "Synthetic Input", "type": "main", "index": 0}]]
+    },
+    "Synthetic Input": {
+      "main": [[{"node": "Submit Synthetic Order", "type": "main", "index": 0}]]
+    },
+    "Submit Synthetic Order": {
+      "main": [[{"node": "Synthetic Final", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "55555555-5555-4555-8555-555555555555"
+}

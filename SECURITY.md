@@ -23,3 +23,11 @@ The runtime gate is restricted by default:
 Use only systems you own or are explicitly authorized to test. Use redacted fixtures and isolated test credentials. Do not point the gate at production.
 
 The importable staging target contains only Webhook, Code and Respond to Webhook nodes. It has no email, database, AI or outbound HTTP action. `npm run verify:n8n` creates a temporary Docker volume and removes it after the check.
+
+## Untrusted workflow exports
+
+Treat every exported workflow as untrusted input, even when it comes from a known client or repository.
+
+The audit, map and gate commands reject oversized or structurally excessive JSON before analysis. The default limits are 10 MiB per JSON file, 50 MiB per directory scan, 100 levels of JSON nesting, 250,000 JSON values, 5,000 nodes per workflow, 25,000 nodes per map, 500 workflows per map and 500 JSON files per directory scan. Directory scans stop after 20 nested directories and do not follow symbolic links.
+
+Malformed JSON, duplicate node names and dangling connection references fail closed. Remove unrelated malformed `.json` files from a directory before mapping it; valid non-workflow JSON is ignored. These limits reduce accidental resource exhaustion but do not make an export trustworthy. Copy exports into a local directory that another user or process cannot modify during the scan. Keep scans local and remove secrets and customer data before retaining a fixture or report.

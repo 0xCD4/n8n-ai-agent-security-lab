@@ -5,18 +5,37 @@
 
 A [CSINT Research](https://en.csintresearch.org/) side project that catches security regressions in n8n AI workflows before production.
 
-It provides four small, explainable outputs and one release-review surface:
+It provides five small, explainable outputs and one release-review surface:
 
 - **Static audit:** follows paths through an exported workflow and reports risky security patterns.
 - **Regression gate:** sends synthetic requests to an isolated staging webhook and checks the behavior that must not change.
 - **Exposure graph:** turns structured risky paths into JSON, Mermaid and a print-ready SVG report figure.
 - **Workspace map:** resolves calls between exported workflows and reports trust-boundary paths, unresolved targets and credential reuse without printing raw credential names or IDs.
 - **Workflow change review:** compares a baseline and candidate, accepts a staging receipt only when its recorded candidate fingerprint matches the export selected for review, and produces a client-ready change record.
+- **Local action rehearsal:** runs a narrow, credential-free HTTP subset in separate contained n8n environments and records observed synthetic action differences without contacting the original destinations.
 
 Workflow exports stay local. The scanner does not upload them or call an AI API.
 First scan: `npm run audit`. See the [60 second demo](assets/security-review-demo-en.mp4) or the [sample review PDF](reports/sample-security-review.pdf).
 
 ![Unsafe and hardened workflow comparison](assets/unsafe-vs-hardened.png)
+
+## Rehearse a release locally
+
+With Docker Desktop running, compare one supported baseline and candidate against 1 to 3 sanitized fixtures:
+
+```bash
+node bin/rehearse.mjs \
+  --baseline baseline.json \
+  --candidate candidate.json \
+  --fixtures fixtures.json \
+  --output rehearsal-result
+```
+
+The command creates `summary.json`, `report.md`, and `evidence-manifest.json`. Their SHA-256 bindings can be checked in the [CSINT browser evidence viewer](https://en.csintresearch.org/ai-security#runtime) without uploading the files.
+
+The supported subset is intentionally narrow: one literal Webhook entry, literal Set nodes, and credential-free HTTP Request 4.2 nodes using literal POST, PUT, or PATCH destinations on an acyclic `main[0]` path. The baseline and candidate run in separate temporary n8n environments. Original request bodies are replaced with synthetic material, HTTP actions are redirected only to the local capture service, and any unexpected action, DNS activity, forwarding, incomplete evidence, or cleanup failure fails closed.
+
+Observed action evidence does not establish node execution order, approvals, retries, loops, downstream completion, delivery to an original destination, production readiness, penetration-test results, complete workflow equivalence, or a release decision. Read the [local CLI and evidence-bundle guide](docs/release-rehearsal-cli.md) before using it.
 
 ## Exposure graph
 

@@ -1,4 +1,4 @@
-import { readdir, readFile, stat } from "node:fs/promises";
+import { lstat, readdir } from "node:fs/promises";
 import path from "node:path";
 import { buildExposureGraph } from "./exposure-graph.mjs";
 import {
@@ -6,6 +6,21 @@ import {
   workflowAdjacency,
   workflowCredentialReferenceKeys,
 } from "./rules.mjs";
+import { readBoundedJsonFile } from "./safe-json.mjs";
+import { DEFAULT_WORKFLOW_LIMITS, validateWorkflowExport } from "./workflow-input.mjs";
+
+const DEFAULT_DISCOVERY_LIMITS = Object.freeze({
+  maxDirectoryDepth: 20,
+  maxFiles: 500,
+  maxTotalBytes: 50 * 1024 * 1024,
+  maxTotalNodes: 25_000,
+});
+
+function assertPositiveInteger(value, label) {
+  if (!Number.isInteger(value) || value < 1) {
+    throw new TypeError(`${label} must be a positive integer.`);
+  }
+}
 
 const EXECUTE_WORKFLOW_TYPES = new Set([
   "n8n-nodes-base.executeworkflow",
@@ -154,37 +169,89 @@ function renderCall(call) {
   };
 }
 
-export async function loadWorkflowSet(inputPath) {
+export async function loadWorkflowSet(inputPath, options = {}) {
   const absoluteInput = path.resolve(inputPath);
-  const inputStat = await stat(absoluteInput);
+  const inputStat = await lstat(absoluteInput);
+  if (inputStat.isSymbolicLink()) {
+    throw new Error("Workflow input must not be a symbolic link.");
+  }
+  if (!inputStat.isDirectory() && !inputStat.isFile()) {
+    throw new Error("Workflow input must be a regular file or directory.");
+  }
+  const maxDirectoryDepth = options.maxDirectoryDepth ?? DEFAULT_DISCOVERY_LIMITS.maxDirectoryDepth;
+  const maxFiles = options.maxFiles ?? DEFAULT_DISCOVERY_LIMITS.maxFiles;
+  const maxTotalBytes = options.maxTotalBytes ?? DEFAULT_DISCOVERY_LIMITS.maxTotalBytes;
+  const maxTotalNodes = options.maxTotalNodes ?? DEFAULT_DISCOVERY_LIMITS.maxTotalNodes;
+  const maxWorkflows = options.maxWorkflows ?? DEFAULT_WORKFLOW_LIMITS.maxWorkflows;
+  assertPositiveInteger(maxDirectoryDepth, "maxDirectoryDepth");
+  assertPositiveInteger(maxFiles, "maxFiles");
+  assertPositiveInteger(maxTotalBytes, "maxTotalBytes");
+  assertPositiveInteger(maxTotalNodes, "maxTotalNodes");
+  assertPositiveInteger(maxWorkflows, "maxWorkflows");
   const files = [];
+  let totalBytes = 0;
 
-  async function visit(current) {
-    const entries = await readdir(current, { withFileTypes: true });
-    for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
-      const item = path.join(current, entry.name);
-      if (entry.isDirectory()) await visit(item);
-      else if (entry.isFile() && entry.name.toLowerCase().endsWith(".json")) files.push(item);
+  async function addFile(file) {
+    const entry = await lstat(file);
+    if (entry.isSymbolicLink()) {
+      throw new Error("Workflow directory must not contain symbolic-link JSON files.");
+    }
+    if (!entry.isFile()) return;
+    totalBytes += entry.size;
+    if (totalBytes > maxTotalBytes) {
+      throw new Error(`Workflow input exceeds the total JSON size limit (${maxTotalBytes} bytes).`);
+    }
+    files.push(file);
+    if (files.length > maxFiles) {
+      throw new Error(`Workflow directory exceeds the JSON file limit (${maxFiles}).`);
     }
   }
 
-  if (inputStat.isDirectory()) await visit(absoluteInput);
-  else files.push(absoluteInput);
+  async function visit(current, depth) {
+    if (depth > maxDirectoryDepth) {
+      throw new Error(`Workflow directory exceeds the depth limit (${maxDirectoryDepth}).`);
+    }
+    const entries = await readdir(current, { withFileTypes: true });
+    for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+      const item = path.join(current, entry.name);
+      if (entry.isDirectory()) await visit(item, depth + 1);
+      else if (entry.isFile() && entry.name.toLowerCase().endsWith(".json")) {
+        await addFile(item);
+      } else if (entry.isSymbolicLink() && entry.name.toLowerCase().endsWith(".json")) {
+        throw new Error("Workflow directory must not contain symbolic-link JSON files.");
+      }
+    }
+  }
+
+  if (inputStat.isDirectory()) await visit(absoluteInput, 0);
+  else await addFile(absoluteInput);
 
   const root = inputStat.isDirectory() ? absoluteInput : path.dirname(absoluteInput);
   const workflows = [];
+  let totalNodes = 0;
   for (const file of files) {
-    let parsed;
-    try {
-      parsed = JSON.parse(await readFile(file, "utf8"));
-    } catch {
-      continue;
-    }
+    const relative = slash(path.relative(root, file)) || path.basename(file);
+    const parsed = await readBoundedJsonFile(file, {
+      label: `Workflow input ${relative}`,
+      maxBytes: options.maxFileBytes,
+      maxDepth: options.maxJsonDepth,
+      maxValues: options.maxJsonValues,
+    });
     const candidates = Array.isArray(parsed) ? parsed : [parsed];
     for (let index = 0; index < candidates.length; index += 1) {
       const workflow = candidates[index];
       if (!workflow || !Array.isArray(workflow.nodes)) continue;
-      const relative = slash(path.relative(root, file)) || path.basename(file);
+      if (workflows.length >= maxWorkflows) {
+        throw new Error(`Workflow input exceeds the workflow limit (${maxWorkflows}).`);
+      }
+      validateWorkflowExport(workflow, {
+        label: candidates.length > 1 ? `${relative}#${index + 1}` : relative,
+        maxNodes: options.maxNodesPerWorkflow,
+      });
+      totalNodes += workflow.nodes.length;
+      if (totalNodes > maxTotalNodes) {
+        throw new Error(`Workflow input exceeds the total node limit (${maxTotalNodes}).`);
+      }
       workflows.push({
         workflow,
         source: candidates.length > 1 ? `${relative}#${index + 1}` : relative,

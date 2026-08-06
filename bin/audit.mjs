@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { auditN8nWorkflow, renderMarkdownReport } from "../src/rules.mjs";
+import { readWorkflowFile } from "../src/workflow-input.mjs";
 import {
   renderExposureGraphMermaid,
   renderExposureGraphSvg,
@@ -95,8 +96,7 @@ async function main() {
   }
 
   const inputPath = path.resolve(options.input);
-  const raw = await readFile(inputPath, "utf8");
-  const workflow = JSON.parse(raw);
+  const workflow = await readWorkflowFile(inputPath, { label: "Workflow export" });
   const result = auditN8nWorkflow(workflow);
   let graphPathForReport = "";
 

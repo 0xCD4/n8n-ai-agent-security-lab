@@ -19,4 +19,6 @@ Contributions should improve defensive analysis, explainability or the safety of
 5. If the change touches the importable n8n fixture, run `npm run verify:n8n`.
 6. Explain the limitation of the rule.
 
+Parser and loader changes must include synthetic boundary tests. Do not commit a real customer export, credential, token, private URL or production payload as a fixture.
+
 Do not submit offensive automation, credential theft, persistence or unauthorized access instructions.

@@ -1,0 +1,12 @@
+**
+!src/evidence-fingerprint.mjs
+!src/release-rehearsal-capture.mjs
+!src/release-rehearsal-dns-sink.mjs
+!src/release-rehearsal-fixture.mjs
+!src/release-rehearsal-normalize.mjs
+!src/release-rehearsal-schema.mjs
+!src/safe-json.mjs
+!lab/release-rehearsal-capture/Containerfile
+!lab/release-rehearsal-capture/server.mjs
+!lab/release-rehearsal-capture/probe.mjs
+!lab/release-rehearsal-capture/injector.mjs

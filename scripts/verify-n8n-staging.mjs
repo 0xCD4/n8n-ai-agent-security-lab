@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import net from "node:net";
 import path from "node:path";
 import process from "node:process";
@@ -13,6 +13,8 @@ import {
 } from "../src/dynamic-lab-report.mjs";
 import { buildEvidenceSubject } from "../src/evidence-fingerprint.mjs";
 import { runSecurityRegressionGate } from "../src/runtime-gate.mjs";
+import { readBoundedJsonFile } from "../src/safe-json.mjs";
+import { readWorkflowFile } from "../src/workflow-input.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const image = process.env.N8N_IMAGE ?? "docker.n8n.io/n8nio/n8n:2.21.5";
@@ -209,9 +211,17 @@ async function verify() {
   await waitForWebhook(baseUrl);
 
   const [workflow, executedWorkflow, contract] = await Promise.all([
-    readFile(path.join(root, "workflows", "hardened-support-agent.json"), "utf8").then(JSON.parse),
-    readFile(path.join(root, "workflows", "security-regression-staging-target.json"), "utf8").then(JSON.parse),
-    readFile(path.join(root, "contracts", "n8n-staging.contract.json"), "utf8").then(JSON.parse),
+    readWorkflowFile(path.join(root, "workflows", "hardened-support-agent.json"), {
+      label: "Static review workflow",
+    }),
+    readWorkflowFile(path.join(root, "workflows", "security-regression-staging-target.json"), {
+      label: "Executed staging workflow",
+    }),
+    readBoundedJsonFile(path.join(root, "contracts", "n8n-staging.contract.json"), {
+      label: "n8n staging contract",
+      maxBytes: 1024 * 1024,
+      maxValues: 50_000,
+    }),
   ]);
   const result = await runSecurityRegressionGate({
     workflow,

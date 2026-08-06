@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "fixtures": [
+    {
+      "schemaVersion": 1,
+      "id": "fixture-example",
+      "correlationId": "fixture-example-seed",
+      "webhook": {
+        "method": "POST",
+        "path": "/phase7-example",
+        "headers": {
+          "x-fixture-mode": "example-fixture-header-73ca"
+        },
+        "json": {
+          "kind": "example-fixture-payload-84db"
+        }
+      },
+      "nodes": [
+        {
+          "nodeId": "submit-order",
+          "minimumOccurrences": 1,
+          "maximumOccurrences": 1,
+          "responses": [
+            {
+              "status": 202,
+              "headers": {
+                "content-type": "application/json; charset=utf-8"
+              },
+              "json": {
+                "result": "example-stub-payload-95ec"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

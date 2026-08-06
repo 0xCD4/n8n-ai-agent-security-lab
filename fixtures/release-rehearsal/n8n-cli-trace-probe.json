@@ -1,0 +1,159 @@
+{
+  "id": "csint-n8n-trace-probe-v1",
+  "name": "CSINT Release Rehearsal n8n CLI Trace Probe",
+  "active": false,
+  "nodes": [
+    {
+      "id": "csint-manual-trigger",
+      "name": "CSINT Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {}
+    },
+    {
+      "id": "csint-synthetic-input",
+      "name": "CSINT Synthetic Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [240, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "csint-assignment-subject",
+              "name": "subject",
+              "type": "string",
+              "value": "probe@rehearsal.invalid"
+            },
+            {
+              "id": "csint-assignment-state",
+              "name": "state",
+              "type": "string",
+              "value": "synthetic"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "csint-capture-http",
+      "name": "CSINT Loopback Capture",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 0],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:18080/v1/rehearsal/capture",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-csint-rehearsal-run",
+              "value": "csint-placeholder-run"
+            },
+            {
+              "name": "x-csint-rehearsal-case",
+              "value": "csint-placeholder-case"
+            },
+            {
+              "name": "x-csint-rehearsal-variant",
+              "value": "baseline"
+            },
+            {
+              "name": "x-csint-rehearsal-fixture",
+              "value": "csint-placeholder-fixture"
+            },
+            {
+              "name": "x-csint-rehearsal-correlation",
+              "value": "csint-placeholder-correlation"
+            },
+            {
+              "name": "x-csint-rehearsal-node-id",
+              "value": "csint-capture-http"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{\"fixture\":\"csint-placeholder-fixture\",\"kind\":\"synthetic-trace-probe\",\"subject\":\"probe@rehearsal.invalid\"}",
+        "options": {
+          "redirect": {
+            "followRedirects": false
+          },
+          "response": {
+            "response": {
+              "fullResponse": false,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 5000
+        }
+      }
+    },
+    {
+      "id": "csint-downstream-proof",
+      "name": "CSINT Downstream Proof",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [720, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "csint-assignment-continuation",
+              "name": "continuation",
+              "type": "string",
+              "value": "complete"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "CSINT Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "CSINT Synthetic Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSINT Synthetic Input": {
+      "main": [
+        [
+          {
+            "node": "CSINT Loopback Capture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSINT Loopback Capture": {
+      "main": [
+        [
+          {
+            "node": "CSINT Downstream Proof",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "tags": []
+}

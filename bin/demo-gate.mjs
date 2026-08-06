@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -11,6 +11,8 @@ import {
   renderGateSarif,
 } from "../src/reporters.mjs";
 import { runSecurityRegressionGate } from "../src/runtime-gate.mjs";
+import { readBoundedJsonFile } from "../src/safe-json.mjs";
+import { readWorkflowFile } from "../src/workflow-input.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -21,12 +23,14 @@ async function main() {
     "contracts",
     "hardened-support-agent.contract.json",
   );
-  const [workflowRaw, contractRaw] = await Promise.all([
-    readFile(workflowPath, "utf8"),
-    readFile(contractPath, "utf8"),
+  const [workflow, contract] = await Promise.all([
+    readWorkflowFile(workflowPath, { label: "Demo workflow export" }),
+    readBoundedJsonFile(contractPath, {
+      label: "Demo security contract",
+      maxBytes: 1024 * 1024,
+      maxValues: 50_000,
+    }),
   ]);
-  const workflow = JSON.parse(workflowRaw);
-  const contract = JSON.parse(contractRaw);
   const staging = await startDemoStagingServer();
 
   try {

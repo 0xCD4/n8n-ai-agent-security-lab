@@ -1,0 +1,24 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+WORKDIR /app
+
+COPY --chown=node:node src/evidence-fingerprint.mjs src/evidence-fingerprint.mjs
+COPY --chown=node:node src/release-rehearsal-capture.mjs src/release-rehearsal-capture.mjs
+COPY --chown=node:node src/release-rehearsal-dns-sink.mjs src/release-rehearsal-dns-sink.mjs
+COPY --chown=node:node src/release-rehearsal-fixture.mjs src/release-rehearsal-fixture.mjs
+COPY --chown=node:node src/release-rehearsal-normalize.mjs src/release-rehearsal-normalize.mjs
+COPY --chown=node:node src/release-rehearsal-schema.mjs src/release-rehearsal-schema.mjs
+COPY --chown=node:node src/safe-json.mjs src/safe-json.mjs
+COPY --chown=node:node lab/release-rehearsal-capture/server.mjs lab/release-rehearsal-capture/server.mjs
+COPY --chown=node:node lab/release-rehearsal-capture/probe.mjs lab/release-rehearsal-capture/probe.mjs
+COPY --chown=node:node lab/release-rehearsal-capture/injector.mjs lab/release-rehearsal-capture/injector.mjs
+
+RUN mkdir -p /run/rehearsal/config /run/rehearsal/fixture /run/rehearsal/output \
+    && touch /run/rehearsal/config/config.json \
+    && touch /run/rehearsal/fixture/fixture-set.json \
+    && chown -R node:node /run/rehearsal
+
+USER 1000:1000
+
+ENTRYPOINT ["node", "/app/lab/release-rehearsal-capture/server.mjs"]
