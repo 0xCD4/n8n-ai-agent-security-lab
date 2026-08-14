@@ -5,7 +5,7 @@
 
 A [CSINT Research](https://en.csintresearch.org/) side project that catches security regressions in n8n AI workflows before production.
 
-It provides five small, explainable outputs and one release-review surface:
+It provides six small, explainable outputs and one release-review surface:
 
 - **Static audit:** follows paths through an exported workflow and reports risky security patterns.
 - **Regression gate:** sends synthetic requests to an isolated staging webhook and checks the behavior that must not change.
@@ -13,6 +13,7 @@ It provides five small, explainable outputs and one release-review surface:
 - **Workspace map:** resolves calls between exported workflows and reports trust-boundary paths, unresolved targets and credential reuse without printing raw credential names or IDs.
 - **Workflow change review:** compares a baseline and candidate, accepts a staging receipt only when its recorded candidate fingerprint matches the export selected for review, and produces a client-ready change record.
 - **Local action rehearsal:** runs a narrow, credential-free HTTP subset in separate contained n8n environments and records observed synthetic action differences without contacting the original destinations.
+- **GitHub PR Gate:** reviews repository-shipped workflow exports on every pull request and writes a redacted step summary, SARIF, JSON, Markdown, Mermaid and SVG evidence without executing the workflows.
 
 Workflow exports stay local. The scanner does not upload them or call an AI API.
 First scan: `npm run audit`. See the [60 second demo](assets/security-review-demo-en.mp4) or the [sample review PDF](reports/sample-security-review.pdf).
@@ -65,6 +66,26 @@ npm run gate:demo
 ```
 
 No npm package installation is required.
+
+## Add the pull-request gate
+
+The repository includes a dependency-free composite GitHub Action. It reviews a workflow JSON file or directory as untrusted data, adds a compact result to the GitHub step summary, and leaves portable evidence files for artifact or SARIF upload.
+
+```yaml
+permissions:
+  contents: read
+
+steps:
+  - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+  - id: releaseguard
+    uses: 0xCD4/n8n-ai-agent-security-lab@v1
+    with:
+      path: workflows
+      output-prefix: reports/releaseguard-pr
+      fail-on: high
+```
+
+For an immutable setup, replace `@v1` with a reviewed full commit SHA. The action needs no credential, API token, AI service or n8n instance. It does not post comments, approve a release, or execute repository code. See the [GitHub PR Gate guide](docs/github-actions.md).
 
 ## Verify the real n8n fixture
 

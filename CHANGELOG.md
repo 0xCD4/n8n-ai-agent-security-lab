@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 1.3.0 - 2026-08-14
+
+- Added a credential-free GitHub pull-request gate for exported n8n workflows.
+- Added redacted step-summary, JSON, Markdown, SARIF, Mermaid and SVG evidence outputs.
+- Added a book-correction issue path and documented the human review boundary.
+
 - Added a local `receipt` output for customer-controlled staging contracts, recording the supplied candidate fingerprint and an explicit zero-action canary check.
 - Bound dynamic receipts to canonical SHA-256 fingerprints of the exact executed workflow and security contract.
 - Reframed the manual pilot around baseline-versus-candidate release review and a client-ready evidence record.

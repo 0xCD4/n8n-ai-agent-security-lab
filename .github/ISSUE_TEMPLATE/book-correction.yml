@@ -1,0 +1,46 @@
+name: Book correction
+description: Suggest a clearer explanation, missing boundary, or safe practical example for Building Safer n8n Systems.
+title: "[Book] "
+labels:
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping make the field guide clearer. Do not include credentials, customer workflows, private URLs, production payloads, or personal data.
+  - type: input
+    id: location
+    attributes:
+      label: Page or chapter
+      description: Name the PDF page, web chapter, heading, or source paragraph.
+      placeholder: "Page 18 - GitHub PR Gate"
+    validations:
+      required: true
+  - type: textarea
+    id: current_problem
+    attributes:
+      label: What is unclear or missing?
+      description: Explain the reader problem in a few sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: suggested_change
+    attributes:
+      label: Suggested change
+      description: Provide concise replacement text, a bounded example, or a source-backed correction.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public supporting source
+      description: Link primary documentation when the change depends on a technical fact.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets, private infrastructure details, customer material, and personal data.
+          required: true
+        - label: I understand that a book correction does not grant repository or production access.
+          required: true

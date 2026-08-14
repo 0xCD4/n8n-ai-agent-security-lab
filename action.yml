@@ -1,0 +1,62 @@
+name: ReleaseGuard n8n PR Gate
+description: Review exported n8n AI workflows in a pull request without executing them or sending them to an AI service.
+author: CSINT Research
+
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  path:
+    description: A repository-relative n8n workflow JSON file or directory.
+    required: false
+    default: workflows
+  output-prefix:
+    description: Repository-relative prefix for JSON, Markdown, SARIF, Mermaid, and SVG evidence files.
+    required: false
+    default: reports/releaseguard-pr
+  name:
+    description: Plain-text label for the workflow set under review.
+    required: false
+    default: n8n workflow pull request
+  fail-on:
+    description: Use high to fail when a high-severity path is found, or never to report without failing.
+    required: false
+    default: high
+
+outputs:
+  decision:
+    description: pass or review. This is a review aid, not a release approval.
+    value: ${{ steps.releaseguard.outputs.decision }}
+  high-findings:
+    description: Number of high-severity findings.
+    value: ${{ steps.releaseguard.outputs.high_findings }}
+  report-json:
+    description: Path to the redacted JSON report.
+    value: ${{ steps.releaseguard.outputs.report_json }}
+  report-markdown:
+    description: Path to the Markdown report.
+    value: ${{ steps.releaseguard.outputs.report_markdown }}
+  sarif:
+    description: Path to the SARIF report.
+    value: ${{ steps.releaseguard.outputs.sarif }}
+  exposure-svg:
+    description: Path to the self-contained exposure graph SVG.
+    value: ${{ steps.releaseguard.outputs.exposure_svg }}
+
+runs:
+  using: composite
+  steps:
+    - id: releaseguard
+      shell: bash
+      env:
+        RELEASEGUARD_INPUT: ${{ inputs.path }}
+        RELEASEGUARD_OUTPUT: ${{ inputs.output-prefix }}
+        RELEASEGUARD_NAME: ${{ inputs.name }}
+        RELEASEGUARD_FAIL_ON: ${{ inputs.fail-on }}
+      run: >-
+        node "$GITHUB_ACTION_PATH/bin/pr-gate.mjs"
+        "$RELEASEGUARD_INPUT"
+        --out "$RELEASEGUARD_OUTPUT"
+        --name "$RELEASEGUARD_NAME"
+        --fail-on "$RELEASEGUARD_FAIL_ON"

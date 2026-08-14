@@ -1,15 +1,16 @@
 {
   "name": "n8n-ai-agent-security-lab",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
   "description": "A CSINT Research side project for static and staging-safe security checks of n8n AI workflows.",
   "type": "module",
   "bin": {
     "n8n-ai-sec": "bin/gate.mjs",
-    "n8n-ai-sec-map": "bin/map.mjs"
+    "n8n-ai-sec-map": "bin/map.mjs",
+    "releaseguard-pr": "bin/pr-gate.mjs"
   },
   "scripts": {
-    "test": "node test/audit.test.mjs && node test/input-security.test.mjs && node test/multi-workflow.test.mjs && node test/gate.test.mjs && node test/n8n-staging-workflow.test.mjs && node test/template-study.test.mjs && node test/dynamic-lab-report.test.mjs && node test/release-rehearsal-unit.test.mjs && node test/release-rehearsal-capture.test.mjs && node test/release-rehearsal-docker-unit.test.mjs && node test/release-rehearsal-n8n-unit.test.mjs && node test/release-rehearsal-n8n-export-unit.test.mjs && node test/release-rehearsal-action-unit.test.mjs && node test/release-rehearsal-cli-unit.test.mjs",
+    "test": "node test/audit.test.mjs && node test/input-security.test.mjs && node test/multi-workflow.test.mjs && node test/github-pr-gate.test.mjs && node test/gate.test.mjs && node test/n8n-staging-workflow.test.mjs && node test/template-study.test.mjs && node test/dynamic-lab-report.test.mjs && node test/release-rehearsal-unit.test.mjs && node test/release-rehearsal-capture.test.mjs && node test/release-rehearsal-docker-unit.test.mjs && node test/release-rehearsal-n8n-unit.test.mjs && node test/release-rehearsal-n8n-export-unit.test.mjs && node test/release-rehearsal-action-unit.test.mjs && node test/release-rehearsal-cli-unit.test.mjs",
     "test:release-rehearsal:docker": "node test/release-rehearsal-docker.test.mjs",
     "test:release-rehearsal:n8n": "node test/release-rehearsal-n8n.test.mjs",
     "test:release-rehearsal:n8n-export": "node test/release-rehearsal-n8n-export.test.mjs",
@@ -22,6 +23,7 @@
     "gate": "node bin/gate.mjs",
     "gate:demo": "node bin/demo-gate.mjs",
     "map:demo": "node bin/map.mjs workflows/multi-workflow-demo --name \"Multi-workflow demo\" --out reports/multi-workflow-demo",
+    "pr-gate:demo": "node bin/pr-gate.mjs workflows/multi-workflow-demo --name \"Synthetic pull request\" --out reports/releaseguard-pr-demo --fail-on never",
     "verify:n8n": "node scripts/verify-n8n-staging.mjs",
     "study:templates:feasibility": "node scripts/audit-public-templates.mjs --count 20 --out research/template-study/feasibility-20",
     "study:templates:top100": "node scripts/audit-public-templates.mjs --count 100 --out research/template-study/top-100",
