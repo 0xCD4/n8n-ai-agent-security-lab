@@ -1,0 +1,94 @@
+{
+  "name": "Demo - AI Agent Handoff",
+  "nodes": [
+    {
+      "name": "Public Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "authentication": "none",
+        "httpMethod": "POST",
+        "path": "ai-handoff"
+      },
+      "position": [250, 300]
+    },
+    {
+      "name": "Extract Request Data",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "options": {},
+        "values": {
+          "string": [
+            {
+              "name": "user_email",
+              "value": "={{ $json.body.email }}"
+            },
+            {
+              "name": "user_request",
+              "value": "={{ $json.body.request }}"
+            },
+            {
+              "name": "api_key",
+              "value": "sk-fakeDEMOFAKEDEMO12345678901234567890"
+            }
+          ]
+        }
+      },
+      "position": [450, 300]
+    },
+    {
+      "name": "AI Decision Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a helpful assistant. Process the user request and decide what action to take."
+      },
+      "position": [650, 300]
+    },
+    {
+      "name": "Send Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "parameters": {
+        "toEmail": "={{ $json.user_email }}",
+        "subject": "Your request has been processed",
+        "emailType": "text",
+        "message": "Thank you for your request. We will get back to you soon."
+      },
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Public Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Request Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Request Data": {
+      "main": [
+        [
+          {
+            "node": "AI Decision Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Decision Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

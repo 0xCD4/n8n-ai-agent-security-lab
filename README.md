@@ -16,6 +16,19 @@ It provides six small, explainable outputs and one release-review surface:
 - **GitHub PR Gate:** reviews repository-shipped workflow exports on every pull request and writes a redacted step summary, SARIF, JSON, Markdown, Mermaid and SVG evidence without executing the workflows.
 
 Workflow exports stay local. The scanner does not upload them or call an AI API.
+
+## 60-second quick start
+
+Clone the repository and scan the demo fixture:
+
+```bash
+git clone https://github.com/0xCD4/n8n-ai-agent-security-lab.git
+cd n8n-ai-agent-security-lab
+node bin/audit.mjs workflows/demo-handoff.json
+```
+
+The demo workflow contains intentional security issues for testing. You should see findings including hardcoded secrets, unauthenticated webhooks, and missing validation. Score: 30/100 (F).
+
 First scan: `npm run audit`. See the [60 second demo](assets/security-review-demo-en.mp4) or the [sample review PDF](reports/sample-security-review.pdf).
 
 ![Unsafe and hardened workflow comparison](assets/unsafe-vs-hardened.png)
