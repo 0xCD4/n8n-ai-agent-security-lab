@@ -2,6 +2,16 @@
 
 Contributions should improve defensive analysis, explainability or the safety of the example workflows.
 
+## Quick start: add a new security rule
+
+All security checks live in `src/rules.mjs`. To add a new rule:
+
+1. Add a detection function that returns `true` when the issue is present
+2. Add a finding entry in the `auditN8nWorkflow` function with your unique ID, severity, title, evidence, recommendation, and reference
+3. Add a test case in `test/audit.test.mjs` with a minimal workflow that triggers the rule
+
+Each rule is a pure function. Keep it modular, deterministic, and explainable.
+
 ## Good contributions
 
 - a redacted workflow pattern that produces a false positive
