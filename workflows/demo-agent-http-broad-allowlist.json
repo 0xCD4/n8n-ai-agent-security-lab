@@ -1,0 +1,69 @@
+{
+  "name": "Demo - AI Agent HTTP tool with over-broad https://* allowlist (expected future finding)",
+  "nodes": [
+    {
+      "id": "public-request",
+      "name": "Public Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "parameters": {
+        "authentication": "none",
+        "httpMethod": "POST",
+        "path": "demo-agent-http-tool"
+      },
+      "position": [240, 300]
+    },
+    {
+      "id": "request-agent",
+      "name": "Request Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "parameters": {
+        "promptType": "define",
+        "text": "Use the available HTTP tool to fetch the URL supplied in the synthetic request."
+      },
+      "position": [500, 300]
+    },
+    {
+      "id": "broad-http-tool",
+      "name": "HTTP Tool - Any HTTPS Host",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $fromAI('url', 'Any HTTPS URL, for example https://api.example.test/data', 'string') }}",
+        "toolDescription": "Fetch any HTTPS destination requested by the agent. URL allowlist: https://*.",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "position": [500, 520]
+    }
+  ],
+  "connections": {
+    "Public Request": {
+      "main": [
+        [
+          {
+            "node": "Request Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Tool - Any HTTPS Host": {
+      "ai_tool": [
+        [
+          {
+            "node": "Request Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "active": false
+}
