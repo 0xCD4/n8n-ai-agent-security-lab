@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { auditN8nWorkflow, renderMarkdownReport } from "../src/rules.mjs";
 import {
   buildExposureGraph,
@@ -9,6 +10,17 @@ import {
 function connection(target) {
   return { main: [[{ node: target, type: "main", index: 0 }]] };
 }
+
+const broadHttpToolFixture = JSON.parse(
+  readFileSync(new URL("../workflows/demo-agent-http-broad-allowlist.json", import.meta.url), "utf8"),
+);
+assert.ok(Array.isArray(broadHttpToolFixture.nodes));
+assert.equal(
+  broadHttpToolFixture.nodes.some(
+    (node) => node.type === "@n8n/n8n-nodes-langchain.toolHttpRequest",
+  ),
+  true,
+);
 
 const vulnerableWorkflow = {
   name: "Unsafe support agent",
